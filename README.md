@@ -11,13 +11,13 @@ To use this overlay follow those steps
 - First you need to install layman
 
 ```
- # emerge -av app-portage/layman
+# emerge -av app-portage/layman
 ```
 
 - Add sunny-overlay's layman configuration
 
 ```
- # cat << EOF > /etc/layman/overlays/sunny-overlay.xml
+# cat << EOF > /etc/layman/overlays/sunny-overlay.xml
 <?xml version="1.0" ?>             
 <repositories version="1.0">
         <repo priority="50" quality="experimental" status="unofficial">
@@ -30,19 +30,18 @@ To use this overlay follow those steps
     	    <source type="git">git://github.com/dguglielmi/sunny-overlay.git</source>
         </repo>
 </repositories>
-
 EOF
 ```
 
 -  Fetch & display a list of all the overlays
 
 ```
- # layman -L
+# layman -L
 ```
 
 -  Finally add sunny-overlay
 
 ```
- # layman -a sunny-overlay
+# layman -a sunny-overlay
 ```
 
