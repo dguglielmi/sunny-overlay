@@ -7,7 +7,7 @@ EAPI=5
 inherit eutils linux-mod rpm
 
 DESCRIPTION="Hercules DJ devices kernel module driver"
-HOMEPAGE="ftp://ftp.hercules.com/pub/webupdate/DJCSeries"
+HOMEPAGE="http://ts.hercules.com/"
 SRC_URI="ftp://ftp.hercules.com/pub/webupdate/DJCSeries/Hercules_DJSeries_Linux.tgz"
 
 LICENSE="GPL-2"
