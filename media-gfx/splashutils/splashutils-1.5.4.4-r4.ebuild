@@ -82,12 +82,18 @@ src_prepare() {
 	# helper.
 	rm "${S}/libs/zlib-${V_ZLIB}/Makefile"
 
+    if use truetype ; then
+        epatch "${FILESDIR}/splashutils-1.5.4.4_fix-freetype-includes.patch"
+    fi
+
 	cd "${SG}"
 	epatch "${FILESDIR}/splashutils-1.5.4.4-gentoo-typo-fix.patch"
 
 	if use truetype ; then
 		cd "${SM}"
 		epatch "${FILESDIR}/splashutils-1.5.4.4-freetype-bz2.patch"
+        epatch "${FILESDIR}/miscsplashutils-0.1.8_fix-freetype-includes.patch"
+
 	fi
 
 	cd "${S}"
@@ -95,6 +101,7 @@ src_prepare() {
 
 	epatch "${FILESDIR}/${P}-bzip2.patch"
 	epatch "${FILESDIR}/${P}-multi-keyboard.patch"
+    epatch "${FILESDIR}/libmng2-lcms2.patch"
 
 	if ! tc-is-cross-compiler && \
 	   has_version "sys-devel/gcc:$(gcc-version)[vanilla]" ; then
