@@ -1,7 +1,7 @@
 sunny-overlay
 =============
 
-Sunny-overlay is my personal Gentoo Portage overlay. Maybe it will be useful for some others (we can always dream).
+Sunny-overlay is my personal Gentoo Portage overlay. Maybe it will be useful to others (we can always dream).
 
 How to use this overlay ?
 -------------------------
