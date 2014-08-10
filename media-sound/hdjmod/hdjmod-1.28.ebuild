@@ -40,14 +40,15 @@ src_unpack() {
 }
 
 src_prepare() {
-	epatch "${FILESDIR}/dj_console_mp3_e2.patch"
-	epatch "${FILESDIR}/${PN}_fix_hotplug.patch"
-	epatch "${FILESDIR}/${PN}_kfree.patch"
-	epatch "${FILESDIR}/${PN}_kernel_2.6.30.patch"
-	epatch "${FILESDIR}/${PN}_kernel_2.6.36.patch"
-	epatch "${FILESDIR}/${PN}_kernel_2.6.37.patch"
-	epatch "${FILESDIR}/${PN}_kernel_2.6.39.patch"
-	epatch "${FILESDIR}/${PN}_kernel_3.6.patch"
-	epatch "${FILESDIR}/${PN}_kernel_3.7.patch"
-	epatch "${FILESDIR}/${PN}_kernel_3.16.patch"
+	epatch \
+			"${FILESDIR}"/dj_console_mp3_e2.patch \
+			"${FILESDIR}"/${PN}_fix_hotplug.patch \
+			"${FILESDIR}"/${PN}_kfree.patch \
+			"${FILESDIR}"/${PN}_kernel_2.6.30.patch \
+			"${FILESDIR}"/${PN}_kernel_2.6.36.patch \
+			"${FILESDIR}"/${PN}_kernel_2.6.37.patch \
+			"${FILESDIR}"/${PN}_kernel_2.6.39.patch \
+			"${FILESDIR}"/${PN}_kernel_3.6.patch \
+			"${FILESDIR}"/${PN}_kernel_3.7.patch \
+			"${FILESDIR}"/${PN}_kernel_3.16.patch
 }
