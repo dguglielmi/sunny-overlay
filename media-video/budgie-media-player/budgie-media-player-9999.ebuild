@@ -29,7 +29,7 @@ RDEPEND="
 	>=media-libs/gst-plugins-base-1.0.1:1.0
 	>=media-libs/taglib-1.9.1"
 
-if [[ ${PV} == "9999" ]]; then
+if [[ ${PV} == "9999" ]] ; then
     RDEPEND="${RDEPEND}
         gnome-base/gnome-common:3"
 fi

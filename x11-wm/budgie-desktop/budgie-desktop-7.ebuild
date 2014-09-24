@@ -35,7 +35,7 @@ RDEPEND="
     dev-libs/libgee:0.8
     >=dev-libs/libpeas-1.0"
 
-if [[ ${PV} == "9999" ]]; then
+if [[ ${PV} == "9999" ]] ; then
     RDEPEND="${RDEPEND}
         gnome-base/gnome-common:3"
 fi
