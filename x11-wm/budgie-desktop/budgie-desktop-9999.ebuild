@@ -11,7 +11,7 @@ DESCRIPTION="Evolve OS's desktop"
 HOMEPAGE="https://evolve-os.com/budgie/"
 
 if [[ ${PV} == "9999" ]] ; then
-    EGIT_REPO_URI="https://github.com/evolve-os/budgie-desktop.git"
+    EGIT_REPO_URI="https://github.com/evolve-os/${PN}.git"
     SRC_URI=""
     inherit git-r3 autotools
 else
