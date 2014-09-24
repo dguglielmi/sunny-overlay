@@ -13,14 +13,15 @@ HOMEPAGE="https://evolve-os.com/budgie/"
 if [[ ${PV} == "9999" ]] ; then
     EGIT_REPO_URI="https://github.com/evolve-os/${PN}.git"
     SRC_URI=""
+    KEYWORDS=""
     inherit git-r3 autotools
 else
     SRC_URI="https://github.com/evolve-os/${PN}/releases/download/v${PV}/${P}.tar.xz -> ${P}.tar.xz"
+    KEYWORDS="~amd64 ~x86"
 fi
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS="~amd64 ~x86"
 IUSE=""
 
 RDEPEND="
