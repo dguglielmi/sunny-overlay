@@ -4,6 +4,7 @@
 EAPI=5
 
 VALA_MIN_API_VERSION="0.22"
+GNOME2_LA_PUNT="yes"
 
 inherit gnome2 vala
 
@@ -53,7 +54,7 @@ src_unpack() {
 
 src_prepare() {
     if [[ ${PV} == "9999" ]] ; then
-        ./autogen.sh VALAC=$(type -P true)
+		eautoreconf
     else
         default_src_prepare
     fi
