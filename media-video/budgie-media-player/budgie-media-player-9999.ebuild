@@ -48,7 +48,7 @@ src_unpack() {
 
 src_prepare() {
     if [[ ${PV} == "9999" ]] ; then
-        ./autogen.sh
+        eautoreconf
     else
         default_src_prepare
     fi

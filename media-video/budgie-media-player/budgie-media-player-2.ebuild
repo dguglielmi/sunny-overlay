@@ -3,7 +3,7 @@
 # $Header: $
 EAPI=5
 
-inherit gnome2
+inherit gnome2 autotools
 
 DESCRIPTION="Evolve OS's Simple Media Player"
 HOMEPAGE="http://ikeydoherty.github.io/budgie/"
@@ -12,7 +12,7 @@ if [[ ${PV} == "9999" ]] ; then
     EGIT_REPO_URI="https://github.com/evolve-os/${PN}.git"
     SRC_URI=""
     KEYWORDS=""
-    inherit git-r3 autotools
+    inherit git-r3
 else
     SRC_URI="https://github.com/evolve-os/${PN}/archive/v${PV}.tar.gz -> ${P}.tar.gz"
     KEYWORDS="~amd64 ~x86"
@@ -47,5 +47,5 @@ src_unpack() {
 }
 
 src_prepare() {
-    ./autogen.sh
+    eautoreconf
 }
