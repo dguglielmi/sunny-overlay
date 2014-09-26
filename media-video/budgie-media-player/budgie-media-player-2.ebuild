@@ -26,8 +26,8 @@ RDEPEND="
     >=dev-libs/glib-2.38:2
     >=x11-libs/gtk+-3.10.0:3
     >=media-libs/gstreamer-1.0.10:1.0
-	>=media-libs/gst-plugins-base-1.0.1:1.0
-	media-libs/id3lib"
+    >=media-libs/gst-plugins-base-1.0.1:1.0
+    media-libs/id3lib"
 
 if [[ ${PV} == "9999" ]] ; then
     RDEPEND="${RDEPEND}

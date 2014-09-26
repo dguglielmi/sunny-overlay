@@ -54,7 +54,7 @@ src_unpack() {
 
 src_prepare() {
     if [[ ${PV} == "9999" ]] ; then
-		eautoreconf
+        eautoreconf
     else
         default_src_prepare
     fi
