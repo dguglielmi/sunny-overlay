@@ -6,18 +6,18 @@ EAPI=5
 
 inherit gnome2
 
-DESCRIPTION="Evolve OS Artwork"
-HOMEPAGE="https://github.com/evolve-os/artwork"
+DESCRIPTION="Solus Project Artwork"
+HOMEPAGE="https://github.com/solus-project/artwork"
 
 MY_PN=${PN/backgrounds/artwork}
 
 if [[ ${PV} == "9999" ]] ; then
-    EGIT_REPO_URI="https://github.com/evolve-os/${MY_PN##*-}.git"
+    EGIT_REPO_URI="https://github.com/solus-project/${MY_PN##*-}.git"
     SRC_URI=""
     KEYWORDS=""
     inherit git-r3 autotools
 else
-    SRC_URI="https://github.com/evolve-os/${MY_PN##*-}/releases/download/v${PV}/${MY_PN}-${PV}.tar.xz -> ${P}.tar.xz"
+    SRC_URI="https://github.com/solus-project/${MY_PN##*-}/releases/download/v${PV}/evolveos-artwork-${PV}.tar.xz -> ${P}.tar.xz"
     S="${WORKDIR}/${MY_PN}-${PV}"
     KEYWORDS="~amd64 ~x86"
 fi
