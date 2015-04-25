@@ -29,7 +29,10 @@ IUSE=""
 RDEPEND=""
 DEPEND="${RDEPEND}"
 
+S=${WORKDIR}/evolveos-artwork-${PV}
+
 src_prepare() {
+
     if [[ ${PV} == "9999" ]] ; then
         eautoreconf
     else
