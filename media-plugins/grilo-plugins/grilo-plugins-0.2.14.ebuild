@@ -19,7 +19,7 @@ IUSE="daap +dvd flickr freebox gnome-online-accounts lua pocket thetvdb tracker 
 RDEPEND="
 	>=dev-libs/glib-2.36:2
 	>=media-libs/grilo-0.2.11:${SLOT}[network,playlist]
-	>=media-libs/libmediaart-0.1
+	>=media-libs/libmediaart-1.9:2.0
 	>=dev-libs/gom-0.2.1
 
 	dev-libs/gmime:2.6
@@ -56,16 +56,6 @@ DEPEND="${RDEPEND}
 	>=dev-util/intltool-0.40.0
 	virtual/pkgconfig
 "
-
-src_prepare() {
-
-    epatch "${FILESDIR}/${P}-0001-fix-thumbnail-url-not-getting-saved.patch"
-    epatch "${FILESDIR}/${P}-0002-fix-updating-bookmarks.patch"
-    epatch "${FILESDIR}/${P}-0003-tracker-correctly-set-title-from-filename.patch"
-    epatch "${FILESDIR}/${P}-0004-bookmarks-only-emit-item-removed-if-actually-removed.patch"
-
-    gnome2_src_prepare
-}
 
 src_configure() {
 	# --enable-debug only changes CFLAGS, useless for us
