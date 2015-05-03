@@ -1,0 +1,31 @@
+From dd2b351e5bdc31da2b047b5a009825209cf0d492 Mon Sep 17 00:00:00 2001
+From: Bastien Nocera <hadess@hadess.net>
+Date: Thu, 23 Apr 2015 17:19:31 +0200
+Subject: grilo: Add debug statements
+
+https://bugzilla.gnome.org/show_bug.cgi?id=746165
+
+diff --git a/src/totem-grilo.c b/src/totem-grilo.c
+index 733d9c9..a0c9027 100644
+--- a/src/totem-grilo.c
++++ b/src/totem-grilo.c
+@@ -2487,6 +2487,8 @@ totem_grilo_finalize (GObject *object)
+ void
+ totem_grilo_start (TotemGrilo *self)
+ {
++	g_debug ("TotemGrilo: Resuming videos thumbnailing");
++
+ 	totem_grilo_resume_icon_thumbnailing ();
+ 
+ 	if (self->priv->plugins_loaded)
+@@ -2501,6 +2503,7 @@ totem_grilo_start (TotemGrilo *self)
+ void
+ totem_grilo_pause (TotemGrilo *self)
+ {
++	g_debug ("TotemGrilo: Pausing videos thumbnailing");
+ 	totem_grilo_pause_icon_thumbnailing ();
+ }
+ 
+-- 
+cgit v0.10.2
+

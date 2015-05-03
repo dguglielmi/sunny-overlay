@@ -1,0 +1,23 @@
+From fa130c465423038db5636aa5cb977e90f0794ac8 Mon Sep 17 00:00:00 2001
+From: Bastien Nocera <hadess@hadess.net>
+Date: Fri, 24 Apr 2015 15:58:23 +0200
+Subject: grilo: Make thumbnail reading cancellable
+
+https://bugzilla.gnome.org/show_bug.cgi?id=748370
+
+diff --git a/src/icon-helpers.c b/src/icon-helpers.c
+index 08d556a..feb15b3 100644
+--- a/src/icon-helpers.c
++++ b/src/icon-helpers.c
+@@ -296,7 +296,7 @@ totem_grilo_get_thumbnail (GObject             *object,
+ 
+ 	file = g_file_new_for_uri (url_thumb);
+ 	g_task_set_task_data (task, file, g_object_unref);
+-	g_file_read_async (file, G_PRIORITY_DEFAULT, NULL,
++	g_file_read_async (file, G_PRIORITY_DEFAULT, cancellable,
+ 			   get_stream_thumbnail_cb, task);
+ }
+ 
+-- 
+cgit v0.10.2
+

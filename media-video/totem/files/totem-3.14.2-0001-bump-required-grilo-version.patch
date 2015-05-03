@@ -1,0 +1,23 @@
+From ef3da6bbf05dfdc8d0c289f3134b67f3eea925e9 Mon Sep 17 00:00:00 2001
+From: Bastien Nocera <hadess@hadess.net>
+Date: Wed, 11 Feb 2015 11:49:47 +0100
+Subject: build: Bump required grilo for GRL_METADATA_KEY_TITLE_FROM_FILENAME
+
+https://bugzilla.gnome.org/show_bug.cgi?id=744315
+
+diff --git a/configure.ac b/configure.ac
+index 65e3069..20ec003 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -59,7 +59,7 @@ VALA_REQS=0.14.1
+ PEAS_REQS=1.1.0
+ PYTHON_REQS=2.3
+ PYGOBJECT_REQS=2.90.3
+-GRILO_REQS=0.2.10
++GRILO_REQS=0.2.11
+ GRILO_PLS_REQS=0.2.1
+ LIBXML_REQS=2.6.0
+ 
+-- 
+cgit v0.10.2
+

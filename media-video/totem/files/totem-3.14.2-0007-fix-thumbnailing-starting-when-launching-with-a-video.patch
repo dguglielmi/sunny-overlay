@@ -1,0 +1,91 @@
+From 295b6d0896177b0f3f778fb0fc1b0efd5595fde3 Mon Sep 17 00:00:00 2001
+From: Bastien Nocera <hadess@hadess.net>
+Date: Thu, 23 Apr 2015 17:21:44 +0200
+Subject: main: Fix thumbnailing starting when launching with a video
+
+We were previously relying on optionstate.filenames being non-NULL to
+avoid starting thumbnailing when the user opened the player with a
+video, but that actually caused doubly-adding those files passed on the
+command-line, and didn't work when the Open() GApplication method was
+used.
+
+Use a separate option to keep track of whether to start populating the
+grilo icon view and thumbnailing, so that thumbnailing doesn't hamper
+playback performance.
+
+https://bugzilla.gnome.org/show_bug.cgi?id=746165
+
+diff --git a/src/totem-object.c b/src/totem-object.c
+index 5ec8255..b9eb2f2 100644
+--- a/src/totem-object.c
++++ b/src/totem-object.c
+@@ -145,6 +145,8 @@ totem_object_app_open (GApplication  *application,
+ 	GSList *slist = NULL;
+ 	int i;
+ 
++	optionstate.had_filenames = (n_files > 0);
++
+ 	g_application_activate (application);
+ 
+ 	totem_object_set_main_page (TOTEM_OBJECT (application), "player");
+@@ -237,21 +239,23 @@ totem_object_app_activate (GApplication *app)
+ 	 * it comes from a plugin */
+ 	totem_object_plugins_init (totem);
+ 
+-	if (optionstate.filenames == NULL) {
+-		totem_object_set_main_page (totem, "grilo");
+-		if (totem_session_try_restore (totem) == FALSE)
++	/* We're only supposed to be called from totem_object_app_handle_local_options()
++	 * and totem_object_app_open() */
++	g_assert (optionstate.filenames == NULL);
++
++	if (!optionstate.had_filenames) {
++		if (totem_session_try_restore (totem) == FALSE) {
++			totem_object_set_main_page (totem, "grilo");
+ 			totem_object_set_mrl (totem, NULL, NULL);
++		} else {
++			totem_object_set_main_page (totem, "player");
++		}
+ 	} else {
+ 		totem_object_set_main_page (totem, "player");
+-		if (totem_object_open_files (totem, optionstate.filenames))
+-			totem_object_play_pause (totem);
+-		else
+-			totem_object_set_mrl (totem, NULL, NULL);
+-
+-		g_strfreev (optionstate.filenames);
+-		optionstate.filenames = NULL;
+ 	}
+ 
++	optionstate.had_filenames = FALSE;
++
+ 	/* Set the logo at the last minute so we won't try to show it before a video */
+ 	bacon_video_widget_set_logo (totem->bvw, "totem");
+ 
+diff --git a/src/totem-options.c b/src/totem-options.c
+index daba578..06b4f7c 100644
+--- a/src/totem-options.c
++++ b/src/totem-options.c
+@@ -106,6 +106,7 @@ totem_options_process_for_server (Totem               *totem,
+ 
+ 	filenames = options->filenames;
+ 	options->filenames = NULL;
++	options->had_filenames = (filenames != NULL);
+ 
+ 	/* Send the files to enqueue */
+ 	for (i = 0; filenames && filenames[i] != NULL; i++) {
+diff --git a/src/totem-options.h b/src/totem-options.h
+index 662b775..f388706 100644
+--- a/src/totem-options.h
++++ b/src/totem-options.h
+@@ -48,6 +48,7 @@ typedef struct {
+ 	gboolean replace;
+ 	gint64 seek;
+ 	gchar **filenames;
++	gboolean had_filenames;
+ } TotemCmdLineOptions;
+ 
+ extern const GOptionEntry all_options[];
+-- 
+cgit v0.10.2
+

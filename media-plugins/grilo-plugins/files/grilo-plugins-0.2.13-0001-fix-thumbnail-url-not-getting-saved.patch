@@ -1,0 +1,24 @@
+From 734936dbe166526a1e2ebdc1ffebbab64b2216ee Mon Sep 17 00:00:00 2001
+From: Bastien Nocera <hadess@hadess.net>
+Date: Tue, 14 Oct 2014 19:30:36 +0200
+Subject: bookmarks: Fix thumbnail URL not getting saved
+
+A cut'n'paste error meant that we saved the description instead of
+the thumbnail URL in that field.
+
+diff --git a/src/bookmarks/grl-bookmarks.c b/src/bookmarks/grl-bookmarks.c
+index d2b4797..b6b49f6 100644
+--- a/src/bookmarks/grl-bookmarks.c
++++ b/src/bookmarks/grl-bookmarks.c
+@@ -718,7 +718,7 @@ store_bookmark (GrlBookmarksSource *bookmarks_source,
+                               GRLKEYID_TO_POINTER (GRL_METADATA_KEY_DESCRIPTION));
+   }
+   if (thumb) {
+-    g_object_set (G_OBJECT (resource), "thumbnail-url", desc, NULL);
++    g_object_set (G_OBJECT (resource), "thumbnail-url", thumb, NULL);
+     *keylist = g_list_remove (*keylist,
+                               GRLKEYID_TO_POINTER (GRL_METADATA_KEY_THUMBNAIL));
+   }
+-- 
+cgit v0.10.2
+

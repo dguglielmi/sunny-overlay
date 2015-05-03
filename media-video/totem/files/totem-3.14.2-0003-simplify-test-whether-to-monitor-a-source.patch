@@ -1,0 +1,31 @@
+From dc35bff8a374ba1cf28212a79e15609f7acfdcd3 Mon Sep 17 00:00:00 2001
+From: Bastien Nocera <hadess@hadess.net>
+Date: Sun, 29 Mar 2015 15:22:18 +0200
+Subject: grilo: Simplify test whether to monitor a source
+
+A little bit cleaner.
+
+diff --git a/src/totem-grilo.c b/src/totem-grilo.c
+index 7408a9b..20580dd 100644
+--- a/src/totem-grilo.c
++++ b/src/totem-grilo.c
+@@ -1297,12 +1297,12 @@ source_added_cb (GrlRegistry *registry,
+ 							   MODEL_RESULTS_IS_PRETHUMBNAIL, TRUE,
+ 							   MODEL_RESULTS_CAN_REMOVE, can_remove (source, NULL),
+ 							   -1);
+-			monitor = TRUE;
++
++			if (g_str_equal (id, "grl-filesystem") == FALSE)
++				monitor = TRUE;
+ 		}
+ 
+-		if (monitor &&
+-		    (ops & GRL_OP_NOTIFY_CHANGE) &&
+-		    g_str_equal (id, "grl-filesystem") == FALSE) {
++		if (monitor && (ops & GRL_OP_NOTIFY_CHANGE)) {
+ 			grl_source_notify_change_start (source, NULL);
+ 			g_signal_connect (G_OBJECT (source), "content-changed",
+ 					  G_CALLBACK (content_changed_cb), self);
+-- 
+cgit v0.10.2
+
