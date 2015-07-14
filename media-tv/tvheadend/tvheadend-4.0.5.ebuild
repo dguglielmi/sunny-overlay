@@ -6,11 +6,9 @@ EAPI=5
 
 inherit eutils linux-info systemd toolchain-funcs user
 
-MY_PV="3.4patch1"
-
 DESCRIPTION="Tvheadend is a TV streaming server and digital video recorder"
 HOMEPAGE="https://tvheadend.org/"
-SRC_URI="https://github.com/${PN}/${PN}/archive/${MY_PV}.tar.gz -> ${P}.tar.gz"
+SRC_URI="https://github.com/${PN}/${PN}/archive/v${PV}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -33,21 +31,15 @@ RDEPEND="${DEPEND}
 	dvbscan? ( media-tv/linuxtv-dvb-apps )
 	xmltv? ( media-tv/xmltv )"
 
-S="${WORKDIR}/${PN}-${MY_PV}"
-
 CONFIG_CHECK="~INOTIFY_USER"
 
-DOCS=( README )
+DOCS=( README.md )
 
 pkg_setup() {
 	enewuser tvheadend -1 -1 /dev/null video
 }
 
 src_prepare() {
-	# set the version number
-	echo "const char *tvheadend_version = \"${PV}\";" \
-		> src/version.c || die "setting version failed!"
-
 	# remove '-Werror' wrt bug #438424
 	sed -e 's:-Werror::' -i Makefile || die 'sed failed!'
 }
