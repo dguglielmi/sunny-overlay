@@ -16,9 +16,9 @@ SRC_URI="https://github.com/gnumdk/lollypop/releases/download/${PV}/${P}.tar.xz"
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="~x86 ~amd64"
-IUSE=""
+IUSE="+lastfm +wikipedia"
 
-IUSE+=" +python_single_target_python3_3 python_single_target_python3_4"
+IUSE+=" python_single_target_python3_3 +python_single_target_python3_4"
 
 RDEPEND="${PYTHON_DEPS}
     >=x11-libs/gtk+-3.13.2:3[introspection]
@@ -26,8 +26,9 @@ RDEPEND="${PYTHON_DEPS}
     dev-python/pygobject:3[cairo,${PYTHON_USEDEP}]                              
 	dev-python/dbus-python[${PYTHON_USEDEP}]                                    
 	media-libs/gstreamer:1.0[introspection] 
-    >=dev-python/pylast-1.0.0
     >=dev-libs/totem-pl-parser-3.10.4
+    lastfm? ( >=dev-python/pylast-1.0.0 )
+    wikipedia? ( >=dev-python/wikipedia-1.4.0 )
 "
 DEPEND="${RDEPEND}
     >=dev-util/intltool-0.26 
