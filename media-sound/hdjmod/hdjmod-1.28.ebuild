@@ -8,7 +8,7 @@ inherit eutils linux-mod rpm
 
 DESCRIPTION="Hercules DJ devices kernel module driver"
 HOMEPAGE="http://ts.hercules.com/"
-SRC_URI="ftp://ftp.hercules.com/pub/webupdate/DJCSeries/Hercules_DJSeries_Linux.tgz"
+SRC_URI="ftp://ftp.hercules.com/pub/webupdate/DJCSeries/Legacy/Hercules_DJSeries_Linux.tgz"
 
 LICENSE="GPL-2"
 SLOT="0"
