@@ -8,10 +8,11 @@ How to use this overlay ?
 
 To use this overlay follow those steps
 
-- First you need to install layman
+- First you need to install layman and source layman configuration from your make.conf
 
 ```
 # emerge -av app-portage/layman
+# echo "source /var/lib/layman/make.conf" >> /etc/portage/make.conf
 ```
 
 - Add sunny-overlay's layman configuration
