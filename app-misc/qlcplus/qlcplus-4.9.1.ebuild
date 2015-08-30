@@ -13,15 +13,24 @@ SRC_URI="http://www.qlcplus.org/downloads/${PV}/${PN}_${PV}.tar.gz"
 LICENSE="Apache-2.0"
 SLOT="0"
 KEYWORDS="~amd64"
-IUSE="+fixtures-editor +httpd midi opendmx ola peperoni udmx"
+
+IUSE="+fixtures-editor +httpd midi opendmx ola peperoni +qt4 qt5 udmx"
+REQUIRED_USE="^^ ( qt4 qt5 )"
 
 LINGUAS="fr"
 
 DEPEND="
-	>=dev-qt/qtcore-4.6:4
-	>=dev-qt/qtgui-4.6:4
-	>=dev-qt/qttest-4.6:4
 	>=media-libs/alsa-lib-1.0.23
+	qt4? (	>=dev-qt/qtcore-4.6:4
+		>=dev-qt/qtgui-4.6:4
+		>=dev-qt/qttest-4.6:4 )
+	qt5? (	>=dev-qt/qtcore-5.4:5
+		>=dev-qt/qtgui-5.4:5
+		>=dev-qt/qttest-5.4:5
+		>=dev-qt/qtmultimedia-5.4:5[widgets]
+		>=dev-qt/qtscript-5.4:5
+		>=dev-qt/qtwidgets-5.4:5
+		>=dev-qt/qtxml-5.4:5 )
 	opendmx? ( >=dev-embedded/libftdi-0.17
 		virtual/libusb:0 )
 	ola? ( >=app-misc/ola-0.9.7 )
@@ -81,7 +90,11 @@ src_prepare() {
 }
 
 src_configure() {
-	eqmake4
+	if use qt5 ; then
+		eqmake5
+	else
+		eqmake4
+	fi
 }
 
 src_install() {
