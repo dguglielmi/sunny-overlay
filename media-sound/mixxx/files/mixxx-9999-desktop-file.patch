@@ -1,0 +1,11 @@
+--- a/res/linux/mixxx.desktop	2015-09-10 22:28:43.231867210 +0200
++++ b/res/linux/mixxx.desktop	2015-09-10 22:28:53.331800347 +0200
+@@ -3,7 +3,7 @@
+ Name=Mixxx
+ GenericName=Digital DJ interface
+ Comment=A digital DJ interface
+-Exec=pasuspender mixxx || mixxx
++Exec=pasuspender mixxx
+ Terminal=false
+ Icon=mixxx-icon
+ Type=Application
