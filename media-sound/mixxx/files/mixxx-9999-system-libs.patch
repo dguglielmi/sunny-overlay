@@ -2,35 +2,6 @@ diff --git a/build/depends.py b/build/depends.py
 index 77f4c4f..a3d0df0 100644
 --- a/build/depends.py
 +++ b/build/depends.py
-@@ -347,25 +347,10 @@ class TestHeaders(Dependence):
- 
- class FidLib(Dependence):
- 
--    def sources(self, build):
--        symbol = None
--        if build.platform_is_windows:
--            if build.toolchain_is_msvs:
--                symbol = 'T_MSVC'
--            elif build.crosscompile:
--                # Not sure why, but fidlib won't build with mingw32msvc and
--                # T_MINGW
--                symbol = 'T_LINUX'
--            elif build.toolchain_is_gnu:
--                symbol = 'T_MINGW'
--        else:
--            symbol = 'T_LINUX'
--
--        return [build.env.StaticObject('#lib/fidlib-0.9.10/fidlib.c',
--                                       CPPDEFINES=symbol)]
--
-     def configure(self, build, conf):
--        build.env.Append(CPPPATH='#lib/fidlib-0.9.10/')
-+        if not conf.CheckLib('fidlib'):
-+            raise Exception('Did not find fidlib library, exiting!')
-+        build.env.Append(CPPPATH=[SCons.ARGUMENTS.get('prefix') + '/include/fidlib'])
- 
- 
- class ReplayGain(Dependence):
 @@ -378,42 +363,17 @@ class ReplayGain(Dependence):
  
  
