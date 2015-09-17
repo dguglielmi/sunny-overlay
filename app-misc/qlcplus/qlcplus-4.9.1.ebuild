@@ -21,18 +21,24 @@ LINGUAS="fr"
 
 DEPEND="
 	>=media-libs/alsa-lib-1.0.23
-	qt4? (	>=dev-qt/qtcore-4.6:4
+	qt4? (
+		>=dev-qt/qtcore-4.6:4
 		>=dev-qt/qtgui-4.6:4
-		>=dev-qt/qttest-4.6:4 )
-	qt5? (	>=dev-qt/qtcore-5.4:5
+		>=dev-qt/qttest-4.6:4
+	)
+	qt5? (
+		>=dev-qt/qtcore-5.4:5
 		>=dev-qt/qtgui-5.4:5
 		>=dev-qt/qttest-5.4:5
 		>=dev-qt/qtmultimedia-5.4:5[widgets]
 		>=dev-qt/qtscript-5.4:5
 		>=dev-qt/qtwidgets-5.4:5
-		>=dev-qt/qtxml-5.4:5 )
-	opendmx? ( >=dev-embedded/libftdi-0.17
-		virtual/libusb:0 )
+		>=dev-qt/qtxml-5.4:5
+	)
+	opendmx? (
+		>=dev-embedded/libftdi-0.17
+		virtual/libusb:0
+	)
 	ola? ( >=app-misc/ola-0.9.7 )
 	peperoni? ( virtual/libusb:0 )
 	udmx? ( virtual/libusb:0 )
