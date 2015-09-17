@@ -49,7 +49,7 @@ auto-sync = yes
 EOF
 ```
 
--  Fetch & display a list of all the overlays
+-  Fetch & display all overlays list
 
 ```
 # layman -L
