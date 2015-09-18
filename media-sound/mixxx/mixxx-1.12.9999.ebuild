@@ -74,7 +74,6 @@ src_prepare() {
 	epatch "${FILESDIR}"/${PN}-1.12.9999-system-libs.patch
 	epatch "${FILESDIR}"/${PN}-1.12.9999-docs.patch
 	epatch "${FILESDIR}"/${PN}-1.12.9999-desktop-file.patch
-	epatch "${FILESDIR}"/${PN}-1.12.9999-use-cpp-built-in-types.patch
 
 	# use multilib compatible directory for plugins
 	sed -i -e "/unix_lib_path =/s/'lib'/'$(get_libdir)'/" src/SConscript || die
