@@ -14,7 +14,8 @@ EGIT_BRANCH="1.12"
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS=""
-IUSE="aac debug doc ffmpeg hid mp3 mp4 pulseaudio shout wavpack"
+IUSE="aac debug doc ffmpeg hid mp3 mp4 pulseaudio +qt4 qt5 shout wavpack"
+REQUIRED_USE="^^ ( qt4 qt5 )"
 
 RDEPEND="dev-libs/protobuf
 	media-libs/chromaprint
@@ -32,13 +33,29 @@ RDEPEND="dev-libs/protobuf
 	sci-libs/fftw:3.0
 	virtual/glu
 	virtual/opengl
-	dev-qt/qtgui:4
-	dev-qt/qtopengl:4
-	dev-qt/qtsql:4
-	dev-qt/qtsvg:4
-	dev-qt/qttest:4
-	dev-qt/qtwebkit:4
-	dev-qt/qtxmlpatterns:4
+	qt4? (
+		dev-qt/qtgui:4
+		dev-qt/qtopengl:4
+		dev-qt/qtsql:4
+		dev-qt/qtsvg:4
+		dev-qt/qttest:4
+		dev-qt/qtwebkit:4
+		dev-qt/qtxmlpatterns:4
+	)
+	qt5? (
+		>=dev-qt/qtscript-5.4.2:5[scripttools]
+		>=dev-qt/qtsvg-5.4.2:5
+		>=dev-qt/qtsql-5.4.2:5
+		>=dev-qt/qtxml-5.4.2:5
+		>=dev-qt/qtopengl-5.4.2:5
+		>=dev-qt/qtgui-5.4.2:5
+		>=dev-qt/qtnetwork-5.4.2:5
+		>=dev-qt/qtcore-5.4.2:5
+		>=dev-qt/qtwidgets-5.4.2:5
+		>=dev-qt/qttest-5.4.2:5
+		>=dev-qt/qtxmlpatterns-5.4.2:5
+		>=dev-qt/qtconcurrent-5.4.2:5
+	)
 	aac? (
 		media-libs/faad2
 		media-libs/libmp4v2:0
@@ -54,9 +71,10 @@ DEPEND="${RDEPEND}
 	virtual/pkgconfig"
 
 src_prepare() {
-	epatch "${FILESDIR}"/${PN}-9999-system-libs.patch
-	epatch "${FILESDIR}"/${PN}-9999-docs.patch
-	epatch "${FILESDIR}"/${PN}-9999-desktop-file.patch
+	epatch "${FILESDIR}"/${PN}-1.12.9999-system-libs.patch
+	epatch "${FILESDIR}"/${PN}-1.12.9999-docs.patch
+	epatch "${FILESDIR}"/${PN}-1.12.9999-desktop-file.patch
+	epatch "${FILESDIR}"/${PN}-1.12.9999-use-cpp-built-in-types.patch
 
 	# use multilib compatible directory for plugins
 	sed -i -e "/unix_lib_path =/s/'lib'/'$(get_libdir)'/" src/SConscript || die
@@ -68,12 +86,19 @@ src_prepare() {
 }
 
 src_configure() {
+	if use qt5 ; then
+		QTDIR=${EPREFIX}/usr/$(get_libdir)/qt5
+	else
+		QTDIR=${EPREFIX}/usr/$(get_libdir)/qt4
+	fi
+
 	myesconsargs=(
 		prefix="${EPREFIX}/usr"
-		qtdir="${EPREFIX}/usr/$(get_libdir)/qt4"
+		qtdir="${QTDIR}"
 		hifieq=1
 		vinylcontrol=1
 		optimize=0
+		$(use_scons qt5)
 		$(use_scons aac faad)
 		$(use_scons debug qdebug)
 		$(use_scons hid hid)
