@@ -34,6 +34,7 @@ DEPEND="
 		>=dev-qt/qtscript-5.4:5
 		>=dev-qt/qtwidgets-5.4:5
 		>=dev-qt/qtxml-5.4:5
+		>=dev-qt/linguist-tools-5.4:5
 	)
 	opendmx? (
 		>=dev-embedded/libftdi-0.17
@@ -56,12 +57,12 @@ src_prepare() {
 
 	sed -i -e '/^unix:!macx:LIBSDIR =/s#lib#'$(get_libdir)'#1' variables.pri || die
 
-    if use qt5 ; then
-        export QT_SELECT=qt5
-        sed -i -e '/^unix:!macx:PLUGINDIR =/s#qt4#qt5#1' variables.pri || die
-    else
-        export QT_SELECT=qt4
-    fi
+	if use qt5 ; then
+		export QT_SELECT=qt5
+		sed -i -e '/^unix:!macx:PLUGINDIR =/s#qt4#qt5#1' variables.pri || die
+	else
+		export QT_SELECT=qt4
+	fi
 
 	if ! use fixtures-editor ; then
 		sed -i -e '/SUBDIRS      += fixtureeditor/d' qlc.pro || die
