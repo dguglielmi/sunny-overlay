@@ -56,6 +56,13 @@ src_prepare() {
 
 	sed -i -e '/^unix:!macx:LIBSDIR =/s#lib#'$(get_libdir)'#1' variables.pri || die
 
+    if use qt5 ; then
+        export QT_SELECT=qt5
+        sed -i -e '/^unix:!macx:PLUGINDIR =/s#qt4#qt5#1' variables.pri || die
+    else
+        export QT_SELECT=qt4
+    fi
+
 	if ! use fixtures-editor ; then
 		sed -i -e '/SUBDIRS      += fixtureeditor/d' qlc.pro || die
 		sed -i -e '/desktop.files/s# qlcplus-fixtureeditor.desktop##g' etc/etc.pro || die

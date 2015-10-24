@@ -57,6 +57,9 @@ src_prepare() {
 		plugins/udmx/src/src.pro || die "Change udev rules path failed"
 
 	sed -i -e '/^unix:!macx:LIBSDIR =/s#lib#'$(get_libdir)'#1' variables.pri || die
+    if use qt5 ; then
+        sed -i -e '/^unix:!macx:PLUGINDIR =/s#qt4#qt5#1' variables.pri || die
+    fi
 
 	if ! use fixtures-editor ; then
 		sed -i -e '/SUBDIRS      += fixtureeditor/d' qlc.pro || die
