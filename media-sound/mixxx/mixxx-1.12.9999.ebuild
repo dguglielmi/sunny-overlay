@@ -33,6 +33,7 @@ RDEPEND="dev-libs/protobuf
 	sci-libs/fftw:3.0
 	virtual/glu
 	virtual/opengl
+	>=media-libs/libshout-2.3
 	qt4? (
 		dev-qt/qtgui:4
 		dev-qt/qtopengl:4
