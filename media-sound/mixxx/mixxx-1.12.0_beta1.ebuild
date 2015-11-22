@@ -72,7 +72,7 @@ DEPEND="${RDEPEND}
 S="${WORKDIR}/${PN}-release-${PV/_/-}"
 
 src_prepare() {
-	epatch "${FILESDIR}"/${PN}-1.12.9999-system-libs.patch
+	epatch "${FILESDIR}"/${PN}-1.12.0_beta1-system-libs.patch
 	epatch "${FILESDIR}"/${PN}-1.12.9999-docs.patch
 	epatch "${FILESDIR}"/${PN}-1.12.0_beta1-use-cpp-built-in-types.patch
 

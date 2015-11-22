@@ -1,8 +1,12 @@
-diff -dNur a/build/depends.py b/build/depends.py
---- a/build/depends.py	2015-11-22 21:50:35.703506778 +0100
-+++ b/build/depends.py	2015-11-22 21:54:50.603417604 +0100
-@@ -403,40 +403,15 @@
-     SOUNDTOUCH_PATH = 'soundtouch-1.8.0'
+diff --git a/build/depends.py b/build/depends.py
+index 77f4c4f..a3d0df0 100644
+--- a/build/depends.py
++++ b/build/depends.py
+@@ -378,42 +363,17 @@ class ReplayGain(Dependence):
+ 
+ 
+ class SoundTouch(Dependence):
+-    SOUNDTOUCH_PATH = 'soundtouch-1.8.0'
  
      def sources(self, build):
 -        return ['engine/enginebufferscalest.cpp',
@@ -36,21 +40,21 @@ diff -dNur a/build/depends.py b/build/depends.py
 -
 -        # If we do not want optimizations then disable them.
 -        optimize = (build.flags['optimize'] if 'optimize' in build.flags
--                    else Optimize.get_optimization_level(build))
+-                    else Optimize.get_optimization_level())
 -        if optimize == Optimize.LEVEL_OFF:
 -            env.Append(CPPDEFINES='SOUNDTOUCH_DISABLE_X86_OPTIMIZATIONS')
--
 +        if not conf.CheckLib(['SoundTouch','libSoundTouch']):
 +            raise Exception('Did not find SoundTouch library, exiting!')
 +        build.env.Append(CPPPATH=[SCons.ARGUMENTS.get('prefix') + '/include/soundtouch'])
 +        build.env.Append(LIBS='SoundTouch')
  
+ 
  class RubberBand(Dependence):
-     def sources(self, build):
-diff -dNur a/build/features.py b/build/features.py
---- a/build/features.py	2015-11-22 21:50:35.703506778 +0100
-+++ b/build/features.py	2015-11-22 21:51:44.230407521 +0100
-@@ -45,7 +45,6 @@
+diff --git a/build/features.py b/build/features.py
+index 2ef1ecd..c100f3b 100644
+--- a/build/features.py
++++ b/build/features.py
+@@ -45,7 +45,6 @@ class HSS1394(Feature):
  
  
  class HID(Feature):
@@ -58,7 +62,7 @@ diff -dNur a/build/features.py b/build/features.py
  
      def description(self):
          return "HID controller support"
-@@ -62,10 +61,6 @@
+@@ -62,10 +61,6 @@ class HID(Feature):
      def configure(self, build, conf):
          if not self.enabled(build):
              return
@@ -69,7 +73,7 @@ diff -dNur a/build/features.py b/build/features.py
  
          if build.platform_is_linux:
              build.env.ParseConfig(
-@@ -89,23 +84,18 @@
+@@ -89,23 +84,18 @@ class HID(Feature):
              build.env.AppendUnique(FRAMEWORKS=['IOKit', 'CoreFoundation'])
  
          build.env.Append(CPPDEFINES='__HID__')
@@ -99,9 +103,9 @@ diff -dNur a/build/features.py b/build/features.py
          return sources
  
  
-@@ -744,24 +734,15 @@
-             test_env.Append(CCFLAGS='-pthread')
-             test_env.Append(LINKFLAGS='-pthread')
+@@ -717,24 +707,15 @@ class TestSuite(Feature):
+         test_env.Append(CCFLAGS='-pthread')
+         test_env.Append(LINKFLAGS='-pthread')
  
 -        test_env.Append(CPPPATH="#lib/gtest-1.7.0/include")
 -        gtest_dir = test_env.Dir("#lib/gtest-1.7.0")
