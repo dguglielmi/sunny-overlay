@@ -33,7 +33,6 @@ RDEPEND="dev-libs/protobuf
 	sci-libs/fftw:3.0
 	virtual/glu
 	virtual/opengl
-	>=media-libs/libshout-2.3
 	qt4? (
 		dev-qt/qtgui:4
 		dev-qt/qtopengl:4
@@ -74,6 +73,7 @@ DEPEND="${RDEPEND}
 src_prepare() {
 	epatch "${FILESDIR}"/${PN}-1.12.9999-system-libs.patch
 	epatch "${FILESDIR}"/${PN}-1.12.9999-docs.patch
+	epatch "${FILESDIR}"/${PN}-1.12.9999-optional-libshout.patch
 
 	# use multilib compatible directory for plugins
 	sed -i -e "/unix_lib_path =/s/'lib'/'$(get_libdir)'/" src/SConscript || die
