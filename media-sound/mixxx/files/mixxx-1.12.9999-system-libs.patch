@@ -1,7 +1,7 @@
 diff -dNur a/build/depends.py b/build/depends.py
---- a/build/depends.py	2015-11-22 21:50:35.703506778 +0100
-+++ b/build/depends.py	2015-11-22 21:54:50.603417604 +0100
-@@ -403,40 +403,15 @@
+--- a/build/depends.py	2015-12-01 17:29:47.731520477 +0000
++++ b/build/depends.py	2015-12-01 17:34:59.412854685 +0000
+@@ -403,39 +403,15 @@
      SOUNDTOUCH_PATH = 'soundtouch-1.8.0'
  
      def sources(self, build):
@@ -39,22 +39,21 @@ diff -dNur a/build/depends.py b/build/depends.py
 -                    else Optimize.get_optimization_level(build))
 -        if optimize == Optimize.LEVEL_OFF:
 -            env.Append(CPPDEFINES='SOUNDTOUCH_DISABLE_X86_OPTIMIZATIONS')
--
 +        if not conf.CheckLib(['SoundTouch','libSoundTouch']):
 +            raise Exception('Did not find SoundTouch library, exiting!')
 +        build.env.Append(CPPPATH=[SCons.ARGUMENTS.get('prefix') + '/include/soundtouch'])
 +        build.env.Append(LIBS='SoundTouch')
  
+ 
  class RubberBand(Dependence):
-     def sources(self, build):
 diff -dNur a/build/features.py b/build/features.py
---- a/build/features.py	2015-11-22 21:50:35.703506778 +0100
-+++ b/build/features.py	2015-11-22 21:51:44.230407521 +0100
+--- a/build/features.py	2015-12-01 17:29:47.731520477 +0000
++++ b/build/features.py	2015-12-01 17:40:15.398209140 +0000
 @@ -45,7 +45,6 @@
  
  
  class HID(Feature):
--    HIDAPI_INTERNAL_PATH = '#lib/hidapi-0.8.0-pre'
+-    HIDAPI_INTERNAL_PATH = '#lib/hidapi-0.8.0-rc1'
  
      def description(self):
          return "HID controller support"
@@ -69,19 +68,19 @@ diff -dNur a/build/features.py b/build/features.py
  
          if build.platform_is_linux:
              build.env.ParseConfig(
-@@ -89,23 +84,18 @@
-             build.env.AppendUnique(FRAMEWORKS=['IOKit', 'CoreFoundation'])
+@@ -90,25 +85,17 @@
  
          build.env.Append(CPPDEFINES='__HID__')
-+        
+ 
 +        if not conf.CheckLib('hidapi-libusb'):
 +            raise Exception('Did not find HID API library, exiting!')
 +        build.env.Append(CPPPATH=[SCons.ARGUMENTS.get('prefix') + '/include/hidapi'])
 +        build.env.Append(LIBS='hidapi-libusb')
 +
- 
++
      def sources(self, build):
-         sources = ['controllers/hid/hidcontroller.cpp',
+-        sources = ['controllers/hid/hidcontroller.cpp',
++        return ['controllers/hid/hidcontroller.cpp',
                     'controllers/hid/hidenumerator.cpp',
                     'controllers/hid/hidcontrollerpresetfilehandler.cpp']
  
@@ -91,15 +90,18 @@ diff -dNur a/build/features.py b/build/features.py
 -            sources.append(
 -                os.path.join(self.HIDAPI_INTERNAL_PATH, "windows/hid.c"))
 -        elif build.platform_is_linux:
+-            # hidapi compiles the libusb implementation by default on Linux
 -            sources.append(
--                os.path.join(self.HIDAPI_INTERNAL_PATH, 'linux/hid-libusb.c'))
+-                os.path.join(self.HIDAPI_INTERNAL_PATH, 'libusb/hid.c'))
 -        elif build.platform_is_osx:
 -            sources.append(
 -                os.path.join(self.HIDAPI_INTERNAL_PATH, 'mac/hid.c'))
-         return sources
+-        return sources
+-
  
- 
-@@ -744,24 +734,15 @@
+ class Bulk(Feature):
+     def description(self):
+@@ -745,25 +732,16 @@
              test_env.Append(CCFLAGS='-pthread')
              test_env.Append(LINKFLAGS='-pthread')
  
@@ -119,17 +121,17 @@ diff -dNur a/build/features.py b/build/features.py
 -        gmock_dir = test_env.Dir("#lib/gmock-1.7.0")
 -        # gmock_dir.addRepository(build.env.Dir('#lib/gmock-1.5.0'))
 -        test_env['LIB_OUTPUT'] = '#/lib/gmock-1.7.0/lib'
--
+ 
 -        env.SConscript(env.File('SConscript', gmock_dir))
 +        if not conf.CheckLib('gtest'):
 +            raise Exception('Did not find gtest library, exiting!')
 +        test_env.Append(CPPPATH=[SCons.ARGUMENTS.get('prefix') + '/include/gtest'])
 +        test_env.Append(LIBS='gtest')
-+ 
+ 
 +        if not conf.CheckLib('gmock'):
 +            raise Exception('Did not find gmock library, exiting!')
 +        test_env.Append(CPPPATH=[SCons.ARGUMENTS.get('prefix') + '/include/gmock'])
 +        test_env.Append(LIBS='gmock')
- 
          return []
+ 
  
