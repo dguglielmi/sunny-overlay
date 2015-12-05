@@ -27,6 +27,7 @@ RDEPEND="${PYTHON_DEPS}
 	dev-python/dbus-python[${PYTHON_USEDEP}]                                    
 	media-libs/gstreamer:1.0[introspection] 
     >=dev-libs/totem-pl-parser-3.10.4
+	x11-libs/libnotify[introspection]
     lastfm? ( >=dev-python/pylast-1.0.0 )
     wikipedia? ( >=dev-python/wikipedia-1.4.0 )
 "
