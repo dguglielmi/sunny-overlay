@@ -72,8 +72,9 @@ DEPEND="${RDEPEND}
 S="${WORKDIR}/${PN}-release-${PV/_/-}"
 
 src_prepare() {
-	epatch "${FILESDIR}"/${PN}-2.0.0_rc1-system-libs.patch
-	epatch "${FILESDIR}"/${PN}-2.0.0_rc1-docs.patch
+	epatch "${FILESDIR}"/${P}-system-libs.patch
+	epatch "${FILESDIR}"/${P}-docs.patch
+	epatch "${FILESDIR}"/${P}-prevent-null-networkstreamworker.patch
 
 	# use multilib compatible directory for plugins
 	sed -i -e "/unix_lib_path =/s/'lib'/'$(get_libdir)'/" src/SConscript || die
