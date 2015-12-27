@@ -1,9 +1,9 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 EAPI=5
 
-VALA_MIN_API_VERSION="0.22"
+VALA_MIN_API_VERSION="0.26"
 GNOME2_LA_PUNT="yes"
 
 inherit gnome2 vala
@@ -27,14 +27,14 @@ IUSE=""
 
 RDEPEND="
     >=media-sound/pulseaudio-4.0[glib]
-    >=x11-libs/gtk+-3.10.1:3
+    >=x11-libs/gtk+-3.14.7:3
     >=sys-power/upower-0.9.20[introspection]
     >=gnome-base/gnome-menus-3.10.1
     >=x11-libs/libwnck-3.4.7
-    >=x11-wm/mutter-3.10.1
-    >=dev-libs/glib-2.38.0
+    >=x11-wm/mutter-3.14.1
+    >=dev-libs/glib-2.42.0
     dev-libs/libgee:0.8
-    >=dev-libs/libpeas-1.0"
+    >=dev-libs/libpeas-1.0[gtk]"
 
 if [[ ${PV} == "9999" ]] ; then
     RDEPEND="${RDEPEND}
