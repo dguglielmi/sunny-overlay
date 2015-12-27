@@ -17,7 +17,7 @@ if [[ ${PV} == "9999" ]] ; then
     KEYWORDS=""
     inherit git-r3 autotools
 else
-    SRC_URI="https://github.com/solus-project/${MY_PN##*-}/releases/download/v${PV}/evolveos-artwork-${PV}.tar.xz -> ${P}.tar.xz"
+    SRC_URI="https://github.com/solus-project/${MY_PN##*-}/releases/download/v${PV}/${MY_PN}-${PV}.tar.xz -> ${P}.tar.xz"
     S="${WORKDIR}/${MY_PN}-${PV}"
     KEYWORDS="~amd64 ~x86"
 fi
@@ -28,8 +28,6 @@ IUSE=""
 
 RDEPEND=""
 DEPEND="${RDEPEND}"
-
-S=${WORKDIR}/evolveos-artwork-${PV}
 
 src_prepare() {
 
