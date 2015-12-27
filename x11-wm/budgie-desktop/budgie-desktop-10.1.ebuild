@@ -26,24 +26,25 @@ SLOT="0"
 IUSE=""
 
 RDEPEND="
-    >=dev-libs/glib-2.44.0
-    >=x11-libs/gtk+-3.16.0:3
-    >=dev-libs/libpeas-1.0[gtk]
-    >=gnome-base/gnome-menus-3.10.1
+	>=dev-libs/glib-2.44.0
+	>=x11-libs/gtk+-3.16.0:3
+	>=dev-libs/libpeas-1.0[gtk]
+	>=gnome-base/gnome-menus-3.10.1
 	>=dev-libs/gobject-introspection-1.44.0
-    >=media-sound/pulseaudio-4.0[glib]
-    >=x11-wm/mutter-3.18.0
+	>=media-sound/pulseaudio-4.0[glib]
+	>=x11-wm/mutter-3.18.0
 	>=gnome-base/gnome-desktop-3.18.0
-    >=x11-libs/libwnck-3.14.0
-    >=sys-power/upower-0.9.20[introspection]"
+	>=gnome-base/gsettings-desktop-schemas-3.18.0
+	>=x11-libs/libwnck-3.14.0
+	>=sys-power/upower-0.9.20[introspection]"
 
 if [[ ${PV} == "9999" ]] ; then
-    RDEPEND="${RDEPEND}
-        gnome-base/gnome-common:3"
+	RDEPEND="${RDEPEND}
+	gnome-base/gnome-common:3"
 fi
 
 DEPEND="${RDEPEND}
-    virtual/pkgconfig"
+	virtual/pkgconfig"
 
 src_unpack() {
     if [[ ${PV} == "9999" ]] ; then
