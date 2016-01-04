@@ -71,6 +71,23 @@ DEPEND="${RDEPEND}
 
 S="${WORKDIR}/${PN}-release-${PV/_/-}"
 
+pkg_pretend() {
+	if use ffmpeg; then
+		ewarn "You enabled USE flag 'ffmpeg'. This is an experimental feature and suffers"
+		ewarn "seek and performance issues."
+		ewarn ""
+	fi
+	if use qt5; then
+		ewarn "You enabled USE flag 'qt5'. This is an experimental feature and not"
+		ewarn "recommended by upstream."
+		ewarn ""
+	fi
+	ewarn "It is recommended by upstream to build libsoundtouch with SSE and CXXFLAGS=\"-ffast-math\"."
+	ewarn "To enable this, please add this line to /etc/portage/env/media-libs/libsoundtouch:"
+	ewarn "CXXFLAGS=\"\${CXXFLAGS} -ffast-math\""
+	ewarn "Please note that \"-ffast-math\" breaks IEEE compliance and may change floating point results."
+}
+
 src_prepare() {
 	epatch "${FILESDIR}"/${P}-system-libs.patch
 	epatch "${FILESDIR}"/${P}-docs.patch
