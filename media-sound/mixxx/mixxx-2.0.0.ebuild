@@ -27,7 +27,7 @@ RDEPEND="dev-libs/protobuf
 	>=media-libs/portaudio-19_pre
 	media-libs/portmidi
 	media-libs/rubberband
-	media-libs/taglib
+	>=media-libs/taglib-1.10
 	media-libs/vamp-plugin-sdk
 	sci-libs/fftw:3.0
 	virtual/glu
