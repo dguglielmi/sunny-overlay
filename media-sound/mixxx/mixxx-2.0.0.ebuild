@@ -1,4 +1,4 @@
-# Copyright 1999-2015 Gentoo Foundation
+# Copyright 1999-2016 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -13,7 +13,7 @@ SRC_URI="https://github.com/mixxxdj/${PN}/archive/release-${PV/_/-}.tar.gz -> ${
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
-IUSE="aac debug doc ffmpeg hid mp3 mp4 pulseaudio +qt4 qt5 shout wavpack"
+IUSE="aac +bulk debug doc ffmpeg hid mp3 opus perftools +qt4 qt5 shout +vinylcontrol wavpack"
 REQUIRED_USE="^^ ( qt4 qt5 )"
 
 RDEPEND="dev-libs/protobuf
@@ -57,13 +57,15 @@ RDEPEND="dev-libs/protobuf
 	)
 	aac? (
 		media-libs/faad2
-		media-libs/libmp4v2:0
+		media-libs/libmp4v2:=
 	)
 	hid? ( dev-libs/hidapi )
 	mp3? ( media-libs/libmad )
-	mp4? ( media-libs/libmp4v2:= )
 	ffmpeg? ( virtual/ffmpeg )
-	pulseaudio? ( media-sound/pulseaudio )
+	opus? ( 
+	       media-libs/opus
+	       media-libs/opusfile )
+	perftools? ( dev-util/google-perftools )
 	shout? ( media-libs/libshout )
 	wavpack? ( media-sound/wavpack )"
 DEPEND="${RDEPEND}
@@ -107,16 +109,16 @@ src_configure() {
 		prefix="${EPREFIX}/usr"
 		qtdir="${QTDIR}"
 		hifieq=1
-		vinylcontrol=1
 		optimize=0
-		$(use_scons qt5)
 		$(use_scons aac faad)
+		$(use_scons bulk bulk)
 		$(use_scons debug qdebug)
+		$(use_scons ffmpeg)
 		$(use_scons hid hid)
 		$(use_scons mp3 mad)
-		$(use_scons mp4 m4a)
-		$(use_scons ffmpeg)
+		$(use_scons qt5)
 		$(use_scons shout shoutcast)
+		$(use_scons vinylcontrol vinylcontrol)
 		$(use_scons wavpack wv)
 	)
 }
