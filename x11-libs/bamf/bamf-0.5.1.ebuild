@@ -48,7 +48,6 @@ src_prepare() {
 src_configure() {
 	local myeconfargs=(
 		--disable-gtktest
-		--disable-webapps
 		$(use_enable doc gtk-doc)
 		$(use_enable introspection)
 		VALA_API_GEN="${VAPIGEN}"
