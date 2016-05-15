@@ -1,0 +1,25 @@
+From b409e2b54bfff5ef83a7769626713260b6e8a0d4 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Timm=20B=C3=A4der?= <mail@baedert.org>
+Date: Sat, 14 May 2016 09:25:46 +0200
+Subject: [PATCH] style: Use GtkImage, not .image
+
+Turns out there was no .image on a GtkImage in pre-3.20.
+
+Fixes #548
+---
+ ui/style.css | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/ui/style.css b/ui/style.css
+index f41d05a..5c2cebe 100644
+--- a/ui/style.css
++++ b/ui/style.css
+@@ -10,7 +10,7 @@
+ }
+ 
+ .topbar button image,
+-.topbar .button .image {
++.topbar .button GtkImage {
+   icon-shadow: none;
+   color: #ddd;
+ }
