@@ -37,7 +37,6 @@ DEPEND="${RDEPEND}
 
 src_prepare() {
 	sed -i -e "/manpagedir/s/manpagedir.*/&\/man1/g" data/Makefile.am || die
-	epatch "${FILESDIR}/${P}-topbar_items_wrong_color.patch"
 	autotools-utils_src_prepare
 	gnome2_src_prepare
 	vala_src_prepare
