@@ -4,7 +4,7 @@
 
 EAPI=5
 
-VALA_MIN_API_VERSION=0.16
+VALA_MIN_API_VERSION=0.26
 VALA_USE_DEPEND=vapigen
 
 inherit vala autotools-utils gnome2
