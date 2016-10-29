@@ -36,11 +36,12 @@ RDEPEND="
 	>=gnome-base/gnome-desktop-3.18.0
 	>=gnome-base/gsettings-desktop-schemas-3.18.0
 	>=x11-libs/libwnck-3.14.0
+	>=app-i18n/ibus-1.5.13
 	>=sys-power/upower-0.9.20[introspection]"
 
 if [[ ${PV} == "9999" ]] ; then
 	RDEPEND="${RDEPEND}
-		gnome-base/gnome-common:3"
+	gnome-base/gnome-common:3"
 fi
 
 DEPEND="${RDEPEND}
