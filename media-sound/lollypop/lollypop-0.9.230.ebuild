@@ -1,12 +1,12 @@
-# Copyright 1999-2016 Gentoo Foundation
+# Copyright 1999-2017 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=5
+EAPI=6
 PYTHON_COMPAT=( python3_4 )
 PYTHON_REQ_USE="sqlite"
 
-inherit gnome2 python-single-r1
+inherit autotools gnome2 python-single-r1
 
 DESCRIPTION="Lollypop is a GNOME music playing application"
 HOMEPAGE="http://gnumdk.github.io/lollypop/"
@@ -37,6 +37,16 @@ DEPEND="${RDEPEND}
 "
 
 REQUIRED_USE="${PYTHON_REQUIRED_USE}"
+
+#PATCHES=(
+#	"${FILESDIR}"/${P}-fix-searchprovider-sandbox-violation.patch
+#)
+
+src_prepare() {
+	epatch "${FILESDIR}"/${P}-fix-searchprovider-sandbox-violation.patch
+	eautoreconf
+	gnome2_src_prepare
+}
 
 src_configure() {
     gnome2_src_configure ITSTOOL="$(type -P true)"
