@@ -38,12 +38,7 @@ DEPEND="${RDEPEND}
 
 REQUIRED_USE="${PYTHON_REQUIRED_USE}"
 
-#PATCHES=(
-#	"${FILESDIR}"/${P}-fix-searchprovider-sandbox-violation.patch
-#)
-
 src_prepare() {
-	epatch "${FILESDIR}"/${P}-fix-searchprovider-sandbox-violation.patch
 	eautoreconf
 	gnome2_src_prepare
 }
