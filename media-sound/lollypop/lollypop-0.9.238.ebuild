@@ -3,7 +3,7 @@
 # $Header: $
 
 EAPI=6
-PYTHON_COMPAT=( python3_4 )
+PYTHON_COMPAT=( python3_4 python3_5 )
 PYTHON_REQ_USE="sqlite"
 
 inherit autotools gnome2 python-single-r1
