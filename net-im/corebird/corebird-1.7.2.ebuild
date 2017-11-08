@@ -35,6 +35,10 @@ DEPEND="${RDEPEND}
 	sys-apps/sed
 	virtual/pkgconfig"
 
+PATCHES=(
+        "${FILESDIR}/${P}-increase-max-length-to-280.patch"
+)
+
 src_prepare() {
 	sed -i -e "/highlighting/d" tests/Makefile.am || die
 	sed -i -e "/manpagedir/s/manpagedir.*/&\/man1/g" data/Makefile.am || die
