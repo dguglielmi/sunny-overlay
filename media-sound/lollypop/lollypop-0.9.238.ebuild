@@ -18,7 +18,7 @@ SLOT="0"
 KEYWORDS="~x86 ~amd64"
 IUSE="+lastfm +wikipedia"
 
-IUSE+=" +python_single_target_python3_4"
+IUSE+=" +python_single_target_python3_5"
 
 RDEPEND="${PYTHON_DEPS}
     >=x11-libs/gtk+-3.13.2:3[introspection]
