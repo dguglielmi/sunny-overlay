@@ -36,7 +36,7 @@ PATCHES=(
 )
 
 src_prepare() {
-	default_src_prepare
+	default
 	NOCONFIGURE=1 REQUIRED_PKG_CONFIG_VERSION=0.1 ./autogen.sh
 	vala_src_prepare
 }
