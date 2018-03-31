@@ -15,7 +15,7 @@ SRC_URI="https://github.com/Keruspe/GPaste/archive/v${PV}.tar.gz -> ${P}.tar.gz"
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
-IUSE="+applet gnome vala"
+IUSE="gnome vala"
 
 CDEPEND="
 	dev-libs/appstream-glib
@@ -55,8 +55,6 @@ src_prepare() {
 src_configure() {
 	econf \
 		$(use_enable vala) \
-		$(use_enable applet) \
-		--disable-unity \
 		$(use_enable gnome gnome-shell-extension) \
 		--disable-static \
 		--disable-schemas-compile
