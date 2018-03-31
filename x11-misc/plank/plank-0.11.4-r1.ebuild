@@ -1,13 +1,12 @@
-# Copyright 1999-2016 Gentoo Foundation
+# Copyright 1999-2018 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Id$
 
-EAPI=5
+EAPI=6
 
 VALA_MIN_API_VERSION=0.26
 VALA_USE_DEPEND=vapigen
 
-inherit vala autotools-utils gnome2
+inherit vala gnome2
 
 DESCRIPTION="Dock panel famious docky"
 HOMEPAGE="https://launchpad.net/plank"
@@ -27,13 +26,17 @@ RDEPEND=">=dev-libs/glib-2.32:2
 	x11-libs/libwnck:3"
 DEPEND="${RDEPEND}
 	$(vala_depend)
-	dev-util/intltool
 	gnome-base/gnome-common
-	sys-devel/gettext
+	>=sys-devel/gettext-0.19.6
 	virtual/pkgconfig"
 DOCS=( AUTHORS COPYRIGHT )
 
+PATCHES=(
+	"${FILESDIR}"/${P}-drop-intltool-requirement.patch
+)
+
 src_prepare() {
+	default_src_prepare
 	NOCONFIGURE=1 REQUIRED_PKG_CONFIG_VERSION=0.1 ./autogen.sh
 	vala_src_prepare
 }

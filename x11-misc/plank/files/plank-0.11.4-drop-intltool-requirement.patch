@@ -1,0 +1,554 @@
+From 764e2ff83126242b8b69d218c3d91883b0ec423b Mon Sep 17 00:00:00 2001
+From: Rico Tzschichholz <ricotz@ubuntu.com>
+Date: Wed, 29 Mar 2017 15:03:56 +0200
+Subject: Drop intltool requirement and use gettext >= 0.19.6 only
+
+
+diff --git a/autogen.sh b/autogen.sh
+index 634216f..b49ccf1 100755
+--- a/autogen.sh
++++ b/autogen.sh
+@@ -20,7 +20,6 @@ fi
+ 
+ set -x
+ aclocal --install || exit 1
+-intltoolize --force --copy --automake || exit 1
+ autoreconf --verbose --force --install -Wno-portability || exit 1
+ set +x
+ 
+diff --git a/configure.ac b/configure.ac
+index bf58be7..da0a788 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -57,6 +57,13 @@ AC_PROG_CXX
+ AC_PROG_CXX_C_O
+ AC_PROG_INSTALL
+ 
++GETTEXT_PACKAGE=AC_PACKAGE_NAME
++AC_SUBST(GETTEXT_PACKAGE)
++AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, ["$GETTEXT_PACKAGE"], [Define the gettext package to be used])
++
++AM_GNU_GETTEXT_VERSION([0.19.6])
++AM_GNU_GETTEXT([external])
++
+ LT_PREREQ([2.2.6])
+ LT_INIT([disable-static])
+ PKG_PROG_PKG_CONFIG([0.21])
+@@ -347,21 +354,11 @@ fi
+ 
+ 
+ # -----------------------------------------------------------
+-# Gettext
+-# -----------------------------------------------------------
+-GETTEXT_PACKAGE=AC_PACKAGE_NAME
+-AC_SUBST(GETTEXT_PACKAGE)
+-AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, ["$GETTEXT_PACKAGE"], [Define the gettext package to be used])
+-IT_PROG_INTLTOOL([0.35.0])
+-
+-
+-# -----------------------------------------------------------
+ # Final output
+ # -----------------------------------------------------------
+ AC_CONFIG_FILES([
+ Makefile
+ data/Makefile
+-data/net.launchpad.plank.gschema.xml.in
+ data/apport/Makefile
+ data/icons/Makefile
+ data/themes/Makefile
+diff --git a/data/Makefile.am b/data/Makefile.am
+index 89dfa51..141fbd7 100644
+--- a/data/Makefile.am
++++ b/data/Makefile.am
+@@ -12,7 +12,7 @@ endif
+ EXTRA_DIST = \
+ 	application-default-icon.svg \
+ 	plank.appdata.xml.in \
+-	net.launchpad.plank.gschema.xml.in.in \
++	net.launchpad.plank.gschema.xml.in \
+ 	plank.desktop.in \
+ 	plank.gresource.xml \
+ 	poof.svg \
+@@ -25,20 +25,19 @@ CLEANFILES = \
+ 	$(gsettings_SCHEMAS) \
+ 	gschemas.compiled \
+ 	net.launchpad.plank.gschema.valid \
+-	net.launchpad.plank.gschema.xml.in \
+ 	$(NULL)
+ 
+ applicationsdir = $(datadir)/applications
+ applications_DATA = plank.desktop
+ 
+-@INTLTOOL_DESKTOP_RULE@
+-
+ appdatadir = $(datadir)/appdata
+ appdata_DATA = plank.appdata.xml
+ 
+ gsettings_SCHEMAS = net.launchpad.plank.gschema.xml
+ 
+-@INTLTOOL_XML_RULE@
++%.gschema.xml: %.gschema.xml.in Makefile
++	$(AM_V_GEN) sed -e 's|@GETTEXT_PACKAGE[@]|$(GETTEXT_PACKAGE)|g' \
++	$< > $@ || rm $@
+ 
+ @GSETTINGS_RULES@
+ 
+@@ -47,3 +46,10 @@ gschemas.compiled: Makefile $(gsettings_SCHEMAS:.xml=.valid)
+ 
+ all-local: gschemas.compiled
+ 
++%.desktop: %.desktop.in
++	$(AM_V_GEN)$(MSGFMT) --desktop --keyword= --keyword=Name \
++		--keyword=GenericName --keyword=Comment --keyword=Keywords \
++		--template $< -d $(top_srcdir)/po -o $@
++
++%.appdata.xml: %.appdata.xml.in
++	$(AM_V_GEN)$(MSGFMT) --xml --template $< -d $(top_srcdir)/po -o $@
+diff --git a/data/net.launchpad.plank.gschema.xml.in b/data/net.launchpad.plank.gschema.xml.in
+new file mode 100644
+index 0000000..e122aec
+--- /dev/null
++++ b/data/net.launchpad.plank.gschema.xml.in
+@@ -0,0 +1,143 @@
++<schemalist>
++	<enum id="PlankHideType">
++		<value nick="none" value="0"/>
++		<value nick="intelligent" value="1"/>
++		<value nick="auto" value="2"/>
++		<value nick="dodge-maximized" value="3"/>
++		<value nick="window-dodge" value="4"/>
++		<value nick="dodge-active" value="5"/>
++	</enum>
++
++	<enum id="GtkAlignType">
++		<value nick="fill" value="0"/>
++		<value nick="start" value="1"/>
++		<value nick="end" value="2"/>
++		<value nick="center" value="3"/>
++	</enum>
++
++	<enum id="GtkPositionType">
++		<value nick="left" value="0"/>
++		<value nick="right" value="1"/>
++		<value nick="top" value="2"/>
++		<value nick="bottom" value="3"/>
++	</enum>
++
++
++	<schema id="net.launchpad.plank" path="/net/launchpad/plank/" gettext-domain="@GETTEXT_PACKAGE@">
++		<child name="docks" schema="net.launchpad.plank.dock.settings"/>
++
++		<key name="enabled-docks" type="as">
++			<default>['dock1']</default>
++			<summary>Array of names of active/enabled docks</summary>
++			<description>Contains the names of docks which are created and loaded on start up</description>
++		</key>
++	</schema>
++
++	<schema id="net.launchpad.plank.dock.settings" gettext-domain="@GETTEXT_PACKAGE@">
++		<key name="alignment" enum='GtkAlignType'>
++			<default>'center'</default>
++			<summary>The alignment for the dock along the monitor's edge</summary>
++			<description>Possible values are "fill", "start", "end", and "center".</description>
++		</key>
++		<key name="auto-pinning" type="b">
++			<default>true</default>
++			<summary>Automatically pin an application if it seems useful to do</summary>
++			<description>If true, automatically pin applications when it seems useful to do.</description>
++		</key>
++		<key name="current-workspace-only" type="b">
++			<default>false</default>
++			<summary>Only show windows from the current workspace</summary>
++			<description>If true, only show unpinned windows from the current workspace in addition to pinned items.</description>
++		</key>
++		<key name="dock-items" type="as">
++			<default>[]</default>
++			<summary>Dockitem-files Array</summary>
++			<description>Array of dockitem-files for this particular dock. This list is automatically updated and managed by Plank. DO NOT MODIFY.</description>
++		</key>
++		<key name="hide-delay" type="i">
++			<range min="0"/>
++			<default>0</default>
++			<summary>Dock hide delay</summary>
++			<description>Length of the delay before hiding the dock, in milliseconds.</description>
++		</key>
++		<key name="hide-mode" enum='PlankHideType'>
++			<default>'intelligent'</default>
++			<summary>Hidemode of the dock</summary>
++			<description>Possible values are "none", "intelligent", "auto", "dodge-maximized", "window-dodge", and "dodge-active".</description>
++		</key>
++		<key name="icon-size" type="i">
++			<range min="24" max="128"/>
++			<default>48</default>
++			<summary>Icon Size</summary>
++			<description>The size of dock items, in pixels.</description>
++		</key>
++		<key name="items-alignment" enum='GtkAlignType'>
++			<default>'center'</default>
++			<summary>The alignment of dock items</summary>
++			<description>Possible values are "fill", "start", "end", and "center".</description>
++		</key>
++		<key name="lock-items" type="b">
++			<default>false</default>
++			<summary>Lock dock items</summary>
++			<description>If true, prevent drag'n'drop actions and lock dock items in place.</description>
++		</key>
++		<key name="monitor" type="s">
++			<default>''</default>
++			<summary>The name of the monitor for the dock to show on</summary>
++			<description>The plug-name of the monitor for the dock to show on (e.g. DVI-I-1, HDMI1, LVDS1). Leave this empty to keep on the primary monitor.</description>
++		</key>
++		<key name="offset" type="i">
++			<range min="-100" max="100"/>
++			<default>0</default>
++			<summary>Position Offset</summary>
++			<description>The dock's position offset from center, in percent.</description>
++		</key>
++		<key name="pinned-only" type="b">
++			<default>false</default>
++			<summary>Only show pinned applications</summary>
++			<description>If true, only show pinned applications. Useful for running more than one dock.</description>
++		</key>
++		<key name="position" enum='GtkPositionType'>
++			<default>'bottom'</default>
++			<summary>The position for the dock on the monitor</summary>
++			<description>Possible values are "left", "right", "top", and "bottom".</description>
++		</key>
++		<key name="pressure-reveal" type="b">
++			<default>false</default>
++			<summary>Pressure Reveal</summary>
++			<description>If true, use pressure-based revealing of the dock if the input device supports it.</description>
++		</key>
++		<key name="show-dock-item" type="b">
++			<default>false</default>
++			<summary>Show the item for the dock itself</summary>
++			<description>If true, show the Plank dock item.</description>
++		</key>
++		<key name="theme" type="s">
++			<default>'Default'</default>
++			<summary>The name of the dock theme for Plank to use</summary>
++			<description>Built-in values include "Default", "Matte", "Transparent", and "Gtk+".</description>
++		</key>
++		<key name="tooltips-enabled" type="b">
++			<default>true</default>
++			<summary>Show tooltips when items are hovered</summary>
++			<description>If true, tooltips will be shown when dock items are hovered with the cursor.</description>
++		</key>
++		<key name="unhide-delay" type="i">
++			<range min="0"/>
++			<default>0</default>
++			<summary>Dock unhide delay</summary>
++			<description>Length of the delay before unhiding the dock, in milliseconds.</description>
++		</key>
++		<key name="zoom-enabled" type="b">
++			<default>false</default>
++			<summary>Zoom dock items when hovered</summary>
++			<description>If true, zoom dock items when hovered with the cursor.</description>
++		</key>
++		<key name="zoom-percent" type="i">
++			<range min="100" max="200"/>
++			<default>150</default>
++			<summary>Icon zoom percentage</summary>
++			<description>The amount to zoom dock items, in percent.</description>
++		</key>
++	</schema>
++</schemalist>
+diff --git a/data/net.launchpad.plank.gschema.xml.in.in b/data/net.launchpad.plank.gschema.xml.in.in
+deleted file mode 100644
+index 3801177..0000000
+--- a/data/net.launchpad.plank.gschema.xml.in.in
++++ /dev/null
+@@ -1,143 +0,0 @@
+-<schemalist>
+-	<enum id="PlankHideType">
+-		<value nick="none" value="0"/>
+-		<value nick="intelligent" value="1"/>
+-		<value nick="auto" value="2"/>
+-		<value nick="dodge-maximized" value="3"/>
+-		<value nick="window-dodge" value="4"/>
+-		<value nick="dodge-active" value="5"/>
+-	</enum>
+-
+-	<enum id="GtkAlignType">
+-		<value nick="fill" value="0"/>
+-		<value nick="start" value="1"/>
+-		<value nick="end" value="2"/>
+-		<value nick="center" value="3"/>
+-	</enum>
+-
+-	<enum id="GtkPositionType">
+-		<value nick="left" value="0"/>
+-		<value nick="right" value="1"/>
+-		<value nick="top" value="2"/>
+-		<value nick="bottom" value="3"/>
+-	</enum>
+-
+-
+-	<schema id="net.launchpad.plank" path="/net/launchpad/plank/">
+-		<child name="docks" schema="net.launchpad.plank.dock.settings"/>
+-
+-		<key name="enabled-docks" type="as">
+-			<default>['dock1']</default>
+-			<_summary>Array of names of active/enabled docks</_summary>
+-			<_description>Contains the names of docks which are created and loaded on start up</_description>
+-		</key>
+-	</schema>
+-
+-	<schema id="net.launchpad.plank.dock.settings" gettext-domain="@GETTEXT_PACKAGE@">
+-		<key name="alignment" enum='GtkAlignType'>
+-			<default>'center'</default>
+-			<_summary>The alignment for the dock along the monitor's edge</_summary>
+-			<_description>Possible values are "fill", "start", "end", and "center".</_description>
+-		</key>
+-		<key name="auto-pinning" type="b">
+-			<default>true</default>
+-			<_summary>Automatically pin an application if it seems useful to do</_summary>
+-			<_description>If true, automatically pin applications when it seems useful to do.</_description>
+-		</key>
+-		<key name="current-workspace-only" type="b">
+-			<default>false</default>
+-			<_summary>Only show windows from the current workspace</_summary>
+-			<_description>If true, only show unpinned windows from the current workspace in addition to pinned items.</_description>
+-		</key>
+-		<key name="dock-items" type="as">
+-			<default>[]</default>
+-			<_summary>Dockitem-files Array</_summary>
+-			<_description>Array of dockitem-files for this particular dock. This list is automatically updated and managed by Plank. DO NOT MODIFY.</_description>
+-		</key>
+-		<key name="hide-delay" type="i">
+-			<range min="0"/>
+-			<default>0</default>
+-			<_summary>Dock hide delay</_summary>
+-			<_description>Length of the delay before hiding the dock, in milliseconds.</_description>
+-		</key>
+-		<key name="hide-mode" enum='PlankHideType'>
+-			<default>'intelligent'</default>
+-			<_summary>Hidemode of the dock</_summary>
+-			<_description>Possible values are "none", "intelligent", "auto", "dodge-maximized", "window-dodge", and "dodge-active".</_description>
+-		</key>
+-		<key name="icon-size" type="i">
+-			<range min="24" max="128"/>
+-			<default>48</default>
+-			<_summary>Icon Size</_summary>
+-			<_description>The size of dock items, in pixels.</_description>
+-		</key>
+-		<key name="items-alignment" enum='GtkAlignType'>
+-			<default>'center'</default>
+-			<_summary>The alignment of dock items</_summary>
+-			<_description>Possible values are "fill", "start", "end", and "center".</_description>
+-		</key>
+-		<key name="lock-items" type="b">
+-			<default>false</default>
+-			<_summary>Lock dock items</_summary>
+-			<_description>If true, prevent drag'n'drop actions and lock dock items in place.</_description>
+-		</key>
+-		<key name="monitor" type="s">
+-			<default>''</default>
+-			<_summary>The name of the monitor for the dock to show on</_summary>
+-			<_description>The plug-name of the monitor for the dock to show on (e.g. DVI-I-1, HDMI1, LVDS1). Leave this empty to keep on the primary monitor.</_description>
+-		</key>
+-		<key name="offset" type="i">
+-			<range min="-100" max="100"/>
+-			<default>0</default>
+-			<_summary>Position Offset</_summary>
+-			<_description>The dock's position offset from center, in percent.</_description>
+-		</key>
+-		<key name="pinned-only" type="b">
+-			<default>false</default>
+-			<_summary>Only show pinned applications</_summary>
+-			<_description>If true, only show pinned applications. Useful for running more than one dock.</_description>
+-		</key>
+-		<key name="position" enum='GtkPositionType'>
+-			<default>'bottom'</default>
+-			<_summary>The position for the dock on the monitor</_summary>
+-			<_description>Possible values are "left", "right", "top", and "bottom".</_description>
+-		</key>
+-		<key name="pressure-reveal" type="b">
+-			<default>false</default>
+-			<_summary>Pressure Reveal</_summary>
+-			<_description>If true, use pressure-based revealing of the dock if the input device supports it.</_description>
+-		</key>
+-		<key name="show-dock-item" type="b">
+-			<default>false</default>
+-			<_summary>Show the item for the dock itself</_summary>
+-			<_description>If true, show the Plank dock item.</_description>
+-		</key>
+-		<key name="theme" type="s">
+-			<default>'Default'</default>
+-			<_summary>The name of the dock theme for Plank to use</_summary>
+-			<_description>Built-in values include "Default", "Matte", "Transparent", and "Gtk+".</_description>
+-		</key>
+-		<key name="tooltips-enabled" type="b">
+-			<default>true</default>
+-			<_summary>Show tooltips when items are hovered</_summary>
+-			<_description>If true, tooltips will be shown when dock items are hovered with the cursor.</_description>
+-		</key>
+-		<key name="unhide-delay" type="i">
+-			<range min="0"/>
+-			<default>0</default>
+-			<_summary>Dock unhide delay</_summary>
+-			<_description>Length of the delay before unhiding the dock, in milliseconds.</_description>
+-		</key>
+-		<key name="zoom-enabled" type="b">
+-			<default>false</default>
+-			<_summary>Zoom dock items when hovered</_summary>
+-			<_description>If true, zoom dock items when hovered with the cursor.</_description>
+-		</key>
+-		<key name="zoom-percent" type="i">
+-			<range min="100" max="200"/>
+-			<default>150</default>
+-			<_summary>Icon zoom percentage</_summary>
+-			<_description>The amount to zoom dock items, in percent.</_description>
+-		</key>
+-	</schema>
+-</schemalist>
+diff --git a/data/plank.appdata.xml.in b/data/plank.appdata.xml.in
+index d2c6dbc..7c2ebc6 100644
+--- a/data/plank.appdata.xml.in
++++ b/data/plank.appdata.xml.in
+@@ -1,20 +1,20 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+-<!-- Copyright 2014 Rico Tzschichholz <ricotz@ubuntu.com> -->
++<!-- Copyright 2016 Rico Tzschichholz <ricotz@ubuntu.com> -->
+ <component type="desktop">
+   <id>plank.desktop</id>
+   <metadata_license>CC0-1.0</metadata_license>
+   <name>Plank</name>
+-  <_summary>Stupidly simple.</_summary>
++  <summary>Stupidly simple.</summary>
+   <description>
+-    <_p>
++    <p>
+       Plank is meant to be the simplest dock on the planet. The goal is to provide just what a dock needs and
+       absolutely nothing more.
+-    </_p>
+-    <_p>
++    </p>
++    <p>
+       It is, however, a library which can be extended to create other dock programs with more advanced features.
+       Thus, Plank is the underlying technology for Docky (starting in version 3.0.0) and aims to provide all the
+       core features while Docky extends it to add fancier things like Docklets, painters, settings dialogs, etc.
+-    </_p>
++    </p>
+   </description>
+   <keywords>
+     <keyword>dock</keyword>
+diff --git a/data/plank.desktop.in b/data/plank.desktop.in
+index 330c3a4..257950b 100644
+--- a/data/plank.desktop.in
++++ b/data/plank.desktop.in
+@@ -1,7 +1,7 @@
+ [Desktop Entry]
+ Name=Plank
+ GenericName=Dock
+-_Comment=Stupidly simple.
++Comment=Stupidly simple.
+ Categories=Utility;
+ Type=Application
+ Exec=plank
+diff --git a/po/Makevars b/po/Makevars
+new file mode 100644
+index 0000000..07a42ad
+--- /dev/null
++++ b/po/Makevars
+@@ -0,0 +1,78 @@
++# Makefile variables for PO directory in any package using GNU gettext.
++
++# Usually the message domain is the same as the package name.
++DOMAIN = $(PACKAGE)
++
++# These two variables depend on the location of this directory.
++subdir = po
++top_builddir = ..
++
++# These options get passed to xgettext.
++XGETTEXT_OPTIONS = --from-code=UTF-8 --keyword=_ --keyword=N_
++
++# This is the copyright holder that gets inserted into the header of the
++# $(DOMAIN).pot file.  Set this to the copyright holder of the surrounding
++# package.  (Note that the msgstr strings, extracted from the package's
++# sources, belong to the copyright holder of the package.)  Translators are
++# expected to transfer the copyright for their translations to this person
++# or entity, or to disclaim their copyright.  The empty string stands for
++# the public domain; in this case the translators are expected to disclaim
++# their copyright.
++COPYRIGHT_HOLDER = The Plank Developers
++
++# This tells whether or not to prepend "GNU " prefix to the package
++# name that gets inserted into the header of the $(DOMAIN).pot file.
++# Possible values are "yes", "no", or empty.  If it is empty, try to
++# detect it automatically by scanning the files in $(top_srcdir) for
++# "GNU packagename" string.
++PACKAGE_GNU = no
++
++# This is the email address or URL to which the translators shall report
++# bugs in the untranslated strings:
++# - Strings which are not entire sentences, see the maintainer guidelines
++#   in the GNU gettext documentation, section 'Preparing Strings'.
++# - Strings which use unclear terms or require additional context to be
++#   understood.
++# - Strings which make invalid assumptions about notation of date, time or
++#   money.
++# - Pluralisation problems.
++# - Incorrect English spelling.
++# - Incorrect formatting.
++# It can be your email address, or a mailing list address where translators
++# can write to without being subscribed, or the URL of a web page through
++# which the translators can contact you.
++MSGID_BUGS_ADDRESS = https://bugs.launchpad.net/plank
++
++# This is the list of locale categories, beyond LC_MESSAGES, for which the
++# message catalogs shall be used.  It is usually empty.
++EXTRA_LOCALE_CATEGORIES =
++
++# This tells whether the $(DOMAIN).pot file contains messages with an 'msgctxt'
++# context.  Possible values are "yes" and "no".  Set this to yes if the
++# package uses functions taking also a message context, like pgettext(), or
++# if in $(XGETTEXT_OPTIONS) you define keywords with a context argument.
++USE_MSGCTXT = no
++
++# These options get passed to msgmerge.
++# Useful options are in particular:
++#   --previous            to keep previous msgids of translated messages,
++#   --quiet               to reduce the verbosity.
++MSGMERGE_OPTIONS =
++
++# These options get passed to msginit.
++# If you want to disable line wrapping when writing PO files, add
++# --no-wrap to MSGMERGE_OPTIONS, XGETTEXT_OPTIONS, and
++# MSGINIT_OPTIONS.
++MSGINIT_OPTIONS =
++
++# This tells whether or not to regenerate a PO file when $(DOMAIN).pot
++# has changed.  Possible values are "yes" and "no".  Set this to no if
++# the POT file is checked in the repository and the version control
++# program ignores timestamps.
++PO_DEPENDS_ON_POT = no
++
++# This tells whether or not to forcibly update $(DOMAIN).pot and
++# regenerate PO files on "make dist".  Possible values are "yes" and
++# "no".  Set this to no if the POT file and PO files are maintained
++# externally.
++DIST_DEPENDS_ON_UPDATE_PO = no
+diff --git a/po/POTFILES.in b/po/POTFILES.in
+index f84f451..e4128d8 100644
+--- a/po/POTFILES.in
++++ b/po/POTFILES.in
+@@ -1,6 +1,6 @@
+ data/plank.appdata.xml.in
+ data/plank.desktop.in
+-[type: gettext/glade]data/ui/preferences.ui
++data/ui/preferences.ui
+ lib/DragManager.vala
+ lib/Factories/AbstractMain.vala
+ lib/Items/ApplicationDockItem.vala
+diff --git a/po/POTFILES.skip b/po/POTFILES.skip
+index 36093ea..c971cd9 100644
+--- a/po/POTFILES.skip
++++ b/po/POTFILES.skip
+@@ -1,5 +1,4 @@
+ data/net.launchpad.plank.gschema.xml.in
+-data/net.launchpad.plank.gschema.xml.in.in
+ docklets/Clippy/ClippyDockItem.c
+ docklets/Clippy/ClippyDocklet.c
+ docklets/Clock/ClockDockItem.c
