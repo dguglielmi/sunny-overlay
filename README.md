@@ -1,5 +1,5 @@
 # sunny-overlay
-Sunny-overlay is my personal Gentoo Portage overlay. Maybe it will be useful to others (we can always dream).
+Sunny-overlay is my personal Gentoo Portage overlay. Maybe it will be useful to others (we always can dream).
 
 ## How to use this overlay ?
 You can use this overlay with the new portage plug-in sync system (see: https://wiki.gentoo.org/wiki/Project:Portage/Sync) or alternatively using app-portage/layman.
