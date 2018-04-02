@@ -14,7 +14,7 @@ SRC_URI="https://github.com/baedert/corebird/archive/${PV}.tar.gz -> ${P}.tar.gz
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
-IUSE="debug gstreamer spellcheck"
+IUSE="gstreamer spellcheck"
 
 RDEPEND="dev-db/sqlite:3
 	>=dev-libs/glib-2.44:2
