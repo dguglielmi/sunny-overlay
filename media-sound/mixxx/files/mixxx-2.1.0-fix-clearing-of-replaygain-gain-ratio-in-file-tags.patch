@@ -1,0 +1,152 @@
+From 0a0e41dd330e34f155c455c2c938a484aeb465f5 Mon Sep 17 00:00:00 2001
+From: Uwe Klotz <uklotz@mixxx.org>
+Date: Sun, 22 Apr 2018 21:58:24 +0200
+Subject: [PATCH 1/2] Remove unused parameter
+
+...but keep in in the innermost function with a default value for
+readability and documentation purposes.
+---
+ src/track/trackmetadatataglib.cpp | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
+
+diff --git a/src/track/trackmetadatataglib.cpp b/src/track/trackmetadatataglib.cpp
+index 17e34b5196..f54724eab5 100644
+--- a/src/track/trackmetadatataglib.cpp
++++ b/src/track/trackmetadatataglib.cpp
+@@ -492,9 +492,8 @@ TagLib::ID3v2::CommentsFrame* findFirstCommentsFrame(
+ }
+ 
+ TagLib::ID3v2::CommentsFrame* findFirstCommentsFrameWithoutDescription(
+-        const TagLib::ID3v2::Tag& tag,
+-        bool preferNotEmpty = true) {
+-    return findFirstCommentsFrame(tag, QString(), preferNotEmpty);
++        const TagLib::ID3v2::Tag& tag) {
++    return findFirstCommentsFrame(tag, QString());
+ }
+ 
+ // Finds the first text frame that with a matching description (case-insensitive).
+@@ -538,10 +537,9 @@ TagLib::ID3v2::UserTextIdentificationFrame* findFirstUserTextIdentificationFrame
+ inline
+ QString readFirstUserTextIdentificationFrame(
+         const TagLib::ID3v2::Tag& tag,
+-        const QString& description,
+-        bool preferNotEmpty = true) {
++        const QString& description) {
+     const TagLib::ID3v2::UserTextIdentificationFrame* pTextFrame =
+-            findFirstUserTextIdentificationFrame(tag, description, preferNotEmpty);
++            findFirstUserTextIdentificationFrame(tag, description);
+     if (pTextFrame && (pTextFrame->fieldList().size() > 1)) {
+         // The actual value is stored in the 2nd field
+         return toQString(pTextFrame->fieldList()[1]);
+@@ -628,7 +626,7 @@ void writeID3v2CommentsFrame(
+         const QString& description,
+         bool isNumericOrURL = false) {
+     TagLib::ID3v2::CommentsFrame* pFrame =
+-            findFirstCommentsFrame(*pTag, description);
++            findFirstCommentsFrame(*pTag, description, true);
+     if (pFrame) {
+         // Modify existing frame
+         if (text.isEmpty()) {
+
+From 1ccbca0b86fc31cdea900f1f9dc7008b205ffb67 Mon Sep 17 00:00:00 2001
+From: Uwe Klotz <uklotz@mixxx.org>
+Date: Sun, 22 Apr 2018 22:22:09 +0200
+Subject: [PATCH 2/2] Either update or remove replaygain ratio/gain values
+
+---
+ src/track/trackmetadatataglib.cpp | 54 ++++++++++++++++++++-------------------
+ 1 file changed, 28 insertions(+), 26 deletions(-)
+
+diff --git a/src/track/trackmetadatataglib.cpp b/src/track/trackmetadatataglib.cpp
+index f54724eab5..2615ae5bb6 100644
+--- a/src/track/trackmetadatataglib.cpp
++++ b/src/track/trackmetadatataglib.cpp
+@@ -227,13 +227,7 @@ bool parseBpm(TrackMetadata* pTrackMetadata, QString sBpm) {
+ 
+ inline
+ QString formatReplayGainGain(const ReplayGain& replayGain) {
+-    const double gainRatio(replayGain.getRatio());
+-    return ReplayGain::ratioToString(gainRatio);
+-}
+-
+-inline
+-bool hasTrackGain(const TrackMetadata& trackMetadata) {
+-    return trackMetadata.getTrackInfo().getReplayGain().hasRatio();
++    return ReplayGain::ratioToString(replayGain.getRatio());
+ }
+ 
+ inline
+@@ -1860,13 +1854,15 @@ bool exportTrackMetadataIntoID3v2Tag(TagLib::ID3v2::Tag* pTag,
+ 
+     writeID3v2TextIdentificationFrame(pTag, "TKEY", trackMetadata.getTrackInfo().getKey());
+ 
+-    if (hasTrackGain(trackMetadata)) {
+-        writeID3v2UserTextIdentificationFrame(
+-                pTag,
+-                "REPLAYGAIN_TRACK_GAIN",
+-                formatTrackGain(trackMetadata),
+-                true);
+-    }
++    writeID3v2UserTextIdentificationFrame(
++            pTag,
++            "REPLAYGAIN_TRACK_GAIN",
++            formatTrackGain(trackMetadata),
++            true);
++    // NOTE(uklotzde, 2018-04-22): The analyzers currently doesn't
++    // calculate a peak value, so leave it untouched in the file if
++    // the value is invalid/absent. Otherwise the ID3 frame would
++    // be deleted.
+     if (hasTrackPeak(trackMetadata)) {
+         writeID3v2UserTextIdentificationFrame(
+                 pTag,
+@@ -2000,10 +1996,12 @@ bool exportTrackMetadataIntoAPETag(TagLib::APE::Tag* pTag, const TrackMetadata&
+     writeAPEItem(pTag, "INITIALKEY",
+             toTagLibString(trackMetadata.getTrackInfo().getKey()));
+ 
+-    if (hasTrackGain(trackMetadata)) {
+-        writeAPEItem(pTag, "REPLAYGAIN_TRACK_GAIN",
+-                toTagLibString(formatTrackGain(trackMetadata)));
+-    }
++    writeAPEItem(pTag, "REPLAYGAIN_TRACK_GAIN",
++            toTagLibString(formatTrackGain(trackMetadata)));
++    // NOTE(uklotzde, 2018-04-22): The analyzers currently doesn't
++    // calculate a peak value, so leave it untouched in the file if
++    // the value is invalid/absent. Otherwise the APE item would be
++    // deleted.
+     if (hasTrackPeak(trackMetadata)) {
+         writeAPEItem(pTag, "REPLAYGAIN_TRACK_PEAK",
+                 toTagLibString(formatTrackPeak(trackMetadata)));
+@@ -2149,10 +2147,12 @@ bool exportTrackMetadataIntoXiphComment(TagLib::Ogg::XiphComment* pTag,
+     writeXiphCommentField(pTag, "INITIALKEY", key); // recommended field
+     updateXiphCommentField(pTag, "KEY", key); // alternative field
+ 
+-    if (hasTrackGain(trackMetadata)) {
+-        writeXiphCommentField(pTag, "REPLAYGAIN_TRACK_GAIN",
+-                toTagLibString(formatTrackGain(trackMetadata)));
+-    }
++    writeXiphCommentField(pTag, "REPLAYGAIN_TRACK_GAIN",
++            toTagLibString(formatTrackGain(trackMetadata)));
++    // NOTE(uklotzde, 2018-04-22): The analyzers currently doesn't
++    // calculate a peak value, so leave it untouched in the file if
++    // the value is invalid/absent. Otherwise the comment field would
++    // be deleted.
+     if (hasTrackPeak(trackMetadata)) {
+         writeXiphCommentField(pTag, "REPLAYGAIN_TRACK_PEAK",
+                 toTagLibString(formatTrackPeak(trackMetadata)));
+@@ -2282,10 +2282,12 @@ bool exportTrackMetadataIntoMP4Tag(TagLib::MP4::Tag* pTag, const TrackMetadata&
+     writeMP4Atom(pTag, "----:com.apple.iTunes:initialkey", key); // preferred
+     updateMP4Atom(pTag, "----:com.apple.iTunes:KEY", key); // alternative
+ 
+-    if (hasTrackGain(trackMetadata)) {
+-        writeMP4Atom(pTag, "----:com.apple.iTunes:replaygain_track_gain",
+-                toTagLibString(formatTrackGain(trackMetadata)));
+-    }
++    writeMP4Atom(pTag, "----:com.apple.iTunes:replaygain_track_gain",
++            toTagLibString(formatTrackGain(trackMetadata)));
++    // NOTE(uklotzde, 2018-04-22): The analyzers currently doesn't
++    // calculate a peak value, so leave it untouched in the file if
++    // the value is invalid/absent. Otherwise the MP4 atom would be
++    // deleted.
+     if (hasTrackPeak(trackMetadata)) {
+         writeMP4Atom(pTag, "----:com.apple.iTunes:replaygain_track_peak",
+                 toTagLibString(formatTrackPeak(trackMetadata)));

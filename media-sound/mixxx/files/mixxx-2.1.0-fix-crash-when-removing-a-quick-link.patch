@@ -1,0 +1,69 @@
+From f54dbc552a0fb9c13c7247faea5c2ffd0013c801 Mon Sep 17 00:00:00 2001
+From: Uwe Klotz <uklotz@mixxx.org>
+Date: Sat, 21 Apr 2018 12:21:36 +0200
+Subject: [PATCH 1/2] Fix crash when removing a quick link
+
+---
+ src/library/browse/browsefeature.cpp | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/src/library/browse/browsefeature.cpp b/src/library/browse/browsefeature.cpp
+index feb53b39d3..18a34d08fe 100644
+--- a/src/library/browse/browsefeature.cpp
++++ b/src/library/browse/browsefeature.cpp
+@@ -286,8 +286,15 @@ void BrowseFeature::onRightClickChild(const QPoint& globalPos, QModelIndex index
+ // This is called whenever you double click or use the triangle symbol to expand
+ // the subtree. The method will read the subfolders.
+ void BrowseFeature::onLazyChildExpandation(const QModelIndex& index) {
++    if (!index.isValid()) {
++        return;
++    }
+     TreeItem *item = static_cast<TreeItem*>(index.internalPointer());
+-    if (!item) {
++    if (!(item && item->getData().isValid())) {
++        // Them tem might have been removed just before
++        // NOTE(2018-04-21, uklotzde): When not checking if the QVariant
++        // stored in the item is valid Mixxx will crash.
++        // See also: https://bugs.launchpad.net/mixxx/+bug/1510068
+         return;
+     }
+ 
+
+From 8a87ad5a176026b92bce2e7c696b619a573f1de1 Mon Sep 17 00:00:00 2001
+From: Uwe Klotz <uklotz@mixxx.org>
+Date: Sun, 22 Apr 2018 12:16:42 +0200
+Subject: [PATCH 2/2] Fix typo and clarify comments
+
+---
+ src/library/browse/browsefeature.cpp | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
+
+diff --git a/src/library/browse/browsefeature.cpp b/src/library/browse/browsefeature.cpp
+index 18a34d08fe..ee72493b43 100644
+--- a/src/library/browse/browsefeature.cpp
++++ b/src/library/browse/browsefeature.cpp
+@@ -286,15 +286,20 @@ void BrowseFeature::onRightClickChild(const QPoint& globalPos, QModelIndex index
+ // This is called whenever you double click or use the triangle symbol to expand
+ // the subtree. The method will read the subfolders.
+ void BrowseFeature::onLazyChildExpandation(const QModelIndex& index) {
++    // The selected item might have been removed just before this function
++    // is invoked!
++    // NOTE(2018-04-21, uklotzde): The following checks prevent a crash
++    // that would otherwise occur after a quick link has been removed.
++    // Especially the check of QVariant::isValid() seems to be essential.
++    // See also: https://bugs.launchpad.net/mixxx/+bug/1510068
++    // After migration to Qt5 the implementation of all LibraryFeatures
++    // should be revisited, because I consider these checks only as a
++    // temporary workaround.
+     if (!index.isValid()) {
+         return;
+     }
+     TreeItem *item = static_cast<TreeItem*>(index.internalPointer());
+     if (!(item && item->getData().isValid())) {
+-        // Them tem might have been removed just before
+-        // NOTE(2018-04-21, uklotzde): When not checking if the QVariant
+-        // stored in the item is valid Mixxx will crash.
+-        // See also: https://bugs.launchpad.net/mixxx/+bug/1510068
+         return;
+     }
+ 

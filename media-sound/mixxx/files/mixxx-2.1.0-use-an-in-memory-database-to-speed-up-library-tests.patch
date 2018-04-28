@@ -1,0 +1,79 @@
+From e41777469701d85069680984b6365fe7a22fd537 Mon Sep 17 00:00:00 2001
+From: Uwe Klotz <uklotz@mixxx.org>
+Date: Tue, 24 Apr 2018 00:56:02 +0200
+Subject: [PATCH] Use an in-memory database to speed up library tests
+
+---
+ src/database/mixxxdb.cpp | 10 ++++++----
+ src/database/mixxxdb.h   |  3 ++-
+ src/test/librarytest.h   |  5 ++++-
+ 3 files changed, 12 insertions(+), 6 deletions(-)
+
+diff --git a/src/database/mixxxdb.cpp b/src/database/mixxxdb.cpp
+index 2046129b44..ef01bcc0f1 100644
+--- a/src/database/mixxxdb.cpp
++++ b/src/database/mixxxdb.cpp
+@@ -19,11 +19,12 @@ const mixxx::Logger kLogger("MixxxDb");
+ 
+ // The connection parameters for the main Mixxx DB
+ mixxx::DbConnection::Params dbConnectionParams(
+-        const UserSettingsPointer& pConfig) {
++        const UserSettingsPointer& pConfig,
++        bool inMemoryConnection) {
+     mixxx::DbConnection::Params params;
+     params.type = "QSQLITE";
+     params.hostName = "localhost";
+-    params.filePath = QDir(pConfig->getSettingsPath()).filePath("mixxxdb.sqlite");
++    params.filePath = inMemoryConnection ? QString(":memory:") : QDir(pConfig->getSettingsPath()).filePath("mixxxdb.sqlite");
+     params.userName = "mixxx";
+     params.password = "mixxx";
+     return params;
+@@ -32,8 +33,9 @@ mixxx::DbConnection::Params dbConnectionParams(
+ } // anonymous namespace
+ 
+ MixxxDb::MixxxDb(
+-        const UserSettingsPointer& pConfig)
+-    : m_pDbConnectionPool(std::make_shared<mixxx::DbConnectionPool>(dbConnectionParams(pConfig), "MIXXX")) {
++        const UserSettingsPointer& pConfig,
++        bool inMemoryConnection)
++    : m_pDbConnectionPool(std::make_shared<mixxx::DbConnectionPool>(dbConnectionParams(pConfig, inMemoryConnection), "MIXXX")) {
+ }
+ 
+ bool MixxxDb::initDatabaseSchema(
+diff --git a/src/database/mixxxdb.h b/src/database/mixxxdb.h
+index 4e5fe77182..0ca67631bc 100644
+--- a/src/database/mixxxdb.h
++++ b/src/database/mixxxdb.h
+@@ -23,7 +23,8 @@ class MixxxDb : public QObject {
+             int schemaVersion = kRequiredSchemaVersion);
+ 
+     explicit MixxxDb(
+-            const UserSettingsPointer& pConfig);
++            const UserSettingsPointer& pConfig,
++            bool inMemoryConnection = false);
+ 
+     mixxx::DbConnectionPoolPtr connectionPool() const {
+         return m_pDbConnectionPool;
+diff --git a/src/test/librarytest.h b/src/test/librarytest.h
+index 1baae898cf..7cf4459a21 100644
+--- a/src/test/librarytest.h
++++ b/src/test/librarytest.h
+@@ -9,6 +9,9 @@
+ #include "util/db/dbconnectionpooled.h"
+ #include "track/globaltrackcache.h"
+ 
++namespace {
++    const bool kInMemoryDbConnection = true;
++} // anonymous namespace
+ 
+ class LibraryTest : public MixxxTest,
+     public virtual /*implements*/ GlobalTrackCacheSaver {
+@@ -21,7 +24,7 @@ class LibraryTest : public MixxxTest,
+ 
+   protected:
+     LibraryTest()
+-        : m_mixxxDb(config()),
++        : m_mixxxDb(config(), kInMemoryDbConnection),
+           m_dbConnectionPooler(m_mixxxDb.connectionPool()),
+           m_dbConnection(mixxx::DbConnectionPooled(m_mixxxDb.connectionPool())),
+           m_trackCollection(config()) {

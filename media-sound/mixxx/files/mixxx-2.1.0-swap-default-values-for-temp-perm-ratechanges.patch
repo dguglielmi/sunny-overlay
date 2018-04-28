@@ -1,0 +1,31 @@
+From 4148349efe700106de3c347708d5d8429c1ffbeb Mon Sep 17 00:00:00 2001
+From: Uwe Klotz <uklotz@mixxx.org>
+Date: Mon, 16 Apr 2018 07:26:51 +0200
+Subject: [PATCH] Swap default values for temp/perm rate changes
+
+---
+ src/preferences/dialog/dlgprefdeck.cpp | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/src/preferences/dialog/dlgprefdeck.cpp b/src/preferences/dialog/dlgprefdeck.cpp
+index 6cf2e0c327..0f73b68f3c 100644
+--- a/src/preferences/dialog/dlgprefdeck.cpp
++++ b/src/preferences/dialog/dlgprefdeck.cpp
+@@ -198,13 +198,13 @@ DlgPrefDeck::DlgPrefDeck(QWidget * parent, MixxxMainWindow * mixxx,
+             this, SLOT(slotRatePermFineSpinbox(double)));
+ 
+     m_dRateTempCoarse = m_pConfig->getValue(ConfigKey("[Controls]", "RateTempLeft"),
+-            kDefaultPermanentRateChangeCoarse);
++            kDefaultTemporaryRateChangeCoarse);
+     m_dRateTempFine = m_pConfig->getValue(ConfigKey("[Controls]", "RateTempRight"),
+-            kDefaultPermanentRateChangeFine);
++            kDefaultTemporaryRateChangeFine);
+     m_dRatePermCoarse = m_pConfig->getValue(ConfigKey("[Controls]", "RatePermLeft"),
+-            kDefaultTemporaryRateChangeCoarse);
++            kDefaultPermanentRateChangeCoarse);
+     m_dRatePermFine = m_pConfig->getValue(ConfigKey("[Controls]", "RatePermRight"),
+-            kDefaultTemporaryRateChangeFine);
++            kDefaultPermanentRateChangeFine);
+ 
+     spinBoxTemporaryRateCoarse->setValue(m_dRateTempCoarse);
+     spinBoxTemporaryRateFine->setValue(m_dRateTempFine);

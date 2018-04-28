@@ -1,0 +1,127 @@
+From cc34144fbad992f0502db66a7ada7ae16683a81e Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Daniel=20Sch=C3=BCrmann?= <daschuer@mixxx.org>
+Date: Mon, 16 Apr 2018 23:41:14 +0200
+Subject: [PATCH 1/2] fix debug assert using empty pixmap source
+
+---
+ src/widget/wpixmapstore.cpp | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/src/widget/wpixmapstore.cpp b/src/widget/wpixmapstore.cpp
+index b2648337c0..36d2418d9e 100644
+--- a/src/widget/wpixmapstore.cpp
++++ b/src/widget/wpixmapstore.cpp
+@@ -16,6 +16,9 @@ QSharedPointer<ImgSource> WPixmapStore::m_loader
+ PaintablePointer WPixmapStore::getPaintable(PixmapSource source,
+                                             Paintable::DrawMode mode,
+                                             double scaleFactor) {
++    if (source.isEmpty()) {
++        return PaintablePointer();
++    }
+     QString key = source.getId() + QString::number(mode) + QString::number(scaleFactor);
+ 
+     // See if we have a cached value for the pixmap.
+
+From 920a00b59b90c36f949d04e8dbbbdf16e3d4364a Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Daniel=20Sch=C3=BCrmann?= <daschuer@mixxx.org>
+Date: Tue, 17 Apr 2018 00:10:21 +0200
+Subject: [PATCH 2/2] Fix false postive restart request when changing skin.
+
+---
+ src/preferences/dialog/dlgprefinterface.cpp | 24 +++++-------------------
+ src/preferences/dialog/dlgprefinterface.h   |  2 --
+ 2 files changed, 5 insertions(+), 21 deletions(-)
+
+diff --git a/src/preferences/dialog/dlgprefinterface.cpp b/src/preferences/dialog/dlgprefinterface.cpp
+index 02dc8b5b01..95d33da72b 100644
+--- a/src/preferences/dialog/dlgprefinterface.cpp
++++ b/src/preferences/dialog/dlgprefinterface.cpp
+@@ -39,13 +39,11 @@ DlgPrefInterface::DlgPrefInterface(QWidget * parent, MixxxMainWindow * mixxx,
+     // Iterate through the available locales and add them to the combobox
+     // Borrowed following snippet from http://qt-project.org/wiki/How_to_create_a_multi_language_application
+     QString translationsFolder = m_pConfig->getResourcePath() + "translations/";
+-    QString currentLocale = pConfig->getValueString(ConfigKey("[Config]", "Locale"));
+ 
+     QDir translationsDir(translationsFolder);
+     QStringList fileNames = translationsDir.entryList(QStringList("mixxx_*.qm"));
+     fileNames.push_back("mixxx_en_US.qm"); // add source language as a fake value
+ 
+-    bool indexFlag = false; // it'll indicate if the selected index changed.
+     for (int i = 0; i < fileNames.size(); ++i) {
+         // Extract locale from filename
+         QString locale = fileNames[i];
+@@ -60,19 +58,9 @@ DlgPrefInterface::DlgPrefInterface(QWidget * parent, MixxxMainWindow * mixxx,
+         }
+         lang = QString("%1 (%2)").arg(lang).arg(country);
+         ComboBoxLocale->addItem(lang, locale); // locale as userdata (for storing to config)
+-        if (locale == currentLocale) { // Set the currently selected locale
+-            ComboBoxLocale->setCurrentIndex(ComboBoxLocale->count() - 1);
+-            indexFlag = true;
+-        }
+     }
+     ComboBoxLocale->model()->sort(0); // Sort languages list
+-
+     ComboBoxLocale->insertItem(0, "System", ""); // System default locale - insert at the top
+-    if (!indexFlag) { // if selectedIndex didn't change - select system default
+-        ComboBoxLocale->setCurrentIndex(0);
+-    }
+-    connect(ComboBoxLocale, SIGNAL(activated(int)),
+-            this, SLOT(slotSetLocale(int)));
+ 
+     //
+     // Skin configurations
+@@ -278,10 +266,6 @@ void DlgPrefInterface::slotResetToDefaults() {
+     radioButtonKeepMetaknobPosition->setChecked(true);
+ }
+ 
+-void DlgPrefInterface::slotSetLocale(int pos) {
+-    m_locale = ComboBoxLocale->itemData(pos).toString();
+-}
+-
+ void DlgPrefInterface::slotSetScaleFactor(double newValue) {
+     // The spinbox shows a percentage, but Mixxx stores a multiplication factor
+     // with 1.00 as no change.
+@@ -345,7 +329,9 @@ void DlgPrefInterface::slotApply() {
+     m_pConfig->set(ConfigKey("[Config]", "ResizableSkin"), m_skin);
+     m_pConfig->set(ConfigKey("[Config]", "Scheme"), m_colorScheme);
+ 
+-    m_pConfig->set(ConfigKey("[Config]", "Locale"), m_locale);
++    QString locale = ComboBoxLocale->itemData(
++            ComboBoxLocale->currentIndex()).toString();
++    m_pConfig->set(ConfigKey("[Config]", "Locale"), locale);
+ 
+     m_pConfig->setValue(
+             ConfigKey("[Config]", "ScaleFactorAuto"), m_bUseAutoScaleFactor);
+@@ -373,10 +359,10 @@ void DlgPrefInterface::slotApply() {
+                 static_cast<mixxx::ScreenSaverPreference>(screensaverComboBoxState));
+     }
+ 
+-    if (m_locale != m_localeOnUpdate) {
++    if (locale != m_localeOnUpdate) {
+         notifyRebootNecessary();
+         // hack to prevent showing the notification when pressing "Okay" after "Apply"
+-        m_localeOnUpdate = m_locale;
++        m_localeOnUpdate = locale;
+     }
+ 
+     if (m_bRebootMixxxView) {
+diff --git a/src/preferences/dialog/dlgprefinterface.h b/src/preferences/dialog/dlgprefinterface.h
+index 6496d8c148..86a896c940 100644
+--- a/src/preferences/dialog/dlgprefinterface.h
++++ b/src/preferences/dialog/dlgprefinterface.h
+@@ -52,7 +52,6 @@ class DlgPrefInterface : public DlgPreferencePage, public Ui::DlgPrefControlsDlg
+     void slotSetSkin(int);
+     void slotSetScheme(int);
+     void slotUpdateSchemes();
+-    void slotSetLocale(int);
+     void slotSetScaleFactor(double newValue);
+     void slotSetScaleFactorAuto(bool checked);
+ 
+@@ -76,7 +75,6 @@ class DlgPrefInterface : public DlgPreferencePage, public Ui::DlgPrefControlsDlg
+     QString m_skin;
+     QString m_skinOnUpdate;
+     QString m_colorScheme;
+-    QString m_locale;
+     QString m_localeOnUpdate;
+     mixxx::TooltipsPreference m_tooltipMode;
+     double m_dScaleFactorAuto;

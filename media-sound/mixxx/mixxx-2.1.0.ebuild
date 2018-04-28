@@ -11,11 +11,9 @@ SRC_URI="https://github.com/mixxxdj/${PN}/archive/release-${PV}.tar.gz -> ${P}-s
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="~amd64 ~x86"
 IUSE="aac doc ffmpeg hid mp3 mp4 shout wavpack"
 
-# fails to compile system-fidlib. Add ">media-libs/fidlib-0.9.10-r1" once this
-# got fixed
 RDEPEND="
 	dev-db/sqlite
 	dev-libs/protobuf:0=
@@ -56,7 +54,6 @@ RDEPEND="
 	wavpack? ( media-sound/wavpack )
 	ffmpeg? ( media-video/ffmpeg:0= )
 "
-# media-libs/rubberband RDEPENDs on sci-libs/fftw:3.0
 DEPEND="
 	${RDEPEND}
 	virtual/pkgconfig
@@ -66,6 +63,20 @@ DEPEND="
 
 PATCHES=(
 	"${FILESDIR}"/${PN}-2.0.0-docs.patch
+	"${FILESDIR}"/${P}-swap-default-values-for-temp-perm-ratechanges.patch
+	"${FILESDIR}"/${P}-fix-invocation-args-of-pasuspender.patch
+	"${FILESDIR}"/${P}-fix-unresponsive-scrolling-through-crates-and-playlists-using-encoder.patch
+	"${FILESDIR}"/${P}-debug-assert-and-fix-false-poisitiv-restart-request.patch
+	"${FILESDIR}"/${P}-fidlib-thread-safe-and-reentrant-generation-of-filters.patch
+	"${FILESDIR}"/${P}-fix-navigation-usability-issues-in-sidebar-tree.patch
+	"${FILESDIR}"/${P}-fix-latenight-group-fx-buttons-in-deck.patch
+	"${FILESDIR}"/${P}-fix-crash-when-removing-a-quick-link.patch
+	"${FILESDIR}"/${P}-fix-clearing-of-replaygain-gain-ratio-in-file-tags.patch
+	"${FILESDIR}"/${P}-fix-memory-leak-when-loading-cover-art.patch
+	"${FILESDIR}"/${P}-use-an-in-memory-database-to-speed-up-library-tests.patch
+	"${FILESDIR}"/${P}-fix-integration-of-external-track-libraries.patch
+	"${FILESDIR}"/${P}-fix-flac-decoding-and-upgrade-db-schema.patch
+	"${FILESDIR}"/${P}-fix-s4-mk2-for-windows.patch
 )
 
 S="${WORKDIR}/${PN}-release-${PV}"
