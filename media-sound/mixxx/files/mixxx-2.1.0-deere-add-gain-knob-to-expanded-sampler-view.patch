@@ -1,0 +1,26 @@
+From 8cc61cb9fc3906a8ecad39d809290f6a2c3d3741 Mon Sep 17 00:00:00 2001
+From: Uwe Klotz <uklotz@mixxx.org>
+Date: Sat, 5 May 2018 14:08:00 +0200
+Subject: [PATCH] Deere: Add gain knob to expanded sampler view
+
+---
+ res/skins/Deere/sampler_controls_row.xml | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/res/skins/Deere/sampler_controls_row.xml b/res/skins/Deere/sampler_controls_row.xml
+index 2514c4d833..202d3ab336 100644
+--- a/res/skins/Deere/sampler_controls_row.xml
++++ b/res/skins/Deere/sampler_controls_row.xml
+@@ -77,6 +77,12 @@
+         <Layout>horizontal</Layout>
+         <ObjectName>ButtonGrid</ObjectName>
+         <Children>
++          <Template src="skin:knob.xml">
++            <SetVariable name="TooltipId">pregain</SetVariable>
++            <SetVariable name="control">pregain</SetVariable>
++            <SetVariable name="color">green</SetVariable>
++          </Template>
++
+           <Template src="skin:left_right_1state_button.xml">
+             <SetVariable name="TooltipId">beatsync_beatsync_tempo</SetVariable>
+             <SetVariable name="ObjectName">BeatsyncButton</SetVariable>

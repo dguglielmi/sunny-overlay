@@ -1,0 +1,25 @@
+From c6564afc8e3252e73f6c7e85fa6ae25a8abd124f Mon Sep 17 00:00:00 2001
+From: "Sean M. Pappalardo" <pegasus@renegadetech.com>
+Date: Fri, 20 Apr 2018 13:22:26 -0700
+Subject: [PATCH] Revert 2b612c2, fix spinback inertia effect for wheeled
+ controllers that use the same wheel to jog when not touched on top. e.g.
+ American Audio VMS4, EKS Otus
+
+---
+ src/controllers/controllerengine.cpp | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/src/controllers/controllerengine.cpp b/src/controllers/controllerengine.cpp
+index c8e34a6022..509cc14a74 100644
+--- a/src/controllers/controllerengine.cpp
++++ b/src/controllers/controllerengine.cpp
+@@ -1379,8 +1379,7 @@ void ControllerEngine::scratchDisable(int deck, bool ramp) {
+ bool ControllerEngine::isScratching(int deck) {
+     // PlayerManager::groupForDeck is 0-indexed.
+     QString group = PlayerManager::groupForDeck(deck - 1);
+-    // Don't report that we are scratching if we're ramping.
+-    return getValue(group, "scratch2_enable") > 0 && !m_ramp[deck];
++    return getValue(group, "scratch2_enable") > 0;
+ }
+ 
+ /*  -------- ------------------------------------------------------

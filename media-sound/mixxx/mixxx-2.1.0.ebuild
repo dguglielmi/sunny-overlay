@@ -77,6 +77,10 @@ PATCHES=(
 	"${FILESDIR}"/${P}-fix-integration-of-external-track-libraries.patch
 	"${FILESDIR}"/${P}-fix-flac-decoding-and-upgrade-db-schema.patch
 	"${FILESDIR}"/${P}-fix-s4-mk2-for-windows.patch
+	"${FILESDIR}"/${P}-pioneer-ddj-sx-mapping-bugfixes.patch
+	"${FILESDIR}"/${P}-fix-spinback-inertia-effect-partial-revert-of-2b612c2.patch
+	"${FILESDIR}"/${P}-denon-mc6000mk2-use-ramping-for-back-spins.patch
+	"${FILESDIR}"/${P}-deere-add-gain-knob-to-expanded-sampler-view.patch
 )
 
 S="${WORKDIR}/${PN}-release-${PV}"

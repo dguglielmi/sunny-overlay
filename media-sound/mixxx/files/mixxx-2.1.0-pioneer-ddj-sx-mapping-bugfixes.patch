@@ -1,0 +1,268 @@
+From cbda5169b22d5300f9d2f83fbf0500a602245787 Mon Sep 17 00:00:00 2001
+From: DJMaxergy <Max-Beiersdorfer@t-online.de>
+Date: Tue, 1 May 2018 19:19:14 +0200
+Subject: [PATCH 1/6] Updated version and date due to bug fixes. Fixed behavior
+ of Play/Pause button concerning brake effect.
+
+---
+ res/controllers/Pioneer-DDJ-SX-scripts.js | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/res/controllers/Pioneer-DDJ-SX-scripts.js b/res/controllers/Pioneer-DDJ-SX-scripts.js
+index 73f9d70c8a..80a4b40b45 100755
+--- a/res/controllers/Pioneer-DDJ-SX-scripts.js
++++ b/res/controllers/Pioneer-DDJ-SX-scripts.js
+@@ -11,11 +11,11 @@ var PioneerDDJSX = function() {};
+ 
+ /*
+ 	Author: 		DJMaxergy
+-	Version: 		1.18, 06/13/2017
++	Version: 		1.19, 05/01/2018
+ 	Description: 	Pioneer DDJ-SX Controller Mapping for Mixxx
+     Source: 		http://github.com/DJMaxergy/mixxx/tree/pioneerDDJSX_mapping
+     
+-    Copyright (c) 2017 DJMaxergy, licensed under GPL version 2 or later
++    Copyright (c) 2018 DJMaxergy, licensed under GPL version 2 or later
+     Copyright (c) 2014-2015 various contributors, base for this mapping, licensed under MIT license
+     
+     Contributors:
+@@ -951,16 +951,16 @@ PioneerDDJSX.playButton = function(channel, control, value, status, group) {
+         playing = engine.getValue(group, "play");
+ 
+     if (value) {
+-        if (!PioneerDDJSX.toggledBrake[deck]) {
+-            script.toggleControl(group, "play");
+-        }
+         if (playing) {
+             script.brake(channel, control, value, status, group);
+             PioneerDDJSX.toggledBrake[deck] = true;
++        } else {
++            script.toggleControl(group, "play");
+         }
+     } else {
+         if (PioneerDDJSX.toggledBrake[deck]) {
+             script.brake(channel, control, value, status, group);
++            script.toggleControl(group, "play");
+             PioneerDDJSX.toggledBrake[deck] = false;
+         }
+     }
+
+From 0351a07487573d5682678de4aa3681e65a47a1dd Mon Sep 17 00:00:00 2001
+From: DJMaxergy <Max-Beiersdorfer@t-online.de>
+Date: Tue, 1 May 2018 19:23:32 +0200
+Subject: [PATCH 2/6] Fixed tempo/speed slider range button behavior: Maximum
+ range is now 90% (0.90) as 100% (1.00) isn't working anymore.
+
+---
+ res/controllers/Pioneer-DDJ-SX-scripts.js | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/res/controllers/Pioneer-DDJ-SX-scripts.js b/res/controllers/Pioneer-DDJ-SX-scripts.js
+index 80a4b40b45..e5ecd61239 100755
+--- a/res/controllers/Pioneer-DDJ-SX-scripts.js
++++ b/res/controllers/Pioneer-DDJ-SX-scripts.js
+@@ -1390,10 +1390,10 @@ PioneerDDJSX.shiftKeyLockButton = function(channel, control, value, status, grou
+ 
+     PioneerDDJSX.nonPadLedControl(group, PioneerDDJSX.nonPadLeds.shiftKeyLock, value);
+ 
+-    if (range === 1.00) {
++    if (range === 0.90) {
+         range = PioneerDDJSX.setUpSpeedSliderRange[deck];
+-    } else if ((range * 2) > 1.00) {
+-        range = 1.00;
++    } else if ((range * 2) > 0.90) {
++        range = 0.90;
+     } else {
+         range = range * 2;
+     }
+
+From 5656194dbf328d81887272e2e2efa2020ad058e8 Mon Sep 17 00:00:00 2001
+From: DJMaxergy <Max-Beiersdorfer@t-online.de>
+Date: Tue, 1 May 2018 19:28:17 +0200
+Subject: [PATCH 3/6] Fixed slip mode enable-disable problem if you want to use
+ beatlooproll feature: Removed "slip_enabled" call in slicer method.
+
+---
+ res/controllers/Pioneer-DDJ-SX-scripts.js | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/res/controllers/Pioneer-DDJ-SX-scripts.js b/res/controllers/Pioneer-DDJ-SX-scripts.js
+index e5ecd61239..027f33457f 100755
+--- a/res/controllers/Pioneer-DDJ-SX-scripts.js
++++ b/res/controllers/Pioneer-DDJ-SX-scripts.js
+@@ -2343,7 +2343,6 @@ PioneerDDJSX.slicerBeatActive = function(value, group, control) {
+             }
+         }
+     } else {
+-        engine.setValue(group, "slip_enabled", false);
+         PioneerDDJSX.slicerAlreadyJumped[deck] = false;
+         PioneerDDJSX.slicerPreviousBeatsPassed[deck] = 0;
+         PioneerDDJSX.slicerActive[deck] = false;
+
+From fcdd67c13fa02cdbc1d556ae6c26dd364f8e610b Mon Sep 17 00:00:00 2001
+From: DJMaxergy <Max-Beiersdorfer@t-online.de>
+Date: Tue, 1 May 2018 19:36:51 +0200
+Subject: [PATCH 4/6] Fixed 2.1 library functions ("rotarySelectorClick" now
+ expands categories in the left library panel) and enabled 2.1 library
+ controls as default.
+
+---
+ res/controllers/Pioneer-DDJ-SX-scripts.js | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/res/controllers/Pioneer-DDJ-SX-scripts.js b/res/controllers/Pioneer-DDJ-SX-scripts.js
+index 027f33457f..afb857678d 100755
+--- a/res/controllers/Pioneer-DDJ-SX-scripts.js
++++ b/res/controllers/Pioneer-DDJ-SX-scripts.js
+@@ -97,8 +97,8 @@ PioneerDDJSX.samplerCueGotoAndPlay = false;
+ PioneerDDJSX.autoPFL = true;
+ 
+ // If true, new in Mixxx 2.1 introduced library controls will be used,
+-// else old playlist controls will be used (default: false).
+-PioneerDDJSX.useNewLibraryControls = false;
++// else old playlist controls will be used (default: true).
++PioneerDDJSX.useNewLibraryControls = true;
+ 
+ 
+ ///////////////////////////////////////////////////////////////
+@@ -2246,7 +2246,7 @@ PioneerDDJSX.rotarySelectorShifted = function(channel, control, value, status) {
+ 
+ PioneerDDJSX.rotarySelectorClick = function(channel, control, value, status) {
+     if (PioneerDDJSX.useNewLibraryControls) {
+-        script.toggleControl("[Library]", "MoveFocusForward");
++        script.toggleControl("[Library]", "GoToItem");
+     } else {
+         if (PioneerDDJSX.autoDJAddTop) {
+             script.toggleControl("[Library]", "AutoDjAddTop");
+
+From 21f3004e6c7cb8efc694b842ddddea8c269ee169 Mon Sep 17 00:00:00 2001
+From: DJMaxergy <Max-Beiersdorfer@t-online.de>
+Date: Tue, 1 May 2018 19:58:30 +0200
+Subject: [PATCH 5/6] Changed "rotarySelectorShiftedClick" button behavior:
+ Using the 2.1 library controls now triggers the
+ "AutoDJAddTop"/"AutoDJAddBottom" function.
+
+---
+ res/controllers/Pioneer-DDJ-SX-scripts.js | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/res/controllers/Pioneer-DDJ-SX-scripts.js b/res/controllers/Pioneer-DDJ-SX-scripts.js
+index afb857678d..f24a20fefc 100755
+--- a/res/controllers/Pioneer-DDJ-SX-scripts.js
++++ b/res/controllers/Pioneer-DDJ-SX-scripts.js
+@@ -2258,7 +2258,11 @@ PioneerDDJSX.rotarySelectorClick = function(channel, control, value, status) {
+ 
+ PioneerDDJSX.rotarySelectorShiftedClick = function(channel, control, value, status) {
+     if (PioneerDDJSX.useNewLibraryControls) {
+-        script.toggleControl("[Library]", "GoToItem");
++        if (PioneerDDJSX.autoDJAddTop) {
++            script.toggleControl("[Library]", "AutoDjAddTop");
++        } else {
++            script.toggleControl("[Library]", "AutoDjAddBottom");
++        }
+     } else {
+         script.toggleControl("[Playlist]", "ToggleSelectedSidebarItem");
+     }
+
+From 60351a88dc39a8ea5815579e3ff68076248910e9 Mon Sep 17 00:00:00 2001
+From: DJMaxergy <Max-Beiersdorfer@t-online.de>
+Date: Sun, 6 May 2018 23:31:15 +0200
+Subject: [PATCH 6/6] Removed option to choose between old and new Mixxx 2.1
+ library controls. New library controls will be used now.
+
+---
+ res/controllers/Pioneer-DDJ-SX-scripts.js | 47 ++++++-------------------------
+ 1 file changed, 9 insertions(+), 38 deletions(-)
+
+diff --git a/res/controllers/Pioneer-DDJ-SX-scripts.js b/res/controllers/Pioneer-DDJ-SX-scripts.js
+index f24a20fefc..b88e31896e 100755
+--- a/res/controllers/Pioneer-DDJ-SX-scripts.js
++++ b/res/controllers/Pioneer-DDJ-SX-scripts.js
+@@ -71,7 +71,7 @@ PioneerDDJSX.jogwheelShiftMultiplier = 10;
+ 
+ // If true, vu meters twinkle if AutoDJ is enabled (default: true).
+ PioneerDDJSX.twinkleVumeterAutodjOn = true;
+-// If true, selected track will be added to AutoDJ queue-top on pressing rotary selector,
++// If true, selected track will be added to AutoDJ queue-top on pressing shift + rotary selector,
+ // else track will be added to AutoDJ queue-bottom (default: false).
+ PioneerDDJSX.autoDJAddTop = false;
+ // Sets the duration of sleeping between AutoDJ actions if AutoDJ is enabled [ms] (default: 1000).
+@@ -96,10 +96,6 @@ PioneerDDJSX.samplerCueGotoAndPlay = false;
+ // If true, PFL / Cue (headphone) is being activated by loading a track into certain deck (default: true).
+ PioneerDDJSX.autoPFL = true;
+ 
+-// If true, new in Mixxx 2.1 introduced library controls will be used,
+-// else old playlist controls will be used (default: true).
+-PioneerDDJSX.useNewLibraryControls = true;
+-
+ 
+ ///////////////////////////////////////////////////////////////
+ //               INIT, SHUTDOWN & GLOBAL HELPER              //
+@@ -2198,11 +2194,7 @@ PioneerDDJSX.loadPrepareButton = function(channel, control, value, status) {
+ };
+ 
+ PioneerDDJSX.backButton = function(channel, control, value, status) {
+-    if (PioneerDDJSX.useNewLibraryControls) {
+-        script.toggleControl("[Library]", "MoveFocusBackward");
+-    } else {
+-        script.toggleControl("AutoDJ", "skip_next");
+-    }
++    script.toggleControl("[Library]", "MoveFocusBackward");
+ };
+ 
+ PioneerDDJSX.shiftBackButton = function(channel, control, value, status) {
+@@ -2224,47 +2216,26 @@ PioneerDDJSX.getRotaryDelta = function(value) {
+ PioneerDDJSX.rotarySelector = function(channel, control, value, status) {
+     var delta = PioneerDDJSX.getRotaryDelta(value);
+ 
+-    if (PioneerDDJSX.useNewLibraryControls) {
+-        engine.setValue("[Library]", "MoveVertical", delta);
+-        PioneerDDJSX.rotarySelectorChanged = true;
+-    } else {
+-        engine.setValue("[Playlist]", "SelectTrackKnob", delta);
+-        PioneerDDJSX.rotarySelectorChanged = true;
+-    }
++    engine.setValue("[Library]", "MoveVertical", delta);
++    PioneerDDJSX.rotarySelectorChanged = true;
+ };
+ 
+ PioneerDDJSX.rotarySelectorShifted = function(channel, control, value, status) {
+     var delta = PioneerDDJSX.getRotaryDelta(value),
+         f = (delta > 0 ? "SelectNextPlaylist" : "SelectPrevPlaylist");
+ 
+-    if (PioneerDDJSX.useNewLibraryControls) {
+-        engine.setValue("[Library]", "MoveHorizontal", delta);
+-    } else {
+-        engine.setValue("[Playlist]", f, Math.abs(delta));
+-    }
++    engine.setValue("[Library]", "MoveHorizontal", delta);
+ };
+ 
+ PioneerDDJSX.rotarySelectorClick = function(channel, control, value, status) {
+-    if (PioneerDDJSX.useNewLibraryControls) {
+-        script.toggleControl("[Library]", "GoToItem");
+-    } else {
+-        if (PioneerDDJSX.autoDJAddTop) {
+-            script.toggleControl("[Library]", "AutoDjAddTop");
+-        } else {
+-            script.toggleControl("[Library]", "AutoDjAddBottom");
+-        }
+-    }
++    script.toggleControl("[Library]", "GoToItem");
+ };
+ 
+ PioneerDDJSX.rotarySelectorShiftedClick = function(channel, control, value, status) {
+-    if (PioneerDDJSX.useNewLibraryControls) {
+-        if (PioneerDDJSX.autoDJAddTop) {
+-            script.toggleControl("[Library]", "AutoDjAddTop");
+-        } else {
+-            script.toggleControl("[Library]", "AutoDjAddBottom");
+-        }
++    if (PioneerDDJSX.autoDJAddTop) {
++        script.toggleControl("[Library]", "AutoDjAddTop");
+     } else {
+-        script.toggleControl("[Playlist]", "ToggleSelectedSidebarItem");
++        script.toggleControl("[Library]", "AutoDjAddBottom");
+     }
+ };
+ 
