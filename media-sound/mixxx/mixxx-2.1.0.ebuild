@@ -82,6 +82,10 @@ PATCHES=(
 	"${FILESDIR}"/${P}-fix-decoding-of-improperly-encoded-flac-files.patch
 	"${FILESDIR}"/${P}-fix-spinback-inertia-effect-partial-revert-of-2b612c2.patch
 	"${FILESDIR}"/${P}-denon-mc6000mk2-use-ramping-for-back-spins.patch
+	"${FILESDIR}"/${P}-optimize-flac-decoding.patch
+	"${FILESDIR}"/${P}-detect-m4a-decoding-errors-on-windows.patch
+	"${FILESDIR}"/${P}-fix-cachingreader-compiler-warnings-about-non-trivial-types.patch
+
 )
 
 S="${WORKDIR}/${PN}-release-${PV}"

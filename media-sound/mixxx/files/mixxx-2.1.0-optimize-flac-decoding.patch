@@ -1,0 +1,208 @@
+From 497e9672dfd1079e28cadc9a413a0b8be00ed59d Mon Sep 17 00:00:00 2001
+From: Uwe Klotz <uklotz@mixxx.org>
+Date: Wed, 9 May 2018 12:08:59 +0200
+Subject: [PATCH 1/4] Optimize FLAC decoding
+
+---
+ src/sources/soundsourceflac.cpp | 51 ++++++++++++++++++++---------------------
+ src/sources/soundsourceflac.h   |  2 --
+ 2 files changed, 25 insertions(+), 28 deletions(-)
+
+diff --git a/src/sources/soundsourceflac.cpp b/src/sources/soundsourceflac.cpp
+index 3d68e05ce7..50cb0955e6 100644
+--- a/src/sources/soundsourceflac.cpp
++++ b/src/sources/soundsourceflac.cpp
+@@ -71,7 +71,6 @@ SoundSourceFLAC::SoundSourceFLAC(const QUrl& url)
+           m_decoder(nullptr),
+           m_maxBlocksize(0),
+           m_bitsPerSample(kBitsPerSampleDefault),
+-          m_sampleScaleFactor(CSAMPLE_ZERO),
+           m_curFrameIndex(0) {
+ }
+ 
+@@ -345,25 +344,30 @@ FLAC__bool SoundSourceFLAC::flacEOF() {
+     return m_file.atEnd();
+ }
+ 
++namespace {
++
++// Workaround for improperly encoded FLAC files that may contain
++// garbage in the most significant, unused bits of decoded samples.
++// Required at least for libFLAC 1.3.2. This workaround might become
++// obsolete once libFLAC is taking care of these issues internally.
++// https://bugs.launchpad.net/mixxx/+bug/1769717
++// https://hydrogenaud.io/index.php/topic,61792.msg559045.html#msg559045
++//
++// We will shift decoded samples left by (32 - m_bitsPerSample) to
++// get rid of the garbage in the most significant bits before scaling.
++// The range of decoded integer sample values then becomes
++// [-2 ^ 31, 2 ^ 31 - 1]. Afterwards this integer range needs to be
++// scaled to [-CSAMPLE_PEAK, CSAMPLE_PEAK).
++
++const CSAMPLE kSampleScaleFactor = CSAMPLE_PEAK / (static_cast<FLAC__int32>(1) << 31);
++
+ inline
+-FLAC__int32 adjustDecodedSample(FLAC__int32 decodedSample, SINT bitsPerSample) {
+-    // Workaround for improperly encoded FLAC files that may contain
+-    // garbage in the most significant, unused bits of decoded samples.
+-    // Required at least for libFLAC 1.3.2. This workaround might become
+-    // obsolete once libFLAC is taking care of these issues internally.
+-    // https://bugs.launchpad.net/mixxx/+bug/1769717
+-    // https://hydrogenaud.io/index.php/topic,61792.msg559045.html#msg559045
+-    FLAC__int32 signBit = static_cast<FLAC__int32>(1) << (bitsPerSample - 1);
+-    FLAC__int32 bitMask = (static_cast<FLAC__int32>(1) << bitsPerSample) - 1; // == (signBit << 1) - 1
+-    FLAC__int32 maskedSample = decodedSample & bitMask;
+-    if (maskedSample & signBit) {
+-        // Sign extension for negative values
+-        return maskedSample | ~bitMask;
+-    } else {
+-        return maskedSample;
+-    }
++CSAMPLE convertDecodedSample(FLAC__int32 decodedSample, int bitsPerSample) {
++    return (decodedSample << (32 - bitsPerSample)) * kSampleScaleFactor;
+ }
+ 
++} // anonymous namespace
++
+ FLAC__StreamDecoderWriteStatus SoundSourceFLAC::flacWrite(
+         const FLAC__Frame* frame, const FLAC__int32* const buffer[]) {
+     const SINT numChannels = frame->header.channels;
+@@ -410,15 +414,15 @@ FLAC__StreamDecoderWriteStatus SoundSourceFLAC::flacWrite(
+     case 1: {
+         // optimized code for 1 channel (mono)
+         for (SINT i = 0; i < numWritableFrames; ++i) {
+-            *pSampleBuffer++ = adjustDecodedSample(buffer[0][i], m_bitsPerSample) * m_sampleScaleFactor;
++            *pSampleBuffer++ = convertDecodedSample(buffer[0][i], m_bitsPerSample);
+         }
+         break;
+     }
+     case 2: {
+         // optimized code for 2 channels (stereo)
+         for (SINT i = 0; i < numWritableFrames; ++i) {
+-            *pSampleBuffer++ = adjustDecodedSample(buffer[0][i], m_bitsPerSample) * m_sampleScaleFactor;
+-            *pSampleBuffer++ = adjustDecodedSample(buffer[1][i], m_bitsPerSample) * m_sampleScaleFactor;
++            *pSampleBuffer++ = convertDecodedSample(buffer[0][i], m_bitsPerSample);
++            *pSampleBuffer++ = convertDecodedSample(buffer[1][i], m_bitsPerSample);
+         }
+         break;
+     }
+@@ -426,7 +430,7 @@ FLAC__StreamDecoderWriteStatus SoundSourceFLAC::flacWrite(
+         // generic code for multiple channels
+         for (SINT i = 0; i < numWritableFrames; ++i) {
+             for (SINT j = 0; j < channelCount(); ++j) {
+-                *pSampleBuffer++ = adjustDecodedSample(buffer[j][i], m_bitsPerSample) * m_sampleScaleFactor;
++                *pSampleBuffer++ = convertDecodedSample(buffer[j][i], m_bitsPerSample);
+             }
+         }
+     }
+@@ -456,11 +460,6 @@ void SoundSourceFLAC::flacMetadata(const FLAC__StreamMetadata* metadata) {
+             // not set before
+             if ((bitsPerSample >= 4) && (bitsPerSample <= 32)) {
+                 m_bitsPerSample = bitsPerSample;
+-                // Range of signed) sample values: [-2 ^ (bitsPerSample - 1), 2 ^ (bitsPerSample - 1) - 1]
+-                const uint32_t absSamplePeak = 1u << (bitsPerSample - 1);
+-                DEBUG_ASSERT(absSamplePeak > 0);
+-                // Scaled range of samples values: [-CSAMPLE_PEAK, CSAMPLE_PEAK)
+-                m_sampleScaleFactor = CSAMPLE_PEAK / absSamplePeak;
+             } else {
+                 kLogger.warning()
+                         << "Invalid bits per sample:"
+diff --git a/src/sources/soundsourceflac.h b/src/sources/soundsourceflac.h
+index 05c74f7b5e..f4b3c1cb3c 100644
+--- a/src/sources/soundsourceflac.h
++++ b/src/sources/soundsourceflac.h
+@@ -49,8 +49,6 @@ class SoundSourceFLAC: public SoundSource {
+     SINT m_maxBlocksize; // in time samples (audio samples = time samples * chanCount)
+     SINT m_bitsPerSample;
+ 
+-    CSAMPLE m_sampleScaleFactor;
+-
+     ReadAheadSampleBuffer m_sampleBuffer;
+ 
+     void invalidateCurFrameIndex() {
+
+From 24c206f60278b8e9576ae661643162512ff1d19b Mon Sep 17 00:00:00 2001
+From: Uwe Klotz <uklotz@mixxx.org>
+Date: Wed, 9 May 2018 12:14:31 +0200
+Subject: [PATCH 2/4] Add an assertion (just in case)
+
+---
+ src/sources/soundsourceflac.cpp | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/sources/soundsourceflac.cpp b/src/sources/soundsourceflac.cpp
+index 50cb0955e6..c01ab8455d 100644
+--- a/src/sources/soundsourceflac.cpp
++++ b/src/sources/soundsourceflac.cpp
+@@ -363,6 +363,7 @@ const CSAMPLE kSampleScaleFactor = CSAMPLE_PEAK / (static_cast<FLAC__int32>(1) <
+ 
+ inline
+ CSAMPLE convertDecodedSample(FLAC__int32 decodedSample, int bitsPerSample) {
++    DEBUG_ASSERT(sizeof(FLAC__int32) == 32); // exactly 32-bits required!
+     return (decodedSample << (32 - bitsPerSample)) * kSampleScaleFactor;
+ }
+ 
+
+From 6dc1d5f1a7e291c36d5828fdaecc82a62845b758 Mon Sep 17 00:00:00 2001
+From: Uwe Klotz <uklotz@mixxx.org>
+Date: Wed, 9 May 2018 12:25:00 +0200
+Subject: [PATCH 3/4] Get rid of (most) implicit assumptions
+
+---
+ src/sources/soundsourceflac.cpp | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/src/sources/soundsourceflac.cpp b/src/sources/soundsourceflac.cpp
+index c01ab8455d..478bac870e 100644
+--- a/src/sources/soundsourceflac.cpp
++++ b/src/sources/soundsourceflac.cpp
+@@ -359,12 +359,12 @@ namespace {
+ // [-2 ^ 31, 2 ^ 31 - 1]. Afterwards this integer range needs to be
+ // scaled to [-CSAMPLE_PEAK, CSAMPLE_PEAK).
+ 
+-const CSAMPLE kSampleScaleFactor = CSAMPLE_PEAK / (static_cast<FLAC__int32>(1) << 31);
++const CSAMPLE kSampleScaleFactor = CSAMPLE_PEAK / (static_cast<FLAC__int32>(1) << std::numeric_limits<FLAC__int32>::digits);
+ 
+ inline
+ CSAMPLE convertDecodedSample(FLAC__int32 decodedSample, int bitsPerSample) {
+-    DEBUG_ASSERT(sizeof(FLAC__int32) == 32); // exactly 32-bits required!
+-    return (decodedSample << (32 - bitsPerSample)) * kSampleScaleFactor;
++    DEBUG_ASSERT(std::numeric_limits<FLAC__int32>::is_signed);
++    return (decodedSample << ((std::numeric_limits<FLAC__int32>::digits + 1) - bitsPerSample)) * kSampleScaleFactor;
+ }
+ 
+ } // anonymous namespace
+
+From a0430875f6c4ad89c0fb09300ed19a64c60bbfb4 Mon Sep 17 00:00:00 2001
+From: Uwe Klotz <uklotz@mixxx.org>
+Date: Wed, 9 May 2018 15:16:58 +0200
+Subject: [PATCH 4/4] Use constexpr and reword comments
+
+---
+ src/sources/soundsourceflac.cpp | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
+
+diff --git a/src/sources/soundsourceflac.cpp b/src/sources/soundsourceflac.cpp
+index 478bac870e..1a95ac168c 100644
+--- a/src/sources/soundsourceflac.cpp
++++ b/src/sources/soundsourceflac.cpp
+@@ -352,14 +352,12 @@ namespace {
+ // obsolete once libFLAC is taking care of these issues internally.
+ // https://bugs.launchpad.net/mixxx/+bug/1769717
+ // https://hydrogenaud.io/index.php/topic,61792.msg559045.html#msg559045
+-//
+-// We will shift decoded samples left by (32 - m_bitsPerSample) to
+-// get rid of the garbage in the most significant bits before scaling.
+-// The range of decoded integer sample values then becomes
+-// [-2 ^ 31, 2 ^ 31 - 1]. Afterwards this integer range needs to be
+-// scaled to [-CSAMPLE_PEAK, CSAMPLE_PEAK).
+ 
+-const CSAMPLE kSampleScaleFactor = CSAMPLE_PEAK / (static_cast<FLAC__int32>(1) << std::numeric_limits<FLAC__int32>::digits);
++// We will shift decoded samples left by (32 - m_bitsPerSample) to
++// get rid of the garbage in the most significant bits before scaling
++// to the range [-CSAMPLE_PEAK, CSAMPLE_PEAK - epsilon] with
++// epsilon = 1 / 2 ^ bitsPerSample.
++constexpr CSAMPLE kSampleScaleFactor = CSAMPLE_PEAK / (static_cast<FLAC__int32>(1) << std::numeric_limits<FLAC__int32>::digits);
+ 
+ inline
+ CSAMPLE convertDecodedSample(FLAC__int32 decodedSample, int bitsPerSample) {

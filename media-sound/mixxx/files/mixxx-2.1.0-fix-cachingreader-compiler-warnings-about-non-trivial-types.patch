@@ -1,0 +1,164 @@
+From 901cacb96a0c3898b7b7af3cddd87e0d02f67235 Mon Sep 17 00:00:00 2001
+From: Uwe Klotz <uklotz@mixxx.org>
+Date: Sat, 12 May 2018 00:20:59 +0200
+Subject: [PATCH] Fix CachingReader compiler warnings about non-trivial types
+
+---
+ src/engine/cachingreader.cpp       |  8 ++++----
+ src/engine/cachingreaderworker.cpp | 17 +++++++++++------
+ src/engine/cachingreaderworker.h   | 36 ++++++++++++++++++++++--------------
+ 3 files changed, 37 insertions(+), 24 deletions(-)
+
+diff --git a/src/engine/cachingreader.cpp b/src/engine/cachingreader.cpp
+index 2764e5c96c..2440b3a8f8 100644
+--- a/src/engine/cachingreader.cpp
++++ b/src/engine/cachingreader.cpp
+@@ -204,7 +204,7 @@ void CachingReader::process() {
+         } else if (status.status == TRACK_LOADED) {
+             m_readerStatus = status.status;
+             // Reset the max. readable frame index
+-            m_readableFrameIndexRange = status.readableFrameIndexRange;
++            m_readableFrameIndexRange = status.readableFrameIndexRange();
+             // Free all chunks with sample data from a previous track
+             freeAllChunks();
+         }
+@@ -212,7 +212,7 @@ void CachingReader::process() {
+             // Adjust the readable frame index range after loading or reading
+             m_readableFrameIndexRange = intersect(
+                     m_readableFrameIndexRange,
+-                    status.readableFrameIndexRange);
++                    status.readableFrameIndexRange());
+         } else {
+             // Reset the readable frame index range
+             m_readableFrameIndexRange = mixxx::IndexRange();
+@@ -467,8 +467,8 @@ void CachingReader::hintAndMaybeWake(const HintVector& hintList) {
+                 }
+                 // Do not insert the allocated chunk into the MRU/LRU list,
+                 // because it will be handed over to the worker immediately
+-                CachingReaderChunkReadRequest request(pChunk);
+-                pChunk->giveToWorker();
++                CachingReaderChunkReadRequest request;
++                request.giveToWorker(pChunk);
+                 // kLogger.debug() << "Requesting read of chunk" << current << "into" << pChunk;
+                 // kLogger.debug() << "Requesting read into " << request.chunk->data;
+                 if (m_chunkReadRequestFIFO.write(&request, 1) != 1) {
+diff --git a/src/engine/cachingreaderworker.cpp b/src/engine/cachingreaderworker.cpp
+index 600389f86f..34f9a9ac83 100644
+--- a/src/engine/cachingreaderworker.cpp
++++ b/src/engine/cachingreaderworker.cpp
+@@ -42,7 +42,9 @@ ReaderStatusUpdate CachingReaderWorker::processReadRequest(
+     // actually available.
+     const auto chunkFrameIndexRange = pChunk->frameIndexRange(m_pAudioSource);
+     if (intersect(chunkFrameIndexRange, m_readableFrameIndexRange).empty()) {
+-        return ReaderStatusUpdate(CHUNK_READ_INVALID, pChunk, m_readableFrameIndexRange);
++        ReaderStatusUpdate result;
++        result.init(CHUNK_READ_INVALID, pChunk, m_readableFrameIndexRange);
++        return result;
+     }
+ 
+     // Try to read the data required for the chunk from the audio source
+@@ -77,7 +79,9 @@ ReaderStatusUpdate CachingReaderWorker::processReadRequest(
+                 << "from originally"
+                 << m_pAudioSource->frameIndexRange();
+     }
+-    return ReaderStatusUpdate(status, pChunk, m_readableFrameIndexRange);
++    ReaderStatusUpdate result;
++    result.init(status, pChunk, m_readableFrameIndexRange);
++    return result;
+ }
+ 
+ // WARNING: Always called from a different thread (GUI)
+@@ -91,10 +95,10 @@ void CachingReaderWorker::run() {
+     unsigned static id = 0; //the id of this thread, for debugging purposes
+     QThread::currentThread()->setObjectName(QString("CachingReaderWorker %1").arg(++id));
+ 
+-    CachingReaderChunkReadRequest request;
+-
+     Event::start(m_tag);
+     while (!load_atomic(m_stop)) {
++        // Request is initialized by reading from FIFO
++        CachingReaderChunkReadRequest request;
+         if (m_newTrackAvailable) {
+             TrackPointer pLoadTrack;
+             { // locking scope
+@@ -130,7 +134,7 @@ mixxx::AudioSourcePointer openAudioSourceForReading(const TrackPointer& pTrack,
+ 
+ void CachingReaderWorker::loadTrack(const TrackPointer& pTrack) {
+     ReaderStatusUpdate status;
+-    status.status = TRACK_NOT_LOADED;
++    status.init(TRACK_NOT_LOADED);
+ 
+     if (!pTrack) {
+         // Unload track
+@@ -179,8 +183,9 @@ void CachingReaderWorker::loadTrack(const TrackPointer& pTrack) {
+     // be decreased to avoid repeated reading of corrupt audio data.
+     m_readableFrameIndexRange = m_pAudioSource->frameIndexRange();
+ 
+-    status.readableFrameIndexRange = m_readableFrameIndexRange;
+     status.status = TRACK_LOADED;
++    status.readableFrameIndexRangeStart = m_readableFrameIndexRange.start();
++    status.readableFrameIndexRangeEnd = m_readableFrameIndexRange.end();
+     m_pReaderStatusFIFO->writeBlocking(&status, 1);
+ 
+     // Clear the chunks to read list.
+diff --git a/src/engine/cachingreaderworker.h b/src/engine/cachingreaderworker.h
+index 4d60e7c3ed..54c5a4c77e 100644
+--- a/src/engine/cachingreaderworker.h
++++ b/src/engine/cachingreaderworker.h
+@@ -14,12 +14,14 @@
+ #include "util/fifo.h"
+ 
+ 
++// POD with trivial ctor/dtor/copy for passing through FIFO
+ typedef struct CachingReaderChunkReadRequest {
+     CachingReaderChunk* chunk;
+ 
+-    explicit CachingReaderChunkReadRequest(
+-            CachingReaderChunk* chunkArg = nullptr)
+-        : chunk(chunkArg) {
++    void giveToWorker(CachingReaderChunkForOwner* chunkForOwner) {
++        DEBUG_ASSERT(chunkForOwner);
++        chunk = chunkForOwner;
++        chunkForOwner->giveToWorker();
+     }
+ } CachingReaderChunkReadRequest;
+ 
+@@ -32,21 +34,27 @@ enum ReaderStatus {
+     CHUNK_READ_INVALID
+ };
+ 
++// POD with trivial ctor/dtor/copy for passing through FIFO
+ typedef struct ReaderStatusUpdate {
+     ReaderStatus status;
+     CachingReaderChunk* chunk;
+-    mixxx::IndexRange readableFrameIndexRange;
+-    ReaderStatusUpdate()
+-        : status(INVALID)
+-        , chunk(nullptr) {
++    SINT readableFrameIndexRangeStart;
++    SINT readableFrameIndexRangeEnd;
++
++    void init(
++            ReaderStatus statusArg = INVALID,
++            CachingReaderChunk* chunkArg = nullptr,
++            const mixxx::IndexRange& readableFrameIndexRangeArg = mixxx::IndexRange()) {
++        status = statusArg;
++        chunk = chunkArg;
++        readableFrameIndexRangeStart = readableFrameIndexRangeArg.start();
++        readableFrameIndexRangeEnd = readableFrameIndexRangeArg.end();
+     }
+-    ReaderStatusUpdate(
+-            ReaderStatus statusArg,
+-            CachingReaderChunk* chunkArg,
+-            const mixxx::IndexRange& readableFrameIndexRangeArg)
+-        : status(statusArg)
+-        , chunk(chunkArg)
+-        , readableFrameIndexRange(readableFrameIndexRangeArg) {
++
++    mixxx::IndexRange readableFrameIndexRange() const {
++        return mixxx::IndexRange::between(
++                readableFrameIndexRangeStart,
++                readableFrameIndexRangeEnd);
+     }
+ } ReaderStatusUpdate;
+ 
