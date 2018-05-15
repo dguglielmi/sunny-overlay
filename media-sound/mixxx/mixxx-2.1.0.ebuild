@@ -85,7 +85,7 @@ PATCHES=(
 	"${FILESDIR}"/${P}-optimize-flac-decoding.patch
 	"${FILESDIR}"/${P}-detect-m4a-decoding-errors-on-windows.patch
 	"${FILESDIR}"/${P}-fix-cachingreader-compiler-warnings-about-non-trivial-types.patch
-
+	"${FILESDIR}"/${P}-components-js-fixes.patch
 )
 
 S="${WORKDIR}/${PN}-release-${PV}"
