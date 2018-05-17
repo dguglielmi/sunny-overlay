@@ -31,8 +31,6 @@ PATCHES=(
 src_prepare() {
     python_setup
 	default
-
-	sed '/default:/d' -i meson_options.txt || die
 }
 
 src_configure() {
