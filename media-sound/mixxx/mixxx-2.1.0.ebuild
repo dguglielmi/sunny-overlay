@@ -86,6 +86,8 @@ PATCHES=(
 	"${FILESDIR}"/${P}-detect-m4a-decoding-errors-on-windows.patch
 	"${FILESDIR}"/${P}-fix-cachingreader-compiler-warnings-about-non-trivial-types.patch
 	"${FILESDIR}"/${P}-components-js-fixes.patch
+	"${FILESDIR}"/${P}-denon-mc6000mk2-fix-looping.patch
+	"${FILESDIR}"/${P}-dlgtrackinfo-mismatching-signal-slot-connection.patch
 )
 
 S="${WORKDIR}/${PN}-release-${PV}"

@@ -1,0 +1,330 @@
+From ffd86c7fa83b0b64814eb488af4807bcfae4c51f Mon Sep 17 00:00:00 2001
+From: Uwe Klotz <uklotz@mixxx.org>
+Date: Tue, 15 May 2018 14:34:01 +0200
+Subject: [PATCH 1/2] Denon MC6000MK2: Delete unused script code for hotcues
+
+---
+ res/controllers/Denon-MC6000MK2-scripts.js | 30 ------------------------------
+ 1 file changed, 30 deletions(-)
+
+diff --git a/res/controllers/Denon-MC6000MK2-scripts.js b/res/controllers/Denon-MC6000MK2-scripts.js
+index 7f1189ce9c..0ee05e4cd2 100644
+--- a/res/controllers/Denon-MC6000MK2-scripts.js
++++ b/res/controllers/Denon-MC6000MK2-scripts.js
+@@ -333,27 +333,6 @@ DenonMC6000MK2.disconnectControls = function () {
+ };
+ 
+ 
+-////////////////////////////////////////////////////////////////////////
+-// Hotcues                                                            //
+-////////////////////////////////////////////////////////////////////////
+-
+-DenonMC6000MK2.Hotcue = function (deck, number, midiLedValue, midiDimmerLedValue) {
+-    this.deck = deck;
+-    this.number = number;
+-    this.ctrlPrefix = "hotcue_" + number;
+-    this.midiLedValue = midiLedValue;
+-    this.midiDimmerLedValue = midiDimmerLedValue;
+-};
+-
+-DenonMC6000MK2.Hotcue.prototype.connectControls = function (callbackFunc) {
+-    this.deck.connectControl(this.ctrlPrefix + "_enabled", callbackFunc);
+-};
+-
+-DenonMC6000MK2.Hotcue.prototype.isEnabled = function () {
+-    return this.deck.getValue(this.ctrlPrefix + "_enabled");
+-};
+-
+-
+ ////////////////////////////////////////////////////////////////////////
+ // Samplers                                                           //
+ ////////////////////////////////////////////////////////////////////////
+@@ -484,11 +463,6 @@ DenonMC6000MK2.OldDeck = function (number, midiChannel) {
+     this.setValue("rate_dir", -1);
+     this.vinylMode = undefined;
+     this.syncMode = undefined;
+-    this.hotcues = [];
+-    this.hotcues[1] = new DenonMC6000MK2.Hotcue(this, 1, 0x11, 0x12);
+-    this.hotcues[2] = new DenonMC6000MK2.Hotcue(this, 2, 0x13, 0x14);
+-    this.hotcues[3] = new DenonMC6000MK2.Hotcue(this, 3, 0x15, 0x16);
+-    this.hotcues[4] = new DenonMC6000MK2.Hotcue(this, 4, 0x17, 0x18);
+ };
+ 
+ /* Shift */
+@@ -934,10 +908,6 @@ DenonMC6000MK2.OldDeck.prototype.connectControls = function () {
+     this.connectControl("loop_end_position", DenonMC6000MK2.ctrlLoopEndPosition);
+     DenonMC6000MK2.leftSide.efxUnit.connectDeckControls(this, DenonMC6000MK2.leftSide.efxUnit.ctrlDeck);
+     DenonMC6000MK2.rightSide.efxUnit.connectDeckControls(this, DenonMC6000MK2.rightSide.efxUnit.ctrlDeck);
+-    this.hotcues[1].connectControls(DenonMC6000MK2.ctrlHotcue1);
+-    this.hotcues[2].connectControls(DenonMC6000MK2.ctrlHotcue2);
+-    this.hotcues[3].connectControls(DenonMC6000MK2.ctrlHotcue3);
+-    this.hotcues[4].connectControls(DenonMC6000MK2.ctrlHotcue4);
+     // default settings
+     this.enableKeyLock();
+     this.enableVinylMode();
+
+From 14626e909bc98b97bd1d24a09fbcc99b557f5547 Mon Sep 17 00:00:00 2001
+From: Uwe Klotz <uklotz@mixxx.org>
+Date: Tue, 15 May 2018 15:23:14 +0200
+Subject: [PATCH 2/2] Denon MC6000MK2: Fix looping by capturing button release
+ events
+
+---
+ res/controllers/Denon-MC6000MK2-scripts.js |  33 +++++----
+ res/controllers/Denon-MC6000MK2.midi.xml   | 108 ++++++++++++++++++++++++-----
+ 2 files changed, 108 insertions(+), 33 deletions(-)
+
+diff --git a/res/controllers/Denon-MC6000MK2-scripts.js b/res/controllers/Denon-MC6000MK2-scripts.js
+index 0ee05e4cd2..fccb95cae2 100644
+--- a/res/controllers/Denon-MC6000MK2-scripts.js
++++ b/res/controllers/Denon-MC6000MK2-scripts.js
+@@ -767,14 +767,16 @@ DenonMC6000MK2.OldDeck.prototype.hasLoopEnd = function () {
+ };
+ 
+ DenonMC6000MK2.OldDeck.prototype.hasLoop = function () {
+-    return this.hasLoopStart() && this.hasLoopEnd();
++    return this.hasLoopStart() && this.hasLoopEnd() && this.getValue("loop_start_position") < this.getValue("loop_end_position");
+ };
+ 
+ DenonMC6000MK2.OldDeck.prototype.deleteLoopStart = function () {
++    this.setValue("loop_in", false);
+     this.setValue("loop_start_position", DenonMC6000MK2.MIXXX_LOOP_POSITION_UNDEFINED);
+ };
+ 
+ DenonMC6000MK2.OldDeck.prototype.deleteLoopEnd = function () {
++    this.setValue("loop_out", false);
+     this.setValue("loop_end_position", DenonMC6000MK2.MIXXX_LOOP_POSITION_UNDEFINED);
+ };
+ 
+@@ -861,11 +863,13 @@ DenonMC6000MK2.OldDeck.prototype.onLoopCutPlusButton = function (isButtonPressed
+ };
+ 
+ DenonMC6000MK2.OldDeck.prototype.updateLoopLeds = function (value) {
+-    this.loopInLed.setStateBoolean(this.hasLoopStart());
+-    this.loopOutLed.setStateBoolean(this.hasLoopEnd());
+     if (this.getValue("loop_enabled")) {
++        this.loopInLed.setTriState(DenonMC6000MK2.TRI_LED_BLINK);
++        this.loopOutLed.setTriState(DenonMC6000MK2.TRI_LED_BLINK);
+         this.autoLoopLed.setTriState(DenonMC6000MK2.TRI_LED_BLINK);
+     } else {
++        this.loopInLed.setStateBoolean(this.hasLoopStart());
++        this.loopOutLed.setStateBoolean(this.hasLoopEnd());
+         this.autoLoopDimmerLed.setStateBoolean(this.hasLoop());
+     }
+ };
+@@ -1418,18 +1422,6 @@ DenonMC6000MK2.recvAutoLoopButton = function (channel, control, value, status, g
+     deck.onAutoLoopButton(isButtonPressed);
+ };
+ 
+-DenonMC6000MK2.recvLoopInButton = function (channel, control, value, status, group) {
+-    var isButtonPressed = DenonMC6000MK2.isButtonPressed(value);
+-    var deck = DenonMC6000MK2.getDeckByGroup(group);
+-    deck.onLoopInButton(isButtonPressed);
+-};
+-
+-DenonMC6000MK2.recvLoopOutButton = function (channel, control, value, status, group) {
+-    var isButtonPressed = DenonMC6000MK2.isButtonPressed(value);
+-    var deck = DenonMC6000MK2.getDeckByGroup(group);
+-    deck.onLoopOutButton(isButtonPressed);
+-};
+-
+ DenonMC6000MK2.recvLoopCutMinusButton = function (channel, control, value, status, group) {
+     var isButtonPressed = DenonMC6000MK2.isButtonPressed(value);
+     var deck = DenonMC6000MK2.getDeckByGroup(group);
+@@ -1708,6 +1700,17 @@ DenonMC6000MK2.Deck.prototype.shiftButtonInput = function (channel, control, val
+     this.side.shiftButtonInput(channel, control, value, status);
+ };
+ 
++DenonMC6000MK2.Deck.prototype.loopInButtonInput = function (channel, control, value, status, group) {
++    var isButtonPressed = DenonMC6000MK2.isButtonPressed(value);
++    var deck = DenonMC6000MK2.getDeckByGroup(group);
++    deck.onLoopInButton(isButtonPressed);
++};
++
++DenonMC6000MK2.Deck.prototype.loopOutButtonInput = function (channel, control, value, status, group) {
++    var isButtonPressed = DenonMC6000MK2.isButtonPressed(value);
++    var deck = DenonMC6000MK2.getDeckByGroup(group);
++    deck.onLoopOutButton(isButtonPressed);
++};
+ 
+ ////////////////////////////////////////////////////////////////////////
+ // Mixxx Callback Functions                                           //
+diff --git a/res/controllers/Denon-MC6000MK2.midi.xml b/res/controllers/Denon-MC6000MK2.midi.xml
+index 7f175f0aee..7295201670 100644
+--- a/res/controllers/Denon-MC6000MK2.midi.xml
++++ b/res/controllers/Denon-MC6000MK2.midi.xml
+@@ -769,9 +769,27 @@
+                     <normal/>
+                 </options>
+             </control>
++            <control>
++                <group>[Channel2]</group>
++                <key>DenonMC6000MK2.rightDeck2.loopOutButtonInput</key>
++                <status>0x92</status>
++                <midino>0x39</midino>
++                <options>
++                    <script-binding/>
++                </options>
++            </control>
++            <control>
++                <group>[Channel4]</group>
++                <key>DenonMC6000MK2.rightDeck4.loopOutButtonInput</key>
++                <status>0x93</status>
++                <midino>0x39</midino>
++                <options>
++                    <script-binding/>
++                </options>
++            </control>
+             <control>
+                 <group>[Channel1]</group>
+-                <key>DenonMC6000MK2.recvLoopOutButton</key>
++                <key>DenonMC6000MK2.leftDeck1.loopOutButtonInput</key>
+                 <status>0x90</status>
+                 <midino>0x39</midino>
+                 <options>
+@@ -780,7 +798,7 @@
+             </control>
+             <control>
+                 <group>[Channel3]</group>
+-                <key>DenonMC6000MK2.recvLoopOutButton</key>
++                <key>DenonMC6000MK2.leftDeck3.loopOutButtonInput</key>
+                 <status>0x91</status>
+                 <midino>0x39</midino>
+                 <options>
+@@ -789,8 +807,8 @@
+             </control>
+             <control>
+                 <group>[Channel2]</group>
+-                <key>DenonMC6000MK2.recvLoopOutButton</key>
+-                <status>0x92</status>
++                <key>DenonMC6000MK2.rightDeck2.loopOutButtonInput</key>
++                <status>0x82</status>
+                 <midino>0x39</midino>
+                 <options>
+                     <script-binding/>
+@@ -798,8 +816,8 @@
+             </control>
+             <control>
+                 <group>[Channel4]</group>
+-                <key>DenonMC6000MK2.recvLoopOutButton</key>
+-                <status>0x93</status>
++                <key>DenonMC6000MK2.rightDeck4.loopOutButtonInput</key>
++                <status>0x83</status>
+                 <midino>0x39</midino>
+                 <options>
+                     <script-binding/>
+@@ -807,34 +825,61 @@
+             </control>
+             <control>
+                 <group>[Channel1]</group>
+-                <key>DenonMC6000MK2.recvLoopInButton</key>
+-                <status>0x90</status>
+-                <midino>0x37</midino>
++                <key>DenonMC6000MK2.leftDeck1.loopOutButtonInput</key>
++                <status>0x80</status>
++                <midino>0x39</midino>
+                 <options>
+                     <script-binding/>
+                 </options>
+             </control>
+             <control>
+                 <group>[Channel3]</group>
+-                <key>DenonMC6000MK2.recvLoopInButton</key>
+-                <status>0x91</status>
++                <key>DenonMC6000MK2.leftDeck3.loopOutButtonInput</key>
++                <status>0x81</status>
++                <midino>0x39</midino>
++                <options>
++                    <script-binding/>
++                </options>
++            </control>
++            <control>
++                <group>[Channel2]</group>
++                <key>DenonMC6000MK2.rightDeck2.loopInButtonInput</key>
++                <status>0x82</status>
+                 <midino>0x37</midino>
+                 <options>
+                     <script-binding/>
+                 </options>
+             </control>
+             <control>
+-                <group>[EqualizerRack1_[Channel1]_Effect1]</group>
+-                <key>parameter1</key>
+-                <status>0xB0</status>
+-                <midino>0x04</midino>
++                <group>[Channel4]</group>
++                <key>DenonMC6000MK2.rightDeck4.loopInButtonInput</key>
++                <status>0x83</status>
++                <midino>0x37</midino>
+                 <options>
+-                    <normal/>
++                    <script-binding/>
++                </options>
++            </control>
++            <control>
++                <group>[Channel1]</group>
++                <key>DenonMC6000MK2.leftDeck1.loopInButtonInput</key>
++                <status>0x80</status>
++                <midino>0x37</midino>
++                <options>
++                    <script-binding/>
++                </options>
++            </control>
++            <control>
++                <group>[Channel3]</group>
++                <key>DenonMC6000MK2.leftDeck3.loopInButtonInput</key>
++                <status>0x81</status>
++                <midino>0x37</midino>
++                <options>
++                    <script-binding/>
+                 </options>
+             </control>
+             <control>
+                 <group>[Channel2]</group>
+-                <key>DenonMC6000MK2.recvLoopInButton</key>
++                <key>DenonMC6000MK2.rightDeck2.loopInButtonInput</key>
+                 <status>0x92</status>
+                 <midino>0x37</midino>
+                 <options>
+@@ -843,13 +888,40 @@
+             </control>
+             <control>
+                 <group>[Channel4]</group>
+-                <key>DenonMC6000MK2.recvLoopInButton</key>
++                <key>DenonMC6000MK2.rightDeck4.loopInButtonInput</key>
+                 <status>0x93</status>
+                 <midino>0x37</midino>
+                 <options>
+                     <script-binding/>
+                 </options>
+             </control>
++            <control>
++                <group>[Channel1]</group>
++                <key>DenonMC6000MK2.leftDeck1.loopInButtonInput</key>
++                <status>0x90</status>
++                <midino>0x37</midino>
++                <options>
++                    <script-binding/>
++                </options>
++            </control>
++            <control>
++                <group>[Channel3]</group>
++                <key>DenonMC6000MK2.leftDeck3.loopInButtonInput</key>
++                <status>0x91</status>
++                <midino>0x37</midino>
++                <options>
++                    <script-binding/>
++                </options>
++            </control>
++            <control>
++                <group>[EqualizerRack1_[Channel1]_Effect1]</group>
++                <key>parameter1</key>
++                <status>0xB0</status>
++                <midino>0x04</midino>
++                <options>
++                    <normal/>
++                </options>
++            </control>
+             <control>
+                 <group>[Channel2]</group>
+                 <key>DenonMC6000MK2.recvXfaderAssignThruButton</key>

@@ -1,0 +1,57 @@
+From 41840857fefb4f359e3fe5e16b9899ffceffd86b Mon Sep 17 00:00:00 2001
+From: Uwe Klotz <uklotz@mixxx.org>
+Date: Wed, 16 May 2018 12:45:56 +0200
+Subject: [PATCH] Fix mismatching signal/slot connection arg type
+
+---
+ src/library/dlgtrackinfo.cpp | 18 +++++++++++-------
+ src/library/dlgtrackinfo.h   |  2 +-
+ 2 files changed, 12 insertions(+), 8 deletions(-)
+
+diff --git a/src/library/dlgtrackinfo.cpp b/src/library/dlgtrackinfo.cpp
+index b619bfd59b..c0db2d815f 100644
+--- a/src/library/dlgtrackinfo.cpp
++++ b/src/library/dlgtrackinfo.cpp
+@@ -237,18 +237,22 @@ void DlgTrackInfo::slotCoverFound(const QObject* pRequestor,
+ }
+ 
+ void DlgTrackInfo::slotReloadCoverArt() {
+-    if (m_pLoadedTrack) {
+-        CoverInfo coverInfo =
+-                CoverArtUtils::guessCoverInfo(*m_pLoadedTrack);
+-        slotCoverInfoSelected(coverInfo);
++    VERIFY_OR_DEBUG_ASSERT(m_pLoadedTrack) {
++        return;
+     }
++    CoverInfo coverInfo =
++            CoverArtUtils::guessCoverInfo(*m_pLoadedTrack);
++    slotCoverInfoSelected(coverInfo);
+ }
+ 
+-void DlgTrackInfo::slotCoverInfoSelected(const CoverInfo& coverInfo) {
++void DlgTrackInfo::slotCoverInfoSelected(const CoverInfoRelative& coverInfo) {
+     qDebug() << "DlgTrackInfo::slotCoverInfoSelected" << coverInfo;
+-    m_loadedCoverInfo = coverInfo;
++    VERIFY_OR_DEBUG_ASSERT(m_pLoadedTrack) {
++        return;
++    }
++    m_loadedCoverInfo = CoverInfo(coverInfo, m_pLoadedTrack->getLocation());
+     CoverArtCache* pCache = CoverArtCache::instance();
+-    if (pCache != NULL) {
++    if (pCache) {
+         pCache->requestCover(m_loadedCoverInfo, this, 0, false, true);
+     }
+ }
+diff --git a/src/library/dlgtrackinfo.h b/src/library/dlgtrackinfo.h
+index ab6717f6d5..0ca2a44a29 100644
+--- a/src/library/dlgtrackinfo.h
++++ b/src/library/dlgtrackinfo.h
+@@ -63,7 +63,7 @@ class DlgTrackInfo : public QDialog, public Ui::DlgTrackInfo {
+ 
+     void slotCoverFound(const QObject* pRequestor,
+                         const CoverInfoRelative& info, QPixmap pixmap, bool fromCache);
+-    void slotCoverInfoSelected(const CoverInfo& coverInfo);
++    void slotCoverInfoSelected(const CoverInfoRelative& coverInfo);
+     void slotReloadCoverArt();
+ 
+   private:
