@@ -1,0 +1,107 @@
+diff -dNur a/ipcalc.c b/ipcalc.c
+--- a/ipcalc.c	2017-12-27 10:47:42.000000000 +0100
++++ b/ipcalc.c	2018-05-18 00:54:51.986184370 +0200
+@@ -1290,8 +1290,15 @@
+ 	if (hostname)
+ 		flags |= FLAG_RESOLVE_IP;
+ 
++#ifdef USE_GEOIP
++#ifdef USE_DYN_GEOIP
+ 	if (geo_setup() == 0 && ((flags & FLAG_SHOW_ALL_INFO) == FLAG_SHOW_ALL_INFO))
+ 		flags |= FLAG_GET_GEOIP;
++#else
++	if ((flags & FLAG_SHOW_ALL_INFO) == FLAG_SHOW_ALL_INFO)
++		flags |= FLAG_GET_GEOIP;
++#endif
++#endif
+ 
+ 	if ((hostname && randomStr) || (hostname && splitStr) || (randomStr && splitStr)) {
+ 		if (!beSilent)
+diff -dNur a/ipcalc-geoip.c b/ipcalc-geoip.c
+--- a/ipcalc-geoip.c	2017-12-27 10:47:42.000000000 +0100
++++ b/ipcalc-geoip.c	2018-05-18 00:54:40.570361944 +0200
+@@ -34,6 +34,22 @@
+ # include <GeoIP.h>
+ # include <GeoIPCity.h>
+ 
++static int __attribute__((__format__(printf, 2, 3)))
++safe_asprintf(char **strp, const char *fmt, ...)
++{
++	int ret;
++	va_list args;
++
++	va_start(args, fmt);
++	ret = vasprintf(&(*strp), fmt, args);
++	va_end(args);
++	if (ret < 0) {
++		fprintf(stderr, "Memory allocation failure\n");
++		exit(1);
++	}
++	return ret;
++}
++
+ # ifdef USE_DYN_GEOIP
+ #  include <dlfcn.h>
+ 
+@@ -59,22 +75,6 @@
+ 
+ #define LIBNAME LIBPATH"/libGeoIP.so.1"
+ 
+-static int __attribute__((__format__(printf, 2, 3)))
+-safe_asprintf(char **strp, const char *fmt, ...)
+-{
+-	int ret;
+-	va_list args;
+-
+-	va_start(args, fmt);
+-	ret = vasprintf(&(*strp), fmt, args);
+-	va_end(args);
+-	if (ret < 0) {
+-		fprintf(stderr, "Memory allocation failure\n");
+-		exit(1);
+-	}
+-	return ret;
+-}
+-
+ int geo_setup(void)
+ {
+ 	static void *ld = NULL;
+@@ -141,8 +141,10 @@
+ 	int country_id;
+ 	const char *p;
+ 
++#ifdef USE_DYN_GEOIP
+ 	if (geo_setup() != 0)
+ 		return;
++#endif
+ 
+ 	ip.s_addr = ntohl(ip.s_addr);
+ 
+@@ -207,8 +209,10 @@
+ 	int country_id;
+ 	const char *p;
+ 
++#ifdef USE_DYN_GEOIP
+ 	if (geo_setup() != 0)
+ 		return;
++#endif
+ 
+ 	p_GeoIP_setup_dbfilename();
+ 
+diff -dNur a/ipcalc.h b/ipcalc.h
+--- a/ipcalc.h	2017-12-27 10:47:42.000000000 +0100
++++ b/ipcalc.h	2018-05-18 00:54:40.570361944 +0200
+@@ -20,11 +20,9 @@
+ #ifdef USE_GEOIP
+ void geo_ipv4_lookup(struct in_addr ip, char **country, char **ccode, char **city, char  **coord);
+ void geo_ipv6_lookup(struct in6_addr *ip, char **country, char **ccode, char **city, char **coord);
++#ifdef USE_DYN_GEOIP
+ int geo_setup(void);
+-#else
+-# define geo_ipv4_lookup(x,y,z,w,a)
+-# define geo_ipv6_lookup(x,y,z,w,a)
+-# define geo_setup() -1
++#endif
+ #endif
+ 
+ char __attribute__((warn_unused_result)) *safe_strdup(const char *str);

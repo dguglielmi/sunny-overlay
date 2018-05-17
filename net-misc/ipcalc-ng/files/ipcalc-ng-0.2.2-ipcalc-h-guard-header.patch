@@ -1,0 +1,30 @@
+From cfb6fab514ff7dbf2eeb641cc553349d6fc143b3 Mon Sep 17 00:00:00 2001
+From: Nikos Mavrogiannopoulos <nmav@redhat.com>
+Date: Wed, 25 Apr 2018 13:22:03 +0200
+Subject: [PATCH] ipcalc.h: guard header
+
+Signed-off-by: Nikos Mavrogiannopoulos <nmav@redhat.com>
+---
+ ipcalc.h | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/ipcalc.h b/ipcalc.h
+index 74c8896..a3f13bc 100644
+--- a/ipcalc.h
++++ b/ipcalc.h
+@@ -17,6 +17,9 @@
+  *   Nikos Mavrogiannopoulos <nmav@redhat.com>
+  */
+ 
++#ifndef _IPCALC_H
++#define _IPCALC_H
++
+ #ifdef USE_GEOIP
+ void geo_ipv4_lookup(struct in_addr ip, char **country, char **ccode, char **city, char  **coord);
+ void geo_ipv6_lookup(struct in6_addr *ip, char **country, char **ccode, char **city, char **coord);
+@@ -100,3 +103,5 @@ __attribute__ ((format(printf, 3, 4)))
+ color_printf(const char *color, const char *title, const char *fmt, ...);
+ 
+ extern int beSilent;
++
++#endif
