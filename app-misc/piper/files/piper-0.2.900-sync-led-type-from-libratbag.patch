@@ -1,0 +1,25 @@
+From be0aff095dd11697b033cec07339ceaea9c18ce0 Mon Sep 17 00:00:00 2001
+From: Thomas Hindoe Paaboel Andersen <phomes@gmail.com>
+Date: Tue, 17 Oct 2017 21:05:52 +0200
+Subject: [PATCH 22/30] sync LED type from libratbag
+
+A new LED type "wheel" was added in libratbag
+---
+ piper/ratbagd.py | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/piper/ratbagd.py b/piper/ratbagd.py
+index 4290aa4..9513f74 100644
+--- a/piper/ratbagd.py
++++ b/piper/ratbagd.py
+@@ -879,6 +879,7 @@ class RatbagdLed(_RatbagdDBus):
+     TYPE_SIDE = 2
+     TYPE_BATTERY = 3
+     TYPE_DPI = 4
++    TYPE_WHEEL = 5
+ 
+     MODE_OFF = 0
+     MODE_ON = 1
+-- 
+2.16.1
+

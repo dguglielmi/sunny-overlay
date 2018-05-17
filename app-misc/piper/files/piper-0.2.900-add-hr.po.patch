@@ -1,0 +1,479 @@
+From 0fd6dd33dbdb1f856a4715136accd974c3543002 Mon Sep 17 00:00:00 2001
+From: muzena <trebelnik2@gmail.com>
+Date: Fri, 25 Aug 2017 23:26:38 +0200
+Subject: [PATCH 01/30] Add hr.po
+
+---
+ po/LINGUAS |   1 +
+ po/hr.po   | 449 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 450 insertions(+)
+ create mode 100644 po/hr.po
+
+diff --git a/po/LINGUAS b/po/LINGUAS
+index 4fa9310..62cada8 100644
+--- a/po/LINGUAS
++++ b/po/LINGUAS
+@@ -1,4 +1,5 @@
+ # Language list must be in alphabetical order
+ de
++hr
+ nl
+ pl
+diff --git a/po/hr.po b/po/hr.po
+new file mode 100644
+index 0000000..afea785
+--- /dev/null
++++ b/po/hr.po
+@@ -0,0 +1,449 @@
++# Croatian Piper translation
++# Copyright (C) 2017 Jente Hidskes
++# This file is distributed under the same license as the piper package.
++# gogo <trebelnik2@gmail.com>, 2017.
++#
++msgid ""
++msgstr ""
++"Project-Id-Version: piper\n"
++"Report-Msgid-Bugs-To: \n"
++"POT-Creation-Date: 2017-08-25 22:16+0200\n"
++"PO-Revision-Date: 2017-08-25 23:21+0200\n"
++"Language-Team: Croatian <>\n"
++"MIME-Version: 1.0\n"
++"Content-Type: text/plain; charset=UTF-8\n"
++"Content-Transfer-Encoding: 8bit\n"
++"X-Generator: Poedit 2.0.3\n"
++"Last-Translator: gogo <trebelnik2@gmail.com>\n"
++"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
++"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
++"Language: hr\n"
++
++#. Translators: section header for mapping one button's click to another.
++#: piper/buttondialog.py:144
++msgid "Button mapping"
++msgstr "Mapiranje tipki"
++
++#. Translators: section header for assigning special functions to buttons.
++#: piper/buttondialog.py:153
++msgid "Special mapping"
++msgstr "Posebno mapiranje"
++
++#. Translators: the {} will be replaced with the button index, e.g.
++#. "Button 1 click".
++#: piper/buttondialog.py:225 piper/buttonspage.py:84
++msgid "Button {} click"
++msgstr "Tipka {} klik"
++
++#: piper/buttonspage.py:88
++msgid "Macro: {}"
++msgstr "Makro: {}"
++
++#. Translators: the button is turned disabled, e.g. off.
++#: piper/buttonspage.py:91
++msgid "Disabled"
++msgstr "Onemogućeno"
++
++#. Translators: the button has an unknown function.
++#: piper/buttonspage.py:94 piper/ratbagd.py:613
++msgid "Unknown"
++msgstr "Nepoznato"
++
++#: piper/buttonspage.py:102
++msgid "Configure button {}"
++msgstr "Prilagodi tipku {}"
++
++#: piper/mouseperspective.py:86 data/ui/ResolutionsPage.ui:209
++msgid "Resolutions"
++msgstr "Razlučivost"
++
++#: piper/mouseperspective.py:88
++msgid "Buttons"
++msgstr "Tipke"
++
++#: piper/mouseperspective.py:90
++msgid "LEDs"
++msgstr "LED"
++
++#. Translators: the {} will be replaced with the profile index.
++#: piper/mouseperspective.py:94 piper/profilerow.py:42
++msgid "Profile {}"
++msgstr "Profil {}"
++
++#: piper/ratbagd.py:604
++msgid "Left mouse button click"
++msgstr "Lijeva tipka klika miša"
++
++#: piper/ratbagd.py:605
++msgid "Right mouse button click"
++msgstr "Desna tipka klika miša"
++
++#: piper/ratbagd.py:606
++msgid "Middle mouse button click"
++msgstr "Srednja tipka klika miša"
++
++#: piper/ratbagd.py:607
++msgid "Backward"
++msgstr "Natrag"
++
++#: piper/ratbagd.py:608
++msgid "Forward"
++msgstr "Naprijed"
++
++#: piper/ratbagd.py:614
++msgid "Doubleclick"
++msgstr "Dvostruki klik"
++
++#: piper/ratbagd.py:615
++msgid "Wheel Left"
++msgstr "Kotačić lijevo"
++
++#: piper/ratbagd.py:616
++msgid "Wheel Right"
++msgstr "Kotačić desno"
++
++#: piper/ratbagd.py:617
++msgid "Wheel Up"
++msgstr "Kotačić gore"
++
++#: piper/ratbagd.py:618
++msgid "Wheel Down"
++msgstr "Kotačić dolje"
++
++#: piper/ratbagd.py:619
++msgid "Ratchet Mode"
++msgstr "Zaustavljački način"
++
++#: piper/ratbagd.py:620
++msgid "Cycle Resolution Up"
++msgstr "Povećaj kružnu razlučivost"
++
++#: piper/ratbagd.py:621
++msgid "Cycle Resolution Down"
++msgstr "Smanji kružnu razlučivost"
++
++#: piper/ratbagd.py:622
++msgid "Resolution Up"
++msgstr "Povećaj razlučivost"
++
++#: piper/ratbagd.py:623
++msgid "Resolution Down"
++msgstr "Smanji razlučivost"
++
++#: piper/ratbagd.py:624
++msgid "Resolution Switch"
++msgstr "Prebaci razlučivosti"
++
++#: piper/ratbagd.py:625
++msgid "Default Resolution"
++msgstr "Zadana razlučivost"
++
++#: piper/ratbagd.py:626
++msgid "Cycle Profile Up"
++msgstr "Veći kružni profil"
++
++#: piper/ratbagd.py:627
++msgid "Cycle Profile Down"
++msgstr "Manji kružni profil"
++
++#: piper/ratbagd.py:628
++msgid "Profile Up"
++msgstr "Veći profil"
++
++#: piper/ratbagd.py:629
++msgid "Profile Down"
++msgstr "Manji profil"
++
++#: piper/ratbagd.py:630
++msgid "Second Mode"
++msgstr "Pomoćni način"
++
++#: piper/ratbagd.py:631
++msgid "Battery Level"
++msgstr "Razina baterije"
++
++#. Translators: this is used when there is no macro to preview.
++#: piper/ratbagd.py:759 data/ui/ButtonDialog.ui:106 data/ui/ButtonDialog.ui:187
++msgid "None"
++msgstr "Nedodjeljeno"
++
++#. Translators: the LED is off.
++#: piper/ratbagd.py:833 data/ui/LedDialog.ui:391
++msgid "Off"
++msgstr "Isključeno"
++
++#. Translators: the LED has a single, solid color.
++#: piper/ratbagd.py:835 data/ui/LedDialog.ui:66
++msgid "Solid"
++msgstr "Nepromjenjivo"
++
++#. Translators: the LED is cycling between red, green and blue.
++#: piper/ratbagd.py:837 data/ui/LedDialog.ui:188
++msgid "Cycle"
++msgstr "Kružno"
++
++#. Translators: the LED's is pulsating a single color on different
++#. brightnesses.
++#: piper/ratbagd.py:840 data/ui/LedDialog.ui:353
++msgid "Breathing"
++msgstr "Pulsirajuće"
++
++#: piper/window.py:50
++msgid "Cannot connect to ratbagd"
++msgstr "Nemoguće povezivanje sa ratbagdom"
++
++#: piper/window.py:51
++msgid "Please make sure ratbagd is running"
++msgstr "Pobrinite se da je ratbagd pokrenut"
++
++#: piper/window.py:64 piper/window.py:114
++msgid "Cannot find any devices"
++msgstr "Nemoguć pronalazak prikladnih uređaja"
++
++#: piper/window.py:65 piper/window.py:115
++msgid "Please make sure your device is supported and plugged in"
++msgstr "Pobrinite se da je vaš uređaj podržan i priključen"
++
++#: piper/window.py:77
++msgid "There are unapplied changes. Are you sure you want to quit?"
++msgstr "Postoje neprimijenjene promjene. Sigurno želite zatvoriti?"
++
++#. The current device disconnected, which can only happen from the
++#. mouse perspective as we'd otherwise be in the welcome screen with
++#. more than one device remaining. Hence, we display the error
++#. perspective.
++#: piper/window.py:106
++msgid "Your device disconnected!"
++msgstr "Vaš uređaj nije priključen!"
++
++#: piper/window.py:107
++msgid "Please make sure your device is plugged in"
++msgstr "Pobrinite se da je vaš uređaj priključen"
++
++#: piper/window.py:155
++msgid "Cannot display device SVG"
++msgstr "Nemoguć prikaz SVG uređaja"
++
++#: piper/window.py:157
++msgid "Unknown exception occurred"
++msgstr "Dogodila se nepoznata iznimka"
++
++#: data/ui/AboutDialog.ui.in:13
++msgid "Visit Piper's website"
++msgstr "Posjetite Piper web stranicu"
++
++#: data/ui/ButtonDialog.ui:65
++msgid "Search for a button mapping"
++msgstr "Pretraži mapiranje tipki"
++
++#: data/ui/ButtonDialog.ui:91
++msgid "Capture a macro for this button"
++msgstr "Uhvati makro za ovu tipku"
++
++#: data/ui/ButtonDialog.ui:104
++msgid "The currently set macro"
++msgstr "Trenutno postavljeni makro"
++
++#: data/ui/ButtonDialog.ui:129
++msgid "Send keystroke"
++msgstr "Pošalji pritisak tipke"
++
++#: data/ui/ButtonDialog.ui:169
++msgid "Enter a new key sequence for the macro."
++msgstr "Unesi novi slijed tipke za makro."
++
++#: data/ui/ButtonDialog.ui:221
++msgid "Press Escape to cancel or Return to accept."
++msgstr "Pritisni Escape za prekidanje ili Return za prihvaćanje."
++
++#: data/ui/ButtonDialog.ui:252
++msgid "Set the device's handedness."
++msgstr "Postavite za ljevu/desnu ruku uređaja."
++
++#: data/ui/ButtonDialog.ui:270
++msgid ""
++"This allows you to swap the order of the primary mouse buttons. In left-"
++"handed mode, the physical left mouse button generates a right mouse click "
++"and vice versa."
++msgstr ""
++"Ovo vam omogućuje zamjenu poredka glavnih tipka miša. U lijevorukom načinu "
++"rada, fizička lijeva tipka miša generira desni klik miša i obrnuto."
++
++#: data/ui/ButtonDialog.ui:290
++msgid "Left Handed"
++msgstr "Lijevoruko"
++
++#: data/ui/ButtonDialog.ui:295
++msgid "The left mouse button generates a left mouse click"
++msgstr "Lijeva tipka miša generira lijevi klik miša"
++
++#: data/ui/ButtonDialog.ui:309
++msgid "Right Handed"
++msgstr "Desnoruko"
++
++#: data/ui/ButtonDialog.ui:314
++msgid "The left mouse button generates a right mouse click"
++msgstr "Lijeva tipka miša generira desni klik miša"
++
++#: data/ui/ButtonDialog.ui:354 data/ui/LedDialog.ui:410
++msgid "Cancel"
++msgstr "Odustani"
++
++#: data/ui/ButtonDialog.ui:356 data/ui/LedDialog.ui:414
++msgid "Ignore any changes made"
++msgstr "Zanemari sve napravljene promjene"
++
++#: data/ui/ButtonDialog.ui:362 data/ui/LedDialog.ui:426
++#: data/ui/MousePerspective.ui:133
++msgid "Apply"
++msgstr "Primjeni"
++
++#: data/ui/ButtonDialog.ui:365 data/ui/LedDialog.ui:431
++msgid "Apply any changes made"
++msgstr "Primijeni sve napravljene promjene"
++
++#: data/ui/ButtonDialog.ui:405
++msgid "No button mapping found"
++msgstr "Nema pronađenih mapiranja tipki"
++
++#: data/ui/ButtonDialog.ui:421
++msgid "Try a different search"
++msgstr "Pokušajte drugačiju pretragu"
++
++#: data/ui/ErrorPerspective.ui:16
++msgid "Here, rodent, rodent, rodent..."
++msgstr "Ovdje, glodavac, glodavac, glodavac..."
++
++#: data/ui/ErrorPerspective.ui:69
++msgid "Uh Oh! Something went wrong..."
++msgstr "Ups! Nešto je pošlo po krivu..."
++
++#: data/ui/ErrorPerspective.ui:73 data/ui/WelcomePerspective.ui:123
++msgid "Quit"
++msgstr "Zatvori"
++
++#: data/ui/LedDialog.ui:58 data/ui/LedDialog.ui:208
++msgid "Choose a color for the LED"
++msgstr "Odaberi boju za LED"
++
++#: data/ui/LedDialog.ui:90 data/ui/LedDialog.ui:256
++msgid "Choose a brightness for the LED"
++msgstr "Odaberi svjetlinu za LED"
++
++#: data/ui/LedDialog.ui:104 data/ui/LedDialog.ui:269
++msgid "Brightness"
++msgstr "Svjetlina"
++
++#: data/ui/LedDialog.ui:135 data/ui/LedDialog.ui:300
++msgid "Choose an effect rate for the LED"
++msgstr "Odaberi frekvenciju efekta za LED"
++
++#: data/ui/LedDialog.ui:152 data/ui/LedDialog.ui:317
++#: data/ui/ResolutionsPage.ui:105
++msgid "Hz"
++msgstr "Hz"
++
++#: data/ui/LedDialog.ui:174 data/ui/LedDialog.ui:339
++msgid "Effect rate"
++msgstr "Frekvencija efekta"
++
++#: data/ui/LedDialog.ui:211
++msgid "Pick a Color for the LED"
++msgstr "Odaberi boju za LED"
++
++#: data/ui/LedDialog.ui:225
++msgid "Color"
++msgstr "Boja"
++
++#: data/ui/LedDialog.ui:378
++msgid "This LED is off"
++msgstr "Ovaj LED je isključen"
++
++#: data/ui/Menus.ui:7
++msgid "_About"
++msgstr "_O programu"
++
++#: data/ui/Menus.ui:11
++msgid "_Quit"
++msgstr "_Zatvori"
++
++#: data/ui/MousePerspective.ui:44
++msgid "Failed to commit changes to the device"
++msgstr "Neuspješno primijenjivanje promjena na uređaju"
++
++#: data/ui/MousePerspective.ui:102
++msgid "Select another profile"
++msgstr "Odaberi drugi profil"
++
++#: data/ui/MousePerspective.ui:127
++msgid "Commit the changes to the device"
++msgstr "Primijeni promjene na uređaju"
++
++#: data/ui/MousePerspective.ui:171
++msgid "Click to switch to another profile"
++msgstr "Klikni za prebacivanje na drugi profil"
++
++#: data/ui/MousePerspective.ui:186
++msgid "Add profile"
++msgstr "Dodaj profil"
++
++#: data/ui/MousePerspective.ui:190
++msgid "Add a new profile to the device"
++msgstr "Dodaj novi profil na uređaj"
++
++#: data/ui/OptionButton.ui:9
++msgid "Open the configuration dialog"
++msgstr "Otvori dijalog prilagodbe"
++
++#: data/ui/ProfileRow.ui:16
++msgid "Remove this profile from the device"
++msgstr "Ukloni ovaj profil sa uređaja"
++
++#: data/ui/ResolutionRow.ui:23
++msgid "Remove this resolution from the profile"
++msgstr "Ukloni ovu razlučivost sa uređaja"
++
++#. Translators: this is used to indicate the active resolution.
++#: data/ui/ResolutionRow.ui:65
++msgid "Active"
++msgstr "Aktivno"
++
++#: data/ui/ResolutionRow.ui:105
++msgid "Set this resolution's DPI"
++msgstr "Postavi ovaj DPI razlučivosti"
++
++#. Translators: the rate at which the device reports movement.
++#: data/ui/ResolutionsPage.ui:43
++msgid "Report rate"
++msgstr "Frekvencija"
++
++#: data/ui/ResolutionsPage.ui:60
++msgid "Change the profile's report rate"
++msgstr "Promijeni frekvenciju profila"
++
++#. Translators: the sensitivity of the device's sensor.
++#: data/ui/ResolutionsPage.ui:125
++msgid "Sensitivity"
++msgstr "Osjetljivost"
++
++#: data/ui/ResolutionsPage.ui:174
++msgid "Add a new resolution to the profile"
++msgstr "Dodaj novu razlučivost u profil"
++
++#: data/ui/WelcomePerspective.ui:20
++msgid "Welcome"
++msgstr "Dobrodošli"
++
++#: data/ui/WelcomePerspective.ui:38
++msgctxt "A subtitle under the \"Welcome\" title."
++msgid "Select a device to configure it"
++msgstr "Odaberite uređaj za prilagodbu"
++
++#: data/ui/WelcomePerspective.ui:89
++msgctxt "A tooltip over the list of devices."
++msgid "Select a device to configure it"
++msgstr "Odaberite uređaj za prilagodbu"
++
++#: data/ui/WelcomePerspective.ui:119
++msgid "Select a Device"
++msgstr "Odaberi uređaj"
+-- 
+2.16.1
+

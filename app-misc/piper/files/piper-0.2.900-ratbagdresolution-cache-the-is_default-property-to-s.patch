@@ -1,0 +1,47 @@
+From 3aae9c0a4541ec8b44a8ec95bf10342b1d71aa0b Mon Sep 17 00:00:00 2001
+From: Jente Hidskes <hjdskes@gmail.com>
+Date: Thu, 31 Aug 2017 11:34:19 +0200
+Subject: [PATCH 09/30] RatbagdResolution: cache the is_default property to
+ signal only changes
+
+Circumvents https://github.com/libratbag/libratbag/blob/bb23f68d53a5da85c195def66ec103f086b9254b/ratbagd/ratbagd-resolution.c#L118
+---
+ piper/ratbagd.py | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/piper/ratbagd.py b/piper/ratbagd.py
+index 3467212..05d3408 100644
+--- a/piper/ratbagd.py
++++ b/piper/ratbagd.py
+@@ -501,6 +501,7 @@ class RatbagdResolution(_RatbagdDBus):
+     def __init__(self, object_path):
+         _RatbagdDBus.__init__(self, "Resolution", object_path)
+         self._active = self._get_dbus_property("IsActive")
++        self._default = self._get_dbus_property("IsDefault")
+ 
+     def _on_properties_changed(self, proxy, changed_props, invalidated_props):
+         if "IsActive" in changed_props.keys():
+@@ -508,6 +509,11 @@ class RatbagdResolution(_RatbagdDBus):
+             if active != self._active:
+                 self._active = active
+                 self.notify("is-active")
++        elif "IsDefault" in changed_props.keys():
++            default = changed_props["IsDefault"]
++            if default != self._default:
++                self._default = default
++                self.notify("is-default")
+ 
+     @GObject.Property
+     def index(self):
+@@ -570,7 +576,7 @@ class RatbagdResolution(_RatbagdDBus):
+     def is_default(self):
+         """True if this is the currently default resolution, False
+         otherwise"""
+-        return self._get_dbus_property("IsDefault")
++        return self._default
+ 
+     def set_default(self):
+         """Set this resolution to be the default."""
+-- 
+2.16.1
+

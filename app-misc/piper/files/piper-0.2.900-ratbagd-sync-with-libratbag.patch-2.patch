@@ -1,0 +1,80 @@
+From f159af3b1efa66fbf1e4fe0195c46fdc12df21e5 Mon Sep 17 00:00:00 2001
+From: Jente Hidskes <hjdskes@gmail.com>
+Date: Sun, 15 Oct 2017 12:30:48 +0200
+Subject: [PATCH 18/30] ratbagd: sync with libratbag
+
+---
+ piper/ratbagd.py | 30 ++++++++++++++++++------------
+ 1 file changed, 18 insertions(+), 12 deletions(-)
+
+diff --git a/piper/ratbagd.py b/piper/ratbagd.py
+index 21b1d36..9e4000a 100644
+--- a/piper/ratbagd.py
++++ b/piper/ratbagd.py
+@@ -581,14 +581,9 @@ class RatbagdResolution(_RatbagdDBus):
+         self._set_dbus_property("ReportRate", "u", rate)
+ 
+     @GObject.Property
+-    def maximum(self):
+-        """The maximum possible resolution."""
+-        return self._get_dbus_property("Maximum")
+-
+-    @GObject.Property
+-    def minimum(self):
+-        """The minimum possible resolution."""
+-        return self._get_dbus_property("Minimum")
++    def resolutions(self):
++        """The list of supported DPI values"""
++        return self._get_dbus_property("Resolutions")
+ 
+     @GObject.Property
+     def is_active(self):
+@@ -880,15 +875,20 @@ class RatbagdMacro(GObject.Object):
+ class RatbagdLed(_RatbagdDBus):
+     """Represents a ratbagd led."""
+ 
+-    TYPE_UNKNOWN = -1
+-    TYPE_LOGO = 0
+-    TYPE_SIDE = 1
++    TYPE_LOGO = 1
++    TYPE_SIDE = 2
++    TYPE_BATTERY = 3
++    TYPE_DPI = 4
+ 
+     MODE_OFF = 0
+     MODE_ON = 1
+     MODE_CYCLE = 2
+     MODE_BREATHING = 3
+ 
++    COLORDEPTH_MONOCHROME = 400
++    COLORDEPTH_RGB_888 = 401
++    COLORDEPTH_RGB_111 = 402
++
+     LED_DESCRIPTION = {
+         # Translators: the LED is off.
+         MODE_OFF: N_("Off"),
+@@ -926,7 +926,7 @@ class RatbagdLed(_RatbagdDBus):
+ 
+     @GObject.Property
+     def type(self):
+-        """An enum describing this led's type, one of RatbagdLed.TYPE_UNKNOWN,
++        """An enum describing this led's type,
+         RatbagdLed.TYPE_LOGO or RatbagdLed.TYPE_SIDE."""
+         return self._get_dbus_property("Type")
+ 
+@@ -943,6 +943,12 @@ class RatbagdLed(_RatbagdDBus):
+         """
+         self._set_dbus_property("Color", "(uuu)", color)
+ 
++    @GObject.Property
++    def colordepth(self):
++        """An enum describing this led's colordepth, one of
++        RatbagdLed.COLORDEPTH_MONOCHROME, RatbagdLed.COLORDEPTH_RGB"""
++        return self._get_dbus_property("ColorDepth")
++
+     @GObject.Property
+     def effect_rate(self):
+         """The LED's effect rate in Hz, values range from 100 to 20000."""
+-- 
+2.16.1
+

@@ -1,0 +1,40 @@
+From c619cd3bb2e60c30ce6ef0be180f8ab3783b93ee Mon Sep 17 00:00:00 2001
+From: Peter Hutterer <peter.hutterer@who-t.net>
+Date: Tue, 29 Aug 2017 10:28:14 +1000
+Subject: [PATCH 14/30] DeviceRow: don't overwrite "device" with the SVG
+
+device is the RatbagdDevice, don't overwrite it because we're still trying to
+access things like device.name
+---
+ piper/devicerow.py | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/piper/devicerow.py b/piper/devicerow.py
+index 63e31a9..6885cee 100644
+--- a/piper/devicerow.py
++++ b/piper/devicerow.py
+@@ -43,16 +43,16 @@ class DeviceRow(Gtk.ListBoxRow):
+         svg_path = device.get_svg("gnome")
+         if os.path.isfile(svg_path):
+             handle = Rsvg.Handle.new_from_file(svg_path)
+-            device = handle.get_pixbuf_sub("#Device")
++            svg = handle.get_pixbuf_sub("#Device")
+             handle.close()
+-            if device is None:
++            if svg is None:
+                 print("Device {}'s SVG is incompatible".format(device.name), file=sys.stderr)
+             else:
+-                device = device.scale_simple(50, 50, GdkPixbuf.InterpType.BILINEAR)
+-                if device is None:
++                svg = svg.scale_simple(50, 50, GdkPixbuf.InterpType.BILINEAR)
++                if svg is None:
+                     print("Cannot resize device SVG", file=sys.stderr)
+                 else:
+-                    self.image.set_from_pixbuf(device)
++                    self.image.set_from_pixbuf(svg)
+         else:
+             print("Device {} has no image or its path is invalid".format(device.name), file=sys.stderr)
+ 
+-- 
+2.16.1
+

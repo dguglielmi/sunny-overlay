@@ -1,0 +1,74 @@
+From f8ab2492ddaa1f32f7edc789b876133656a9b02c Mon Sep 17 00:00:00 2001
+From: Jente Hidskes <hjdskes@gmail.com>
+Date: Thu, 31 Aug 2017 11:29:57 +0200
+Subject: [PATCH 07/30] RatbagdProfile: emit notify::is-active from DBus'
+ PropertyChanged signal
+
+This ensures that it is fired in all instances where the property is
+updated, and not just on our own `set_active` method.
+
+We also cache the property so that we can emit the signals only for the
+profile that *was* the active one, and the one that *became* the active
+one, to circumvent
+https://github.com/libratbag/libratbag/blob/bb23f68d53a5da85c195def66ec103f086b9254b/ratbagd/ratbagd-profile.c#L271
+
+Fixes #167.
+---
+ piper/ratbagd.py | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
+
+diff --git a/piper/ratbagd.py b/piper/ratbagd.py
+index ec601cf..90ec505 100644
+--- a/piper/ratbagd.py
++++ b/piper/ratbagd.py
+@@ -314,7 +314,8 @@ class RatbagdDevice(_RatbagdDBus):
+             profile.connect("notify::is-active", self._on_active_profile_changed)
+ 
+     def _on_active_profile_changed(self, profile, pspec):
+-        self.emit("active-profile-changed", self._profiles[profile.index])
++        if profile.is_active:
++            self.emit("active-profile-changed", self._profiles[profile.index])
+ 
+     @GObject.Property
+     def id(self):
+@@ -391,6 +392,7 @@ class RatbagdProfile(_RatbagdDBus):
+     def __init__(self, object_path):
+         _RatbagdDBus.__init__(self, "Profile", object_path)
+         self._dirty = False
++        self._active = self._get_dbus_property("IsActive")
+ 
+         # FIXME: if we start adding and removing objects from any of these
+         # lists, things will break!
+@@ -415,6 +417,14 @@ class RatbagdProfile(_RatbagdDBus):
+             self._dirty = True
+             self.notify("dirty")
+ 
++    def _on_properties_changed(self, proxy, changed_props, invalidated_props):
++        if "IsActive" in changed_props.keys():
++            active = changed_props["IsActive"]
++            if active != self._active:
++                self._active = active
++                self.notify("is-active")
++                self._on_obj_notify(None, None)
++
+     @GObject.Property
+     def index(self):
+         """The index of this profile."""
+@@ -473,13 +483,12 @@ class RatbagdProfile(_RatbagdDBus):
+     @GObject.Property
+     def is_active(self):
+         """Returns True if the profile is currenly active, false otherwise."""
+-        return self._get_dbus_property("IsActive")
++        return self._active
+ 
+     def set_active(self):
+         """Set this profile to be the active profile."""
+         ret = self._dbus_call("SetActive", "")
+         self._set_dbus_property("IsActive", "b", True, readwrite=False)
+-        self.notify("is-active")
+         return ret
+ 
+ 
+-- 
+2.16.1
+

@@ -1,0 +1,30 @@
+From 7e24a26dbbec99ed12173a340aa9b85859959ce2 Mon Sep 17 00:00:00 2001
+From: Jente Hidskes <hjdskes@gmail.com>
+Date: Mon, 28 Aug 2017 12:48:12 +0200
+Subject: [PATCH 04/30] ButtonDialog: correctly (re)initialize the current
+ macro on Escape
+
+Fixes #159.
+---
+ piper/buttondialog.py | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/piper/buttondialog.py b/piper/buttondialog.py
+index b3558b9..fecbb6f 100644
+--- a/piper/buttondialog.py
++++ b/piper/buttondialog.py
+@@ -301,7 +301,10 @@ class ButtonDialog(Gtk.Dialog):
+                 return
+             # Escape cancels the editing.
+             elif event.keyval == Gdk.KEY_Escape:
+-                self._create_current_macro(macro=self._mapping)
++                if self._action_type == RatbagdButton.ACTION_TYPE_MACRO:
++                    self._create_current_macro(macro=self._mapping)
++                else:
++                    self._create_current_macro()
+                 self.stack.set_visible_child_name("overview")
+                 return
+         elif event.type == Gdk.EventType.KEY_RELEASE:
+-- 
+2.16.1
+

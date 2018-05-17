@@ -1,0 +1,43 @@
+From 1c0548a4dc013eac9fe2414ef69700c330a2ecbe Mon Sep 17 00:00:00 2001
+From: Jente Hidskes <hjdskes@gmail.com>
+Date: Thu, 31 Aug 2017 11:32:09 +0200
+Subject: [PATCH 08/30] RatbagdResolution: cache the is_active property to
+ signal only changes
+
+Circumvents https://github.com/libratbag/libratbag/blob/bb23f68d53a5da85c195def66ec103f086b9254b/ratbagd/ratbagd-resolution.c#L85
+---
+ piper/ratbagd.py | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/piper/ratbagd.py b/piper/ratbagd.py
+index 90ec505..3467212 100644
+--- a/piper/ratbagd.py
++++ b/piper/ratbagd.py
+@@ -500,10 +500,14 @@ class RatbagdResolution(_RatbagdDBus):
+ 
+     def __init__(self, object_path):
+         _RatbagdDBus.__init__(self, "Resolution", object_path)
++        self._active = self._get_dbus_property("IsActive")
+ 
+     def _on_properties_changed(self, proxy, changed_props, invalidated_props):
+         if "IsActive" in changed_props.keys():
+-            self.notify("is-active")
++            active = changed_props["IsActive"]
++            if active != self._active:
++                self._active = active
++                self.notify("is-active")
+ 
+     @GObject.Property
+     def index(self):
+@@ -560,7 +564,7 @@ class RatbagdResolution(_RatbagdDBus):
+     def is_active(self):
+         """True if this is the currently active resolution, False
+         otherwise"""
+-        return self._get_dbus_property("IsActive")
++        return self._active
+ 
+     @GObject.Property
+     def is_default(self):
+-- 
+2.16.1
+

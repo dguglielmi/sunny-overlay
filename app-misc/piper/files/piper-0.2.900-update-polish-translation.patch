@@ -1,0 +1,190 @@
+From 15c9aeddd102d27084275fba0d29e72194225498 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Piotr=20Dr=C4=85g?= <piotrdrag@gmail.com>
+Date: Sun, 1 Oct 2017 13:39:19 +0200
+Subject: [PATCH 17/30] Update Polish translation
+
+---
+ po/pl.po | 66 ++++++++++++++++++++++++++++++++++------------------------------
+ 1 file changed, 35 insertions(+), 31 deletions(-)
+
+diff --git a/po/pl.po b/po/pl.po
+index bd53d2a..906d1e3 100644
+--- a/po/pl.po
++++ b/po/pl.po
+@@ -8,8 +8,8 @@ msgid ""
+ msgstr ""
+ "Project-Id-Version: piper\n"
+ "Report-Msgid-Bugs-To: \n"
+-"POT-Creation-Date: 2017-08-23 20:38+0200\n"
+-"PO-Revision-Date: 2017-08-23 23:13+0200\n"
++"POT-Creation-Date: 2017-10-01 13:37+0200\n"
++"PO-Revision-Date: 2017-10-01 13:38+0200\n"
+ "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
+ "Language-Team: Polish <community-poland@mozilla.org>\n"
+ "Language: pl\n"
+@@ -45,7 +45,7 @@ msgid "Disabled"
+ msgstr "Wyłączone"
+ 
+ #. Translators: the button has an unknown function.
+-#: piper/buttonspage.py:94 piper/ratbagd.py:613
++#: piper/buttonspage.py:94 piper/ratbagd.py:689
+ msgid "Unknown"
+ msgstr "Nieznane"
+ 
+@@ -70,121 +70,125 @@ msgstr "Diody LED"
+ msgid "Profile {}"
+ msgstr "{}. profil"
+ 
+-#: piper/ratbagd.py:604
++#: piper/ratbagd.py:679
+ msgid "Left mouse button click"
+ msgstr "Kliknięcie lewym przyciskiem myszy"
+ 
+-#: piper/ratbagd.py:605
++#: piper/ratbagd.py:680
+ msgid "Right mouse button click"
+ msgstr "Kliknięcie prawym przyciskiem myszy"
+ 
+-#: piper/ratbagd.py:606
++#: piper/ratbagd.py:681
+ msgid "Middle mouse button click"
+ msgstr "Kliknięcie środkowym przyciskiem myszy"
+ 
+-#: piper/ratbagd.py:607
++#: piper/ratbagd.py:682
+ msgid "Backward"
+ msgstr "Wstecz"
+ 
+-#: piper/ratbagd.py:608
++#: piper/ratbagd.py:683
+ msgid "Forward"
+ msgstr "Dalej"
+ 
+-#: piper/ratbagd.py:614
++#: piper/ratbagd.py:688
++msgid "Invalid"
++msgstr "Nieprawidłowe"
++
++#: piper/ratbagd.py:690
+ msgid "Doubleclick"
+ msgstr "Podwójne kliknięcie"
+ 
+-#: piper/ratbagd.py:615
++#: piper/ratbagd.py:691
+ msgid "Wheel Left"
+ msgstr "Kółko w lewo"
+ 
+-#: piper/ratbagd.py:616
++#: piper/ratbagd.py:692
+ msgid "Wheel Right"
+ msgstr "Kółko w prawo"
+ 
+-#: piper/ratbagd.py:617
++#: piper/ratbagd.py:693
+ msgid "Wheel Up"
+ msgstr "Kółko w górę"
+ 
+-#: piper/ratbagd.py:618
++#: piper/ratbagd.py:694
+ msgid "Wheel Down"
+ msgstr "Kółko w dół"
+ 
+-#: piper/ratbagd.py:619
++#: piper/ratbagd.py:695
+ msgid "Ratchet Mode"
+ msgstr "Tryb zapadkowy"
+ 
+-#: piper/ratbagd.py:620
++#: piper/ratbagd.py:696
+ msgid "Cycle Resolution Up"
+ msgstr "Przewija rozdzielczość w górę"
+ 
+-#: piper/ratbagd.py:621
++#: piper/ratbagd.py:697
+ msgid "Cycle Resolution Down"
+ msgstr "Przewija rozdzielczość w dół"
+ 
+-#: piper/ratbagd.py:622
++#: piper/ratbagd.py:698
+ msgid "Resolution Up"
+ msgstr "Rozdzielczość w górę"
+ 
+-#: piper/ratbagd.py:623
++#: piper/ratbagd.py:699
+ msgid "Resolution Down"
+ msgstr "Rozdzielczość w dół"
+ 
+-#: piper/ratbagd.py:624
++#: piper/ratbagd.py:700
+ msgid "Resolution Switch"
+ msgstr "Przełączenie rozdzielczości"
+ 
+-#: piper/ratbagd.py:625
++#: piper/ratbagd.py:701
+ msgid "Default Resolution"
+ msgstr "Domyślna rozdzielczość"
+ 
+-#: piper/ratbagd.py:626
++#: piper/ratbagd.py:702
+ msgid "Cycle Profile Up"
+ msgstr "Przewija profil w górę"
+ 
+-#: piper/ratbagd.py:627
++#: piper/ratbagd.py:703
+ msgid "Cycle Profile Down"
+ msgstr "Przewija profil w dół"
+ 
+-#: piper/ratbagd.py:628
++#: piper/ratbagd.py:704
+ msgid "Profile Up"
+ msgstr "Profil w górę"
+ 
+-#: piper/ratbagd.py:629
++#: piper/ratbagd.py:705
+ msgid "Profile Down"
+ msgstr "Profil w dół"
+ 
+-#: piper/ratbagd.py:630
++#: piper/ratbagd.py:706
+ msgid "Second Mode"
+ msgstr "Drugi poziom"
+ 
+-#: piper/ratbagd.py:631
++#: piper/ratbagd.py:707
+ msgid "Battery Level"
+ msgstr "Poziom naładowania akumulatora"
+ 
+ #. Translators: this is used when there is no macro to preview.
+-#: piper/ratbagd.py:759 data/ui/ButtonDialog.ui:106 data/ui/ButtonDialog.ui:187
++#: piper/ratbagd.py:820 data/ui/ButtonDialog.ui:106 data/ui/ButtonDialog.ui:187
+ msgid "None"
+ msgstr "Brak"
+ 
+ #. Translators: the LED is off.
+-#: piper/ratbagd.py:833 data/ui/LedDialog.ui:391
++#: piper/ratbagd.py:894 data/ui/LedDialog.ui:391
+ msgid "Off"
+ msgstr "Wyłączone"
+ 
+ #. Translators: the LED has a single, solid color.
+-#: piper/ratbagd.py:835 data/ui/LedDialog.ui:66
++#: piper/ratbagd.py:896 data/ui/LedDialog.ui:66
+ msgid "Solid"
+ msgstr "Jeden kolor"
+ 
+ #. Translators: the LED is cycling between red, green and blue.
+-#: piper/ratbagd.py:837 data/ui/LedDialog.ui:188
++#: piper/ratbagd.py:898 data/ui/LedDialog.ui:188
+ msgid "Cycle"
+ msgstr "Zmienny kolor"
+ 
+ #. Translators: the LED's is pulsating a single color on different
+ #. brightnesses.
+-#: piper/ratbagd.py:840 data/ui/LedDialog.ui:353
++#: piper/ratbagd.py:901 data/ui/LedDialog.ui:353
+ msgid "Breathing"
+ msgstr "Pulsujący kolor"
+ 
+-- 
+2.16.1
+

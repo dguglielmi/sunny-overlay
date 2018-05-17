@@ -1,0 +1,97 @@
+From d243325068981ce2f662f4f0eb2d0b04d18a7faf Mon Sep 17 00:00:00 2001
+From: Jente Hidskes <hjdskes@gmail.com>
+Date: Mon, 20 Nov 2017 12:06:02 +0100
+Subject: [PATCH 29/30] ratbagd.py: sync with libratbag
+
+---
+ piper/ratbagd.py | 42 +++++++++++++++++++++++++++++++++---------
+ 1 file changed, 33 insertions(+), 9 deletions(-)
+
+diff --git a/piper/ratbagd.py b/piper/ratbagd.py
+index 9513f74..d686452 100644
+--- a/piper/ratbagd.py
++++ b/piper/ratbagd.py
+@@ -275,12 +275,25 @@ class Ratbagd(_RatbagdDBus):
+         """A list of RatbagdDevice objects supported by ratbagd."""
+         return self._devices
+ 
++    def __getitem__(self, id):
++        """Returns the requested device, or None."""
++        for d in self.devices:
++            if d.id == id:
++                return d
++        return None
++
+     @GObject.Property
+     def themes(self):
+         """A list of theme names. The theme 'default' is guaranteed to be
+         available."""
+         return self._get_dbus_property("Themes")
+ 
++    def __enter__(self):
++        return self
++
++    def __exit__(self, exc_type, exc_val, exc_tb):
++        pass
++
+ 
+ class RatbagdDevice(_RatbagdDBus):
+     """Represents a ratbagd device."""
+@@ -585,6 +598,11 @@ class RatbagdResolution(_RatbagdDBus):
+         """The list of supported DPI values"""
+         return self._get_dbus_property("Resolutions")
+ 
++    @GObject.Property
++    def report_rates(self):
++        """The list of supported report rates"""
++        return self._get_dbus_property("ReportRates")
++
+     @GObject.Property
+     def is_active(self):
+         """True if this is the currently active resolution, False
+@@ -925,9 +943,15 @@ class RatbagdLed(_RatbagdDBus):
+         """
+         self._set_dbus_property("Mode", "u", mode)
+ 
++    @GObject.Property
++    def modes(self):
++        """The supported modes as a list"""
++        return self._get_dbus_property("Modes")
++
+     @GObject.Property
+     def type(self):
+-        """An enum describing this led's type, one of RatbagdLed.TYPE_*."""
++        """An enum describing this led's type,
++        RatbagdLed.TYPE_LOGO or RatbagdLed.TYPE_SIDE."""
+         return self._get_dbus_property("Type")
+ 
+     @GObject.Property
+@@ -950,17 +974,17 @@ class RatbagdLed(_RatbagdDBus):
+         return self._get_dbus_property("ColorDepth")
+ 
+     @GObject.Property
+-    def effect_rate(self):
+-        """The LED's effect rate in Hz, values range from 100 to 20000."""
+-        return self._get_dbus_property("EffectRate")
++    def effect_duration(self):
++        """The LED's effect duration in ms, values range from 0 to 10000."""
++        return self._get_dbus_property("EffectDuration")
+ 
+-    @effect_rate.setter
+-    def effect_rate(self, effect_rate):
+-        """Set the effect rate in Hz. Allowed values range from 100 to 20000.
++    @effect_duration.setter
++    def effect_duration(self, effect_duration):
++        """Set the effect duration in ms. Allowed values range from 0 to 10000.
+ 
+-        @param effect_rate The new effect rate, as int
++        @param effect_duration The new effect duration, as int
+         """
+-        self._set_dbus_property("EffectRate", "u", effect_rate)
++        self._set_dbus_property("EffectDuration", "u", effect_duration)
+ 
+     @GObject.Property
+     def brightness(self):
+-- 
+2.16.1
+
