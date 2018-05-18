@@ -88,6 +88,7 @@ PATCHES=(
 	"${FILESDIR}"/${P}-components-js-fixes.patch
 	"${FILESDIR}"/${P}-denon-mc6000mk2-fix-looping.patch
 	"${FILESDIR}"/${P}-dlgtrackinfo-mismatching-signal-slot-connection.patch
+	"${FILESDIR}"/${P}-reduce-log-spam-from-soundsourceproxy.patch
 )
 
 S="${WORKDIR}/${PN}-release-${PV}"

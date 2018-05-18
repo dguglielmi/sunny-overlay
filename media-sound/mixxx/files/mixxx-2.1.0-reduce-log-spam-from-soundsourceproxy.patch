@@ -1,0 +1,44 @@
+From 11de4b0ce3e36887471ad818ddc023e23b517097 Mon Sep 17 00:00:00 2001
+From: Uwe Klotz <uklotz@mixxx.org>
+Date: Fri, 18 May 2018 17:15:00 +0200
+Subject: [PATCH] Reduce log spam
+
+---
+ src/sources/soundsourceproxy.cpp | 17 ++++++++++-------
+ 1 file changed, 10 insertions(+), 7 deletions(-)
+
+diff --git a/src/sources/soundsourceproxy.cpp b/src/sources/soundsourceproxy.cpp
+index 0d43f1fd70..4dbe1b4765 100644
+--- a/src/sources/soundsourceproxy.cpp
++++ b/src/sources/soundsourceproxy.cpp
+@@ -528,20 +528,23 @@ void SoundSourceProxy::updateTrackFromSource(
+         // once in the past. Only overwrite this information if
+         // new data has actually been imported, otherwise abort
+         // and preserve the existing data!
+-        if (metadataImported.first == mixxx::MetadataSource::ImportResult::Succeeded) {
+-            kLogger.info()
++        if (metadataImported.first != mixxx::MetadataSource::ImportResult::Succeeded) {
++            return; // abort
++        }
++        if (kLogger.debugEnabled()) {
++            kLogger.debug()
+                     << "Updating track metadata"
+                     << (pCoverImg ? "and embedded cover art" : "")
+                     << "from file"
+                     << getUrl().toString();
+-        } else {
+-            return; // abort
+         }
+     } else {
+         DEBUG_ASSERT(pCoverImg);
+-        kLogger.info()
+-                << "Initializing track metadata and embedded cover art from file"
+-                << getUrl().toString();
++        if (kLogger.debugEnabled()) {
++            kLogger.debug()
++                    << "Initializing track metadata and embedded cover art from file"
++                    << getUrl().toString();
++        }
+     }
+ 
+     // Fallback: If artist or title fields are blank then try to populate
