@@ -1,25 +1,7 @@
-diff -dNur a/ipcalc.c b/ipcalc.c
---- a/ipcalc.c	2017-12-27 10:47:42.000000000 +0100
-+++ b/ipcalc.c	2018-05-18 00:54:51.986184370 +0200
-@@ -1290,8 +1290,15 @@
- 	if (hostname)
- 		flags |= FLAG_RESOLVE_IP;
- 
-+#ifdef USE_GEOIP
-+#ifdef USE_DYN_GEOIP
- 	if (geo_setup() == 0 && ((flags & FLAG_SHOW_ALL_INFO) == FLAG_SHOW_ALL_INFO))
- 		flags |= FLAG_GET_GEOIP;
-+#else
-+	if ((flags & FLAG_SHOW_ALL_INFO) == FLAG_SHOW_ALL_INFO)
-+		flags |= FLAG_GET_GEOIP;
-+#endif
-+#endif
- 
- 	if ((hostname && randomStr) || (hostname && splitStr) || (randomStr && splitStr)) {
- 		if (!beSilent)
-diff -dNur a/ipcalc-geoip.c b/ipcalc-geoip.c
---- a/ipcalc-geoip.c	2017-12-27 10:47:42.000000000 +0100
-+++ b/ipcalc-geoip.c	2018-05-18 00:54:40.570361944 +0200
+diff --git a/ipcalc-geoip.c b/ipcalc-geoip.c
+index 6be38fe..4cae8c0 100644
+--- a/ipcalc-geoip.c
++++ b/ipcalc-geoip.c
 @@ -34,6 +34,22 @@
  # include <GeoIP.h>
  # include <GeoIPCity.h>
@@ -43,7 +25,7 @@ diff -dNur a/ipcalc-geoip.c b/ipcalc-geoip.c
  # ifdef USE_DYN_GEOIP
  #  include <dlfcn.h>
  
-@@ -59,22 +75,6 @@
+@@ -59,22 +75,6 @@ static GeoIP_record_by_ipnum_v6_func pGeoIP_record_by_ipnum_v6;
  
  #define LIBNAME LIBPATH"/libGeoIP.so.1"
  
@@ -66,7 +48,7 @@ diff -dNur a/ipcalc-geoip.c b/ipcalc-geoip.c
  int geo_setup(void)
  {
  	static void *ld = NULL;
-@@ -141,8 +141,10 @@
+@@ -141,8 +141,10 @@ void geo_ipv4_lookup(struct in_addr ip, char **country, char **ccode, char **cit
  	int country_id;
  	const char *p;
  
@@ -77,7 +59,7 @@ diff -dNur a/ipcalc-geoip.c b/ipcalc-geoip.c
  
  	ip.s_addr = ntohl(ip.s_addr);
  
-@@ -207,8 +209,10 @@
+@@ -207,8 +209,10 @@ void geo_ipv6_lookup(struct in6_addr *ip, char **country, char **ccode, char **c
  	int country_id;
  	const char *p;
  
@@ -88,10 +70,54 @@ diff -dNur a/ipcalc-geoip.c b/ipcalc-geoip.c
  
  	p_GeoIP_setup_dbfilename();
  
-diff -dNur a/ipcalc.h b/ipcalc.h
---- a/ipcalc.h	2017-12-27 10:47:42.000000000 +0100
-+++ b/ipcalc.h	2018-05-18 00:54:40.570361944 +0200
-@@ -20,11 +20,9 @@
+diff --git a/ipcalc.c b/ipcalc.c
+index 5437ea8..411e1b0 100644
+--- a/ipcalc.c
++++ b/ipcalc.c
+@@ -709,8 +709,10 @@ int get_ipv4_info(const char *ipStr, int prefix, ip_info_st * info,
+ 
+ 	ipv4_prefix_to_hosts(info->hosts, sizeof(info->hosts), prefix);
+ 
++#ifdef USE_GEOIP
+ 	if (flags & FLAG_GET_GEOIP)
+ 		geo_ipv4_lookup(ip, &info->geoip_country, &info->geoip_ccode, &info->geoip_city, &info->geoip_coord);
++#endif
+ 
+ 	if (flags & FLAG_RESOLVE_HOST) {
+ 		info->hostname = get_hostname(AF_INET, &ip);
+@@ -927,9 +929,10 @@ int get_ipv6_info(const char *ipStr, int prefix, ip_info_st * info,
+ 
+ 	ipv6_prefix_to_hosts(info->hosts, sizeof(info->hosts), prefix);
+ 
+-
++#ifdef USE_GEOIP
+ 	if (flags & FLAG_GET_GEOIP)
+ 		geo_ipv6_lookup(&ip6, &info->geoip_country, &info->geoip_ccode, &info->geoip_city, &info->geoip_coord);
++#endif
+ 
+ 	if (flags & FLAG_RESOLVE_HOST) {
+ 		info->hostname = get_hostname(AF_INET6, &ip6);
+@@ -1290,8 +1293,15 @@ int main(int argc, char **argv)
+ 	if (hostname)
+ 		flags |= FLAG_RESOLVE_IP;
+ 
++#ifdef USE_GEOIP
++#ifdef USE_DYN_GEOIP
+ 	if (geo_setup() == 0 && ((flags & FLAG_SHOW_ALL_INFO) == FLAG_SHOW_ALL_INFO))
+ 		flags |= FLAG_GET_GEOIP;
++#else
++	if ((flags & FLAG_SHOW_ALL_INFO) == FLAG_SHOW_ALL_INFO)
++		flags |= FLAG_GET_GEOIP;
++#endif
++#endif
+ 
+ 	if ((hostname && randomStr) || (hostname && splitStr) || (randomStr && splitStr)) {
+ 		if (!beSilent)
+diff --git a/ipcalc.h b/ipcalc.h
+index a3f13bc..a9a3c0f 100644
+--- a/ipcalc.h
++++ b/ipcalc.h
+@@ -23,11 +23,9 @@
  #ifdef USE_GEOIP
  void geo_ipv4_lookup(struct in_addr ip, char **country, char **ccode, char **city, char  **coord);
  void geo_ipv6_lookup(struct in6_addr *ip, char **country, char **ccode, char **city, char **coord);

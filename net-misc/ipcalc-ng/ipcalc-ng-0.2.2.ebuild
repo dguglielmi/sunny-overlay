@@ -28,10 +28,10 @@ PATCHES=(
 )
 
 src_compile() {
+	emake \
 	CC="$(tc-getCC)" LIBS="${LDFLAGS}" LIBPATH="${EPREFIX}/usr/$(get_libdir)" \
 	USE_GEOIP="$(usex geoip yes no)" \
-	USE_DYN_GEOIP="no" \
-	emake
+	USE_DYN_GEOIP="no"
 }
 
 src_install() {
