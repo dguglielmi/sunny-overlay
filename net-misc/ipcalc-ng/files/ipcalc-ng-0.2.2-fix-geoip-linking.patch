@@ -1,5 +1,5 @@
 diff --git a/ipcalc-geoip.c b/ipcalc-geoip.c
-index 6be38fe..4cae8c0 100644
+index 6be38fe..17b6346 100644
 --- a/ipcalc-geoip.c
 +++ b/ipcalc-geoip.c
 @@ -34,6 +34,22 @@
@@ -48,86 +48,17 @@ index 6be38fe..4cae8c0 100644
  int geo_setup(void)
  {
  	static void *ld = NULL;
-@@ -141,8 +141,10 @@ void geo_ipv4_lookup(struct in_addr ip, char **country, char **ccode, char **cit
- 	int country_id;
- 	const char *p;
- 
-+#ifdef USE_DYN_GEOIP
- 	if (geo_setup() != 0)
- 		return;
-+#endif
- 
- 	ip.s_addr = ntohl(ip.s_addr);
- 
-@@ -207,8 +209,10 @@ void geo_ipv6_lookup(struct in6_addr *ip, char **country, char **ccode, char **c
- 	int country_id;
- 	const char *p;
- 
-+#ifdef USE_DYN_GEOIP
- 	if (geo_setup() != 0)
- 		return;
-+#endif
- 
- 	p_GeoIP_setup_dbfilename();
- 
-diff --git a/ipcalc.c b/ipcalc.c
-index 5437ea8..411e1b0 100644
---- a/ipcalc.c
-+++ b/ipcalc.c
-@@ -709,8 +709,10 @@ int get_ipv4_info(const char *ipStr, int prefix, ip_info_st * info,
- 
- 	ipv4_prefix_to_hosts(info->hosts, sizeof(info->hosts), prefix);
- 
-+#ifdef USE_GEOIP
- 	if (flags & FLAG_GET_GEOIP)
- 		geo_ipv4_lookup(ip, &info->geoip_country, &info->geoip_ccode, &info->geoip_city, &info->geoip_coord);
-+#endif
- 
- 	if (flags & FLAG_RESOLVE_HOST) {
- 		info->hostname = get_hostname(AF_INET, &ip);
-@@ -927,9 +929,10 @@ int get_ipv6_info(const char *ipStr, int prefix, ip_info_st * info,
- 
- 	ipv6_prefix_to_hosts(info->hosts, sizeof(info->hosts), prefix);
- 
--
-+#ifdef USE_GEOIP
- 	if (flags & FLAG_GET_GEOIP)
- 		geo_ipv6_lookup(&ip6, &info->geoip_country, &info->geoip_ccode, &info->geoip_city, &info->geoip_coord);
-+#endif
- 
- 	if (flags & FLAG_RESOLVE_HOST) {
- 		info->hostname = get_hostname(AF_INET6, &ip6);
-@@ -1290,8 +1293,15 @@ int main(int argc, char **argv)
- 	if (hostname)
- 		flags |= FLAG_RESOLVE_IP;
- 
-+#ifdef USE_GEOIP
-+#ifdef USE_DYN_GEOIP
- 	if (geo_setup() == 0 && ((flags & FLAG_SHOW_ALL_INFO) == FLAG_SHOW_ALL_INFO))
- 		flags |= FLAG_GET_GEOIP;
-+#else
-+	if ((flags & FLAG_SHOW_ALL_INFO) == FLAG_SHOW_ALL_INFO)
-+		flags |= FLAG_GET_GEOIP;
-+#endif
-+#endif
- 
- 	if ((hostname && randomStr) || (hostname && splitStr) || (randomStr && splitStr)) {
- 		if (!beSilent)
 diff --git a/ipcalc.h b/ipcalc.h
-index a3f13bc..a9a3c0f 100644
+index a3f13bc..9af367a 100644
 --- a/ipcalc.h
 +++ b/ipcalc.h
-@@ -23,11 +23,9 @@
- #ifdef USE_GEOIP
+@@ -24,6 +24,9 @@
  void geo_ipv4_lookup(struct in_addr ip, char **country, char **ccode, char **city, char  **coord);
  void geo_ipv6_lookup(struct in6_addr *ip, char **country, char **ccode, char **city, char **coord);
-+#ifdef USE_DYN_GEOIP
  int geo_setup(void);
--#else
--# define geo_ipv4_lookup(x,y,z,w,a)
--# define geo_ipv6_lookup(x,y,z,w,a)
--# define geo_setup() -1
++#ifndef USE_DYN_GEOIP
++# define geo_setup() 0
 +#endif
- #endif
- 
- char __attribute__((warn_unused_result)) *safe_strdup(const char *str);
+ #else
+ # define geo_ipv4_lookup(x,y,z,w,a)
+ # define geo_ipv6_lookup(x,y,z,w,a)
