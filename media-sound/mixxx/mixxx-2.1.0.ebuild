@@ -89,6 +89,10 @@ PATCHES=(
 	"${FILESDIR}"/${P}-denon-mc6000mk2-fix-looping.patch
 	"${FILESDIR}"/${P}-dlgtrackinfo-mismatching-signal-slot-connection.patch
 	"${FILESDIR}"/${P}-reduce-log-spam-from-soundsourceproxy.patch
+	"${FILESDIR}"/${P}-qt5-2.1.patch
+	"${FILESDIR}"/${P}-update-american-audio-vms4-preset-for-mixxx-v2.1.x.patch
+	"${FILESDIR}"/${P}-empty-library-fix-lp1772591.patch
+	"${FILESDIR}"/${P}-beatsync-fix.patch
 )
 
 S="${WORKDIR}/${PN}-release-${PV}"

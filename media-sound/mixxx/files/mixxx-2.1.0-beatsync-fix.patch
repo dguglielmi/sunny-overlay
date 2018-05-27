@@ -1,0 +1,87 @@
+From 5b656450844d09f41afbb2cccbec74ef3b72eb99 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Daniel=20Sch=C3=BCrmann?= <daschuer@mixxx.org>
+Date: Tue, 22 May 2018 02:29:42 +0200
+Subject: [PATCH 1/2] fix beatsync control syncing phase, an old regression
+ since 2.0
+
+---
+ src/engine/enginebuffer.cpp | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/src/engine/enginebuffer.cpp b/src/engine/enginebuffer.cpp
+index 1218f017b6..42087bc248 100644
+--- a/src/engine/enginebuffer.cpp
++++ b/src/engine/enginebuffer.cpp
+@@ -658,7 +658,7 @@ void EngineBuffer::slotControlPlayRequest(double v) {
+     bool verifiedPlay = updateIndicatorsAndModifyPlay(v > 0.0);
+ 
+     if (!oldPlay && verifiedPlay) {
+-        if (m_pQuantize->get() > 0.0
++        if (m_pQuantize->toBool()
+ #ifdef __VINYLCONTROL__
+                 && m_pVinylControlControl && !m_pVinylControlControl->isEnabled()
+ #endif
+@@ -900,7 +900,7 @@ void EngineBuffer::process(CSAMPLE* pOutput, const int iBufferSize) {
+         // we need to sync phase or we'll be totally out of whack and the sync
+         // adjuster will kick in and push the track back in to sync with the
+         // master.
+-        if (m_scratching_old && !is_scratching && m_pQuantize->get() > 0.0
++        if (m_scratching_old && !is_scratching && m_pQuantize->toBool()
+                 && m_pSyncControl->getSyncMode() == SYNC_FOLLOWER && !paused) {
+             // TODO() The resulting seek is processed in the following callback
+             // That is to late
+@@ -1179,7 +1179,7 @@ void EngineBuffer::processSeek(bool paused) {
+             return;
+     }
+ 
+-    if ((seekType & SEEK_PHASE) && !paused && m_pQuantize->toBool()) {
++    if (!paused && ((seekType & SEEK_PHASE) || m_pQuantize->toBool())) {
+         position = m_pBpmControl->getNearestPositionInPhase(position, true, true);
+     }
+     if (position != m_filepos_play) {
+
+From f762d52d65c63bcfac7604011b231019d605dd97 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Daniel=20Sch=C3=BCrmann?= <daschuer@mixxx.org>
+Date: Tue, 22 May 2018 02:37:31 +0200
+Subject: [PATCH 2/2] Added beatsync to right click on sync in Shade and Deere,
+ fixes bug #1772526
+
+---
+ res/skins/Deere/deck_tempo_column.xml | 3 ++-
+ res/skins/Shade/deck.xml              | 2 +-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/res/skins/Deere/deck_tempo_column.xml b/res/skins/Deere/deck_tempo_column.xml
+index 7d7e76ea19..d7de70df24 100644
+--- a/res/skins/Deere/deck_tempo_column.xml
++++ b/res/skins/Deere/deck_tempo_column.xml
+@@ -15,7 +15,7 @@
+         <ObjectName>TempoControlButtons</ObjectName>
+         <Layout>vertical</Layout>
+         <Children>
+-          <Template src="skin:left_2state_button.xml">
++          <Template src="skin:left_right_2state_button.xml">
+             <SetVariable name="TooltipId">sync_enabled</SetVariable>
+             <SetVariable name="ObjectName">DeckSync</SetVariable>
+             <SetVariable name="MinimumSize">-1,18</SetVariable>
+@@ -28,6 +28,7 @@
+             <SetVariable name="state_1_pressed"></SetVariable>
+             <SetVariable name="state_1_unpressed"></SetVariable>
+             <SetVariable name="left_connection_control"><Variable name="group"/>,sync_enabled</SetVariable>
++            <SetVariable name="right_connection_control"><Variable name="group"/>,beatsync</SetVariable>
+           </Template>
+ 
+           <WidgetGroup>
+diff --git a/res/skins/Shade/deck.xml b/res/skins/Shade/deck.xml
+index ad3cabd6d2..494901128a 100644
+--- a/res/skins/Shade/deck.xml
++++ b/res/skins/Shade/deck.xml
+@@ -450,7 +450,7 @@
+ 							<ButtonState>LeftButton</ButtonState>
+ 						</Connection>
+ 						<Connection>
+-							<ConfigKey>[Channel<Variable name="channum"/>],beatsync_tempo</ConfigKey>
++							<ConfigKey>[Channel<Variable name="channum"/>],beatsync</ConfigKey>
+ 							<ButtonState>RightButton</ButtonState>
+ 						</Connection>
+ 					</PushButton>
