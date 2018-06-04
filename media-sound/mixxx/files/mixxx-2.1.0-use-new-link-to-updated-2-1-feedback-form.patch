@@ -1,0 +1,24 @@
+From bd9084d2d592bf34980e88428b7d1af40fce6b55 Mon Sep 17 00:00:00 2001
+From: "S.Brandt" <s.brandt@mixxx.org>
+Date: Sun, 22 Apr 2018 16:34:19 +0200
+Subject: [PATCH] In ``Help --> Send Us Feedback``, use new link to updated 2.1
+ feedback form.
+
+---
+ src/defs_urls.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/defs_urls.h b/src/defs_urls.h
+index 993ad91d35..29b377d980 100644
+--- a/src/defs_urls.h
++++ b/src/defs_urls.h
+@@ -19,8 +19,8 @@
+ 
+ #define MIXXX_WEBSITE_URL       "https://www.mixxx.org"
+ #define MIXXX_SUPPORT_URL       "https://www.mixxx.org/support/"
+-#define MIXXX_FEEDBACK_URL      "https://docs.google.com/forms/d/14pLA_aeK0TZUgpfEa6uVLknRX2CBPBPf99gHNHkYgUc/viewform"
+ #define MIXXX_TRANSLATION_URL   "https://www.transifex.com/projects/p/mixxxdj/"
++#define MIXXX_FEEDBACK_URL      "https://goo.gl/forms/IHf3JK7Q9DXmExXc2"
+ #define MIXXX_MANUAL_URL        "https://mixxx.org/manual/2.1"
+ #define MIXXX_SHORTCUTS_URL     "https://mixxx.org/manual/2.1/chapters/appendix.html#keyboard-mapping-table"
+ #define MIXXX_MANUAL_FILENAME   "Mixxx-Manual.pdf"

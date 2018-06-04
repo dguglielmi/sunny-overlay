@@ -59,6 +59,7 @@ DEPEND="
 	virtual/pkgconfig
 	dev-qt/qttest:5
 	dev-qt/qtxmlpatterns:5
+	dev-vcs/git
 "
 
 PATCHES=(
@@ -92,6 +93,11 @@ PATCHES=(
 	"${FILESDIR}"/${P}-qt5-2.1.patch
 	"${FILESDIR}"/${P}-update-american-audio-vms4-preset-for-mixxx-v2.1.x.patch
 	"${FILESDIR}"/${P}-empty-library-fix-lp1772591.patch
+	#"${FILESDIR}"/${P}-try-to-fix-appstream-config-and-desktop-icon.patch
+	"${FILESDIR}"/${P}-use-new-link-to-updated-2-1-feedback-form.patch
+	#"${FILESDIR}"/${P}-library-improvements-for-all-skins-fix-lp1772202-in-tango.patch
+	"${FILESDIR}"/${P}-fix-crash-when-importing-id3v2-apic-frames.patch
+	"${FILESDIR}"/${P}-fix-some-log-levels-and-reduce-debug-log-spam.patch
 	"${FILESDIR}"/${P}-beatsync-fix.patch
 )
 
@@ -102,6 +108,11 @@ src_prepare() {
 	sed -i -e "/unix_lib_path =/s/'lib'/'$(get_libdir)'/" src/SConscript || die
 
 	default
+
+	einfo "Applying ${P}-try-to-fix-appstream-config-and-desktop-icon.patch ..."
+	git apply --ignore-whitespace -p1 < "${FILESDIR}"/${P}-try-to-fix-appstream-config-and-desktop-icon.patch 2>/dev/null
+	einfo "Applying ${P}-library-improvements-for-all-skins-fix-lp1772202-in-tango.patch ..."
+	git apply --ignore-whitespace -p1 < "${FILESDIR}"/${P}-library-improvements-for-all-skins-fix-lp1772202-in-tango.patch 2>/dev/null
 }
 
 src_configure() {
