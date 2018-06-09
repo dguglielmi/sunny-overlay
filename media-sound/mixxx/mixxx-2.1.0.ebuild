@@ -98,6 +98,7 @@ PATCHES=(
 	#"${FILESDIR}"/${P}-library-improvements-for-all-skins-fix-lp1772202-in-tango.patch
 	"${FILESDIR}"/${P}-fix-crash-when-importing-id3v2-apic-frames.patch
 	"${FILESDIR}"/${P}-fix-some-log-levels-and-reduce-debug-log-spam.patch
+	"${FILESDIR}"/${P}-os-theme-shining-though-fix.patch
 	"${FILESDIR}"/${P}-beatsync-fix.patch
 )
 
