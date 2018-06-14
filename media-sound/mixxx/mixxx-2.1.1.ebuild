@@ -12,10 +12,11 @@ SRC_URI="https://github.com/mixxxdj/${PN}/archive/release-${PV}.tar.gz -> ${P}-s
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
-IUSE="aac doc ffmpeg hid mp3 mp4 shout wavpack"
+IUSE="aac doc ffmpeg hid mp3 mp4 opus shout wavpack"
 
 RDEPEND="
 	dev-db/sqlite
+	dev-libs/glib:2
 	dev-libs/protobuf:0=
 	dev-qt/qtconcurrent:5
 	dev-qt/qtcore:5
@@ -50,6 +51,7 @@ RDEPEND="
 	hid? ( dev-libs/hidapi )
 	mp3? ( media-libs/libmad )
 	mp4? ( media-libs/libmp4v2:= )
+	opus? (	media-libs/opusfile )
 	shout? ( media-libs/libshout )
 	wavpack? ( media-sound/wavpack )
 	ffmpeg? ( media-video/ffmpeg:0= )
@@ -61,11 +63,11 @@ DEPEND="
 	dev-qt/qtxmlpatterns:5
 "
 
+S="${WORKDIR}/${PN}-release-${PV}"
+
 PATCHES=(
 	"${FILESDIR}"/${PN}-2.0.0-docs.patch
 )
-
-S="${WORKDIR}/${PN}-release-${PV}"
 
 src_prepare() {
 	# use multilib compatible directory for plugins
@@ -99,6 +101,7 @@ src_configure() {
 		m4a="$(usex mp4 1 0)"
 		mad="$(usex mp3 1 0)"
 		optimize="${myoptimize}"
+		opus="$(usex opus 1 0)"
 		# force qdebug enabled (https://bugs.launchpad.net/mixxx/+bug/1737546)
 		qdebug=1
 		qt5=1
