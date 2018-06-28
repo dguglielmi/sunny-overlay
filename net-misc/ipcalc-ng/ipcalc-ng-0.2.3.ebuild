@@ -22,11 +22,6 @@ DEPEND="!net-misc/ipcalc
 	geoip? ( dev-libs/geoip )"
 RDEPEND="${DEPEND}"
 
-PATCHES=(
-	${FILESDIR}/${P}-fix-geoip-linking.patch
-	${FILESDIR}/${P}-ipcalc-h-guard-header.patch
-)
-
 src_compile() {
 	emake \
 	CC="$(tc-getCC)" LIBS="${LDFLAGS}" LIBPATH="${EPREFIX}/usr/$(get_libdir)" \
