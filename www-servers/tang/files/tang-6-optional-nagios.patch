@@ -6,7 +6,7 @@ diff -dNur a/configure.ac b/configure.ac
  PKG_CHECK_MODULES([systemd], [systemd])
  
 +AC_ARG_ENABLE([nagiosplugin],
-+              AS_HELP_STRING([--disable-nagios], [Disable Nagios plugin]))
++              AS_HELP_STRING([--disable-nagiosplugin], [Disable Nagios plugin]))
 +
 +AM_CONDITIONAL([NAGIOSPLUGIN], [test "x$enable_nagiosplugin" != "xno"])
 +
