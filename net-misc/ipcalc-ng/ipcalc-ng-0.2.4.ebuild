@@ -25,7 +25,7 @@ REQUIRED_USE="?? ( geoip geoip2 )"
 
 src_compile() {
 	emake \
-	CC="$(tc-getCC)" LIBS="${LDFLAGS}" LIBPATH="${EPREFIX}/usr/$(get_libdir)" \
+	CC="$(tc-getCC)" LIBS="${LDFLAGS}" \
 	USE_GEOIP="$(usex geoip yes no)" \
 	USE_MAXMIND="$(usex geoip2 yes no)" \
 	USE_RUNTIME_LINKING="no"
