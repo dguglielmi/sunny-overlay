@@ -18,6 +18,7 @@ IUSE="doc test"
 DEPEND="
 	virtual/pkgconfig
 	doc? ( app-doc/doxygen )
+	test? ( dev-util/valgrind )
 "
 RDEPEND="
 	dev-libs/libevdev
@@ -25,14 +26,14 @@ RDEPEND="
 "
 
 src_prepare() {
-    python_setup
+	python_setup
 	default
 }
 
 src_configure() {
 	local emesonargs=(
-		-Denable-documentation=$(usex doc true false)
-		-Denable-tests=$(usex test true false)
+		-Ddocumentation=$(usex doc true false)
+		-Dtests=$(usex test true false)
 		-Dudev-dir=$(get_udevdir)
 	)
 	meson_src_configure
