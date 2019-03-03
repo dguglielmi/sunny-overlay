@@ -1,0 +1,30 @@
+From 63d760a3bbf420063cff3f978bc9c05e39de149a Mon Sep 17 00:00:00 2001
+From: David Guglielmi <david.guglielmi@gmail.com>
+Date: Sun, 3 Mar 2019 16:46:17 +0100
+Subject: [PATCH] svgs: use /usr/bin/env shebang for python3 scripts
+
+---
+ data/generate-piper-gresource.xml.py | 2 +-
+ data/svgs/check-svg.py               | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/data/generate-piper-gresource.xml.py b/data/generate-piper-gresource.xml.py
+index 19bc43d..af12cac 100644
+--- a/data/generate-piper-gresource.xml.py
++++ b/data/generate-piper-gresource.xml.py
+@@ -1,4 +1,4 @@
+-#!/bin/python3
++#!/usr/bin/env python3
+ 
+ import sys
+ 
+diff --git a/data/svgs/check-svg.py b/data/svgs/check-svg.py
+index fafc3f2..f62ccea 100755
+--- a/data/svgs/check-svg.py
++++ b/data/svgs/check-svg.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/python3
++#!/usr/bin/env python3
+ # vim: set expandtab shiftwidth=4 tabstop=4:
+ 
+ import os

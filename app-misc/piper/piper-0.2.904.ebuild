@@ -15,17 +15,19 @@ SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE=""
 
+PATCHES=( "${FILESDIR}"/${P}-fix-python3-shebang.patch )
+
 DEPEND="
 	virtual/pkgconfig
 	dev-python/pygobject:3
 	>=x11-libs/gtk+-3.22:3[introspection]
 "
 RDEPEND="
-	dev-libs/libratbag
+	>=dev-libs/libratbag-0.9.905
 	dev-python/python-evdev[${PYTHON_USEDEP}]
 "
 src_prepare() {
-    python_setup
+	python_setup
 	default
 }
 
