@@ -1,12 +1,12 @@
 # sunny-overlay
-Sunny-overlay is my personal Gentoo Portage overlay. Maybe it will be useful to others (we always can dream).
+Sunny-overlay is my personal Gentoo Portage overlay.
 
 ## How to use this overlay ?
-You can use this overlay with the new portage plug-in sync system (see: https://wiki.gentoo.org/wiki/Project:Portage/Sync) or alternatively using app-portage/layman.
+You can use this overlay with portage plug-in sync system (see: https://wiki.gentoo.org/wiki/Project:Portage/Sync) or alternatively by using app-portage/layman.
 
 ### New portage plug-in sync system (>=sys-apps/portage-2.2.16)
 
-- Add sunny-overlay's configuration
+- Add "sunny-overlay" configuration
 ```
 # cat << EOF > /etc/portage/repos.conf/sunny-overlay.conf
 [sunny-overlay]
@@ -24,7 +24,7 @@ EOF
 
 ### Layman users
 
-- First you need to install layman and source layman configuration from your make.conf
+- First, you need to install layman and source layman configuration from your make.conf
 
 ```
 # emerge -av app-portage/layman
