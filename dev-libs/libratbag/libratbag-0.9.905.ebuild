@@ -17,6 +17,7 @@ IUSE="doc test"
 
 DEPEND="
 	virtual/pkgconfig
+	dev-lang/swig
 	doc? ( app-doc/doxygen )
 	test? ( dev-util/valgrind )
 "
