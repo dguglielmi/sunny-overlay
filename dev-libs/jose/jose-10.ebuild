@@ -14,5 +14,5 @@ IUSE=""
 
 DEPEND="sys-libs/zlib
 	>=dev-libs/jansson-2.10
-	>=dev-libs/openssl-1.0.2"
+	dev-libs/openssl:0="
 RDEPEND="${DEPEND}"
