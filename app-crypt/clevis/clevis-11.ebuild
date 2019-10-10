@@ -16,13 +16,13 @@ IUSE="bash-completion dracut udisks"
 
 DEPEND="app-text/asciidoc
 	>=sys-fs/luksmeta-8
-	>=dev-libs/openssl-1.0.2
+	dev-libs/openssl:0=
 	>=dev-libs/jansson-2.10
 	>=dev-libs/jose-8
 	>=sys-fs/cryptsetup-2.0.4[pwquality]
 	sys-apps/systemd
 	dracut?	( sys-kernel/dracut )
 	udisks? ( sys-fs/udisks:2
-	          >=sys-process/audit-2.7.8 )
+	>=sys-process/audit-2.7.8 )
 	bash-completion? ( app-shells/bash-completion )"
 RDEPEND="${DEPEND}"

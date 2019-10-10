@@ -15,7 +15,7 @@ KEYWORDS="~amd64 ~x86"
 IUSE="dracut"
 
 DEPEND=">=sys-fs/luksmeta-8
-	>=dev-libs/openssl-1.0.2
+	dev-libs/openssl:0=
 	>=dev-libs/jansson-2.10
 	>=dev-libs/jose-8
 	dev-libs/libpwquality
