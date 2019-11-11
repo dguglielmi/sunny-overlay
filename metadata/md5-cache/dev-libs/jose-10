@@ -1,0 +1,11 @@
+DEFINED_PHASES=-
+DEPEND=sys-libs/zlib >=dev-libs/jansson-2.10 dev-libs/openssl:0=
+DESCRIPTION=C-language implementation of Javascript Object Signing and Encryption
+EAPI=6
+HOMEPAGE=https://latchset.github.io/
+KEYWORDS=~amd64 ~x86
+LICENSE=Apache-2.0
+RDEPEND=sys-libs/zlib >=dev-libs/jansson-2.10 dev-libs/openssl:0=
+SLOT=0
+SRC_URI=https://github.com/latchset/jose/releases/download/v10/jose-10.tar.bz2
+_md5_=9d00fd737e291861aa0155415084b92e

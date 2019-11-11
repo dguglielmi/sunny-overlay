@@ -1,0 +1,11 @@
+DEFINED_PHASES=-
+DEPEND=sys-fs/cryptsetup
+DESCRIPTION=LUKSMeta is a simple library for storing metadata in the LUKSv1 header
+EAPI=6
+HOMEPAGE=https://latchset.github.io/
+KEYWORDS=~amd64 ~x86
+LICENSE=LGPL-2+
+RDEPEND=sys-fs/cryptsetup
+SLOT=0
+SRC_URI=https://github.com/latchset/luksmeta/releases/download/v8/luksmeta-8.tar.bz2
+_md5_=0d145baf2b1ae35bacce622fa088cc3d
