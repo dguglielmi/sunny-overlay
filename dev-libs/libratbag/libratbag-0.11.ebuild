@@ -13,12 +13,13 @@ SRC_URI="https://github.com/${PN}/${PN}/archive/v${PV}.tar.gz -> ${P}.tar.gz"
 LICENSE="MIT"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
-IUSE="doc test"
+IUSE="doc systemd test"
 
 DEPEND="
 	virtual/pkgconfig
 	dev-lang/swig
 	doc? ( app-doc/doxygen )
+	!systemd? ( sys-auth/elogind )
 	test? ( dev-util/valgrind )
 "
 RDEPEND="
