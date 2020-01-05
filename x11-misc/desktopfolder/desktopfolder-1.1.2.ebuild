@@ -21,7 +21,7 @@ RDEPEND="dev-libs/libgee:0.8
 	dev-libs/json-glib
 	x11-libs/gdk-pixbuf
 	x11-libs/libwnck:3
-	x11-libs/gtksourceview:3.0"
+	x11-libs/gtksourceview:4"
 DEPEND="
 	${RDEPEND}
 	$(vala_depend)
