@@ -1,10 +1,10 @@
-# Copyright 1999-2018 Gentoo Foundation
+# Copyright 2020 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=6
-PYTHON_COMPAT=( python{3_5,3_6,3_7} )
+EAPI=7
+PYTHON_COMPAT=( python{3_6,3_7} )
 
-inherit gnome2 meson python-r1
+inherit meson python-r1
 
 DESCRIPTION="GTK application to configure gaming mice"
 HOMEPAGE="https://github.com/libratbag/piper"
@@ -31,4 +31,9 @@ src_prepare() {
 
 src_configure() {
 	meson_src_configure
+}
+
+src_install() {
+	meson_src_install
+	python_optimize "${D}"
 }
