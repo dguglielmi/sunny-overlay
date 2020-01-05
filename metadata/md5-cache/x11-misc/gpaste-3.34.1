@@ -1,12 +1,13 @@
+BDEPEND=>=app-portage/elt-patches-20170815 || ( >=sys-devel/automake-1.16.1:1.16 >=sys-devel/automake-1.15.1:1.15 ) >=sys-devel/autoconf-2.69 >=sys-devel/libtool-2.4
 DEFINED_PHASES=configure install postinst postrm preinst prepare unpack
-DEPEND=dev-libs/appstream-glib >=dev-libs/gjs-1.54.0 >=dev-libs/glib-2.58:2 >=dev-libs/gobject-introspection-1.58.0 sys-apps/dbus >=x11-libs/gdk-pixbuf-2.38:2 >=x11-libs/gtk+-3.24:3 X? ( x11-libs/libX11 x11-libs/libXi ) gnome? ( gnome-base/gnome-control-center:2 media-libs/clutter x11-libs/pango >=x11-wm/mutter-3.34.0:0/5 ) virtual/pkgconfig vala? ( || ( dev-lang/vala:0.46[vapigen(+)] dev-lang/vala:0.44[vapigen(+)] dev-lang/vala:0.42[vapigen(+)] ) ) >=app-portage/elt-patches-20170815 || ( >=sys-devel/automake-1.16.1:1.16 >=sys-devel/automake-1.15.1:1.15 ) >=sys-devel/autoconf-2.69 >=sys-devel/libtool-2.4
+DEPEND=dev-libs/appstream-glib >=dev-libs/gjs-1.54.0 >=dev-libs/glib-2.58:2 >=dev-libs/gobject-introspection-1.58.0 sys-apps/dbus >=x11-libs/gdk-pixbuf-2.38:2 >=x11-libs/gtk+-3.24:3 X? ( x11-libs/libX11 x11-libs/libXi ) gnome? ( gnome-base/gnome-control-center:2 media-libs/clutter x11-libs/pango >=x11-wm/mutter-3.34.0:0/5 ) virtual/pkgconfig vala? ( || ( dev-lang/vala:0.46[vapigen(+)] dev-lang/vala:0.44[vapigen(+)] dev-lang/vala:0.42[vapigen(+)] ) )
 DESCRIPTION=Clipboard management system
-EAPI=6
+EAPI=7
 HOMEPAGE=https://github.com/Keruspe/GPaste
 IUSE=X bash-completion gnome vala zsh-completion
 LICENSE=GPL-3
 RDEPEND=dev-libs/appstream-glib >=dev-libs/gjs-1.54.0 >=dev-libs/glib-2.58:2 >=dev-libs/gobject-introspection-1.58.0 sys-apps/dbus >=x11-libs/gdk-pixbuf-2.38:2 >=x11-libs/gtk+-3.24:3 X? ( x11-libs/libX11 x11-libs/libXi ) gnome? ( gnome-base/gnome-control-center:2 media-libs/clutter x11-libs/pango >=x11-wm/mutter-3.34.0:0/5 ) gnome? ( gnome-base/gnome-shell )
 SLOT=0
 SRC_URI=https://github.com/Keruspe/GPaste/archive/v3.34.1.tar.gz -> gpaste-3.34.1.tar.gz
-_eclasses_=autotools	ea7865c8fba1ea8d3639f355fffe1a3c	desktop	b1d22ac8bdd4679ab79c71aca235009d	epatch	a1bf4756dba418a7238f3be0cb010c54	estack	686eaab303305a908fd57b2fd7617800	eutils	fcb2aa98e1948b835b5ae66ca52868c5	gnome2-utils	532371cfcba45b2ab0d2950547c97d95	libtool	f143db5a74ccd9ca28c1234deffede96	ltprune	2729691420b6deeda2a90b1f1183fb55	multilib	1d91b03d42ab6308b5f4f6b598ed110e	preserve-libs	ef207dc62baddfddfd39a164d9797648	toolchain-funcs	512eb3367f507ebaa1d1d43ab7d66e6c	vala	682da46cf615b9f7a7d3680058139dcd	vcs-clean	2a0f74a496fa2b1552c4f3398258b7bf	vcs-snapshot	b1abf460a493fc59ebb25de0df3f09dd	xdg-utils	ff2ff954e6b17929574eee4efc5152ba
-_md5_=d114ceb38610720353317fb4b3ee5c91
+_eclasses_=autotools	ea7865c8fba1ea8d3639f355fffe1a3c	eutils	fcb2aa98e1948b835b5ae66ca52868c5	gnome2-utils	532371cfcba45b2ab0d2950547c97d95	libtool	f143db5a74ccd9ca28c1234deffede96	multilib	1d91b03d42ab6308b5f4f6b598ed110e	toolchain-funcs	512eb3367f507ebaa1d1d43ab7d66e6c	vala	682da46cf615b9f7a7d3680058139dcd	vcs-snapshot	b1abf460a493fc59ebb25de0df3f09dd	xdg-utils	ff2ff954e6b17929574eee4efc5152ba
+_md5_=66d6c95945120eaf4cc3d6d611321bb1
