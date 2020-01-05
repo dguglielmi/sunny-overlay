@@ -6,7 +6,7 @@ EAPI=7
 VALA_MIN_API_VERSION="0.42"
 VALA_USE_DEPEND="vapigen"
 
-inherit eutils autotools gnome2-utils vala vcs-snapshot
+inherit autotools eutils gnome2-utils vala vcs-snapshot
 
 DESCRIPTION="Clipboard management system"
 HOMEPAGE="https://github.com/Keruspe/GPaste"
@@ -63,7 +63,7 @@ src_configure() {
 
 src_install() {
 	default
-	prune_libtool_files
+	find "${D}" -name '*.la' -delete
 }
 
 pkg_preinst() {
