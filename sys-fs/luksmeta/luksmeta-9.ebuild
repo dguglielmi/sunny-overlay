@@ -1,7 +1,7 @@
-# Copyright 1999-2018 Gentoo Foundation
+# Copyright 2020 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=6
+EAPI=7
 
 DESCRIPTION="LUKSMeta is a simple library for storing metadata in the LUKSv1 header"
 HOMEPAGE="https://latchset.github.io/"
@@ -12,6 +12,8 @@ SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE=""
 
-DEPEND="app-text/asciidoc
-	sys-fs/cryptsetup"
+DEPEND="
+	app-text/asciidoc
+	sys-fs/cryptsetup
+"
 RDEPEND="${DEPEND}"
