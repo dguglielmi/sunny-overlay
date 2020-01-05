@@ -1,7 +1,7 @@
-# Copyright 1999-2018 Gentoo Foundation
+# Copyright 2020 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=6
+EAPI=7
 
 inherit meson systemd
 
@@ -14,7 +14,8 @@ SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE="bash-completion dracut udisks"
 
-DEPEND="app-text/asciidoc
+DEPEND="
+	app-text/asciidoc
 	>=sys-fs/luksmeta-8
 	dev-libs/openssl:0=
 	>=dev-libs/jansson-2.10
@@ -24,5 +25,6 @@ DEPEND="app-text/asciidoc
 	dracut?	( sys-kernel/dracut )
 	udisks? ( sys-fs/udisks:2
 	>=sys-process/audit-2.7.8 )
-	bash-completion? ( app-shells/bash-completion )"
+	bash-completion? ( app-shells/bash-completion )
+"
 RDEPEND="${DEPEND}"
