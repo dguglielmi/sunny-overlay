@@ -41,6 +41,11 @@ src_prepare() {
 	vala_src_prepare
 }
 
+src_install() {
+	default
+	find "${D}" -name '*.la' -delete || die
+}
+
 pkg_postinst() {
 	gnome2_schemas_update
 	xdg_desktop_database_update
