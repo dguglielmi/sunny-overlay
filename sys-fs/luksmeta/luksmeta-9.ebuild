@@ -12,8 +12,6 @@ SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE=""
 
-DEPEND="
-	app-text/asciidoc
-	sys-fs/cryptsetup
-"
+DEPEND="app-text/asciidoc
+	sys-fs/cryptsetup"
 RDEPEND="${DEPEND}"

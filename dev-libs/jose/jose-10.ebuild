@@ -12,9 +12,7 @@ SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE=""
 
-DEPEND="
-	sys-libs/zlib
+DEPEND="sys-libs/zlib
 	>=dev-libs/jansson-2.10
-	dev-libs/openssl:0=
-"
+	dev-libs/openssl:0="
 RDEPEND="${DEPEND}"

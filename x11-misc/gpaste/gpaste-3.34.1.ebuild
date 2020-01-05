@@ -17,8 +17,7 @@ SLOT="0"
 KEYWORDS=""
 IUSE="X bash-completion gnome vala zsh-completion"
 
-CDEPEND="
-	dev-libs/appstream-glib
+CDEPEND="dev-libs/appstream-glib
 	>=dev-libs/gjs-1.54.0
 	>=dev-libs/glib-2.58:2
 	>=dev-libs/gobject-introspection-1.58.0
@@ -34,17 +33,12 @@ CDEPEND="
 		media-libs/clutter
 		x11-libs/pango
 		>=x11-wm/mutter-3.34.0:0/5
-	)
-"
+	)"
 RDEPEND="${CDEPEND}
-	gnome? (
-		gnome-base/gnome-shell
-	)
-"
+	gnome? ( gnome-base/gnome-shell )"
 DEPEND="${CDEPEND}
 	virtual/pkgconfig
-	vala? ( $(vala_depend) )
-"
+	vala? ( $(vala_depend) )"
 
 src_prepare() {
 	default

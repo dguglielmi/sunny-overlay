@@ -15,17 +15,13 @@ SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE="doc systemd test"
 
-DEPEND="
-	virtual/pkgconfig
+DEPEND="virtual/pkgconfig
 	dev-lang/swig
 	doc? ( app-doc/doxygen )
 	!systemd? ( sys-auth/elogind )
-	test? ( dev-util/valgrind )
-"
-RDEPEND="
-	dev-libs/libevdev
-	virtual/libudev
-"
+	test? ( dev-util/valgrind )"
+RDEPEND="dev-libs/libevdev
+	virtual/libudev"
 
 src_prepare() {
 	python_setup

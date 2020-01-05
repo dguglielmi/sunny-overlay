@@ -11,10 +11,8 @@ DESCRIPTION="Python library that makes it easy to access and parse data from Wik
 HOMEPAGE="https://github.com/goldsmith/Wikipedia"
 SRC_URI="mirror://pypi/${PN:0:1}/${PN}/${P}.tar.gz"
 
-RDEPEND="
-	dev-python/beautifulsoup:4
-	>=dev-python/requests-2.6.0
-"
+RDEPEND="dev-python/beautifulsoup:4
+	>=dev-python/requests-2.6.0"
 
 LICENSE="MIT"
 SLOT="0"

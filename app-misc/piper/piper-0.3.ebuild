@@ -15,15 +15,12 @@ SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE=""
 
-DEPEND="
-	virtual/pkgconfig
+DEPEND="virtual/pkgconfig
 	dev-python/pygobject:3
-	>=x11-libs/gtk+-3.22:3[introspection]
-"
-RDEPEND="
-	>=dev-libs/libratbag-0.10
-	dev-python/python-evdev[${PYTHON_USEDEP}]
-"
+	>=x11-libs/gtk+-3.22:3[introspection]"
+RDEPEND=">=dev-libs/libratbag-0.10
+	dev-python/python-evdev[${PYTHON_USEDEP}]"
+
 src_prepare() {
 	python_setup
 	default

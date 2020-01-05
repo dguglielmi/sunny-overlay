@@ -1,4 +1,4 @@
-# Copyright 1999-2018 Gentoo Foundation
+# Copyright 2020 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=7
@@ -18,8 +18,7 @@ SLOT="0"
 KEYWORDS="amd64 x86"
 IUSE="+introspection doc static-libs"
 
-RDEPEND="
-	dev-libs/dbus-glib
+RDEPEND="dev-libs/dbus-glib
 	dev-util/gdbus-codegen
 	dev-libs/glib:2
 	gnome-base/libgtop:2

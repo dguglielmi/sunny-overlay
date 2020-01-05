@@ -14,12 +14,10 @@ SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE=""
 
-DEPEND="
-	app-text/asciidoc
+DEPEND="app-text/asciidoc
 	>=net-libs/http-parser-2.8.0
 	sys-apps/systemd
-	>=dev-libs/jose-8
-"
+	>=dev-libs/jose-8"
 RDEPEND="${DEPEND}"
 
 src_configure() {
