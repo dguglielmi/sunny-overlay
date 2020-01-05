@@ -1,7 +1,7 @@
-# Copyright 1999-2018 Gentoo Foundation
+# Copyright 2020 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=6
+EAPI=7
 
 inherit autotools systemd
 
@@ -14,10 +14,12 @@ SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE=""
 
-DEPEND="app-text/asciidoc
+DEPEND="
+	app-text/asciidoc
 	>=net-libs/http-parser-2.8.0
 	sys-apps/systemd
-	>=dev-libs/jose-8"
+	>=dev-libs/jose-8
+"
 RDEPEND="${DEPEND}"
 
 src_configure() {
