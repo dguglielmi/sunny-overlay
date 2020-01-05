@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
 <pkgmetadata>
-  <upstream>
-    <remote-id type="github">libratbag/libratbag</remote-id>
-  </upstream>
+	<maintainer type="person">
+		<email>david.guglielmi@gmail.com</email>
+		<name>David GUGLGLIELMI</name>
+	</maintainer>
+	<upstream>
+		<remote-id type="github">libratbag/libratbag</remote-id>
+	</upstream>
 </pkgmetadata>
