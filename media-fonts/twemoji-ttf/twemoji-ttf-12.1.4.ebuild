@@ -11,7 +11,6 @@ DESCRIPTION="Twitter Emoji for everyone"
 HOMEPAGE="https://twemoji.twitter.com/"
 SRC_URI="https://archives.fedoraproject.org/pub/fedora/linux/development/rawhide/Everything/x86_64/os/Packages/t/twitter-${MY_PN}-fonts-${PV}-1.fc32.noarch.rpm"
 
-LICENSE=""
 LICENSE="MIT CC-BY-4.0"
 SLOT="0"
 KEYWORDS="~amd64 ~arm ~arm64 ~x86"
