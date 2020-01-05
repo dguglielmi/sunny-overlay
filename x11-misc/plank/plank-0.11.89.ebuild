@@ -1,12 +1,12 @@
-# Copyright 1999-2019 Gentoo Foundation
+# Copyright 2020 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=6
+EAPI=7
 
 VALA_MIN_API_VERSION=0.26
 VALA_USE_DEPEND=vapigen
 
-inherit vala gnome2
+inherit vala gnome2-utils xdg-utils
 
 DESCRIPTION="Dock panel famious docky"
 HOMEPAGE="https://launchpad.net/plank"
@@ -39,4 +39,16 @@ src_prepare() {
 	default
 	NOCONFIGURE=1 REQUIRED_PKG_CONFIG_VERSION=0.1 ./autogen.sh
 	vala_src_prepare
+}
+
+pkg_postinst() {
+	gnome2_schemas_update
+	xdg_desktop_database_update
+	xdg_icon_cache_update
+}
+
+pkg_postrm() {
+	gnome2_schemas_update
+	xdg_desktop_database_update
+	xdg_icon_cache_update
 }
