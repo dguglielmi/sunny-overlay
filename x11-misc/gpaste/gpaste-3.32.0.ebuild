@@ -63,7 +63,7 @@ src_configure() {
 
 src_install() {
 	default
-	find "${D}" -name '*.la' -delete
+	find "${D}" -name '*.la' -delete || die
 }
 
 pkg_preinst() {
