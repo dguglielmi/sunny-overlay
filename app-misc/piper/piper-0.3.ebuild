@@ -4,7 +4,7 @@
 EAPI=7
 PYTHON_COMPAT=( python{3_6,3_7} )
 
-inherit meson python-r1
+inherit meson python-r1 xdg-utils
 
 DESCRIPTION="GTK application to configure gaming mice"
 HOMEPAGE="https://github.com/libratbag/piper"
@@ -33,4 +33,14 @@ src_configure() {
 src_install() {
 	meson_src_install
 	python_optimize "${D}"
+}
+
+pkg_postinst() {
+	xdg_desktop_database_update
+	xdg_icon_cache_update
+}
+
+pkg_postrm() {
+	xdg_desktop_database_update
+	xdg_icon_cache_update
 }
