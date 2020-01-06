@@ -14,7 +14,7 @@ SRC_URI="https://github.com/Keruspe/GPaste/archive/v${PV}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS=""
+KEYWORDS="~amd64 ~x86"
 IUSE="X bash-completion gnome introspection systemd vala zsh-completion"
 
 CDEPEND="dev-libs/appstream-glib
@@ -32,7 +32,7 @@ CDEPEND="dev-libs/appstream-glib
 		gnome-base/gnome-control-center:2
 		media-libs/clutter
 		x11-libs/pango
-		>=x11-wm/mutter-3.34.0:0/5
+		>=x11-wm/mutter-3.32.0:0/4
 	)
 	systemd? ( sys-apps/systemd )"
 RDEPEND="${CDEPEND}
