@@ -69,10 +69,6 @@ src_install() {
 	find "${D}" -name '*.la' -delete || die
 }
 
-pkg_preinst() {
-	gnome2_schemas_savelist
-}
-
 pkg_postinst() {
 	gnome2_schemas_update
 	xdg_desktop_database_update
