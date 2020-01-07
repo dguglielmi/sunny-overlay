@@ -6,7 +6,7 @@ EAPI=7
 VALA_MIN_API_VERSION="0.42"
 VALA_USE_DEPEND="vapigen"
 
-inherit autotools eutils gnome2-utils vala vcs-snapshot
+inherit gnome2-utils meson vala vcs-snapshot xdg-utils
 
 DESCRIPTION="Clipboard management system"
 HOMEPAGE="https://github.com/Keruspe/GPaste"
@@ -15,9 +15,9 @@ SRC_URI="https://github.com/Keruspe/GPaste/archive/v${PV}.tar.gz -> ${P}.tar.gz"
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
-IUSE="X bash-completion gnome vala zsh-completion"
+IUSE="X bash-completion gnome introspection systemd vala zsh-completion"
 
-CDEPEND="dev-libs/appstream-glib
+DEPEND="dev-libs/appstream-glib
 	>=dev-libs/gjs-1.54.0
 	>=dev-libs/glib-2.58:2
 	>=dev-libs/gobject-introspection-1.58.0
@@ -33,47 +33,54 @@ CDEPEND="dev-libs/appstream-glib
 		media-libs/clutter
 		x11-libs/pango
 		>=x11-wm/mutter-3.32.0:0/4
-	)"
-RDEPEND="${CDEPEND}
+	)
+	systemd? ( sys-apps/systemd )"
+RDEPEND="${DEPEND}
 	gnome? ( gnome-base/gnome-shell )"
-DEPEND="${CDEPEND}
-	virtual/pkgconfig
-	vala? ( $(vala_depend) )"
+
+BDEPEND="vala? ( $(vala_depend) )
+	virtual/pkgconfig"
+
+REQUIRED_USE="vala? ( introspection )"
+
+PATCHES=(
+	"${FILESDIR}/${P}-detect-when-images-are-growing.patch"
+	"${FILESDIR}/${P}-gnome-shel-only-var-should-be-exported.patch"
+)
 
 src_prepare() {
 	default
-	eautoreconf
-	vala_src_prepare
-
-	if ! use gnome ; then
-		echo "" > data/control-center.mk || die
+	if use vala; then
+		vala_src_prepare
 	fi
 }
 
 src_configure() {
-	econf \
-		$(use_enable X x-keybinder) \
-		$(use_enable bash-completion) \
-		$(use_enable vala) \
-		$(use_enable gnome gnome-shell-extension) \
-		$(use_enable zsh-completion) \
-		--disable-static \
-		--disable-schemas-compile
+	local emesonargs=(
+		$(meson_use X x-keybinder)
+		$(meson_use bash-completion)
+		$(meson_use gnome gnome-shell)
+		$(meson_use introspection)
+		$(meson_use systemd)
+		$(meson_use vala vapi)
+		$(meson_use zsh-completion)
+	)
+	meson_src_configure
 }
 
 src_install() {
-	default
+	meson_src_install
 	find "${D}" -name '*.la' -delete || die
-}
-
-pkg_preinst() {
-	gnome2_schemas_savelist
 }
 
 pkg_postinst() {
 	gnome2_schemas_update
+	xdg_desktop_database_update
+	xdg_icon_cache_update
 }
 
 pkg_postrm() {
 	gnome2_schemas_update
+	xdg_desktop_database_update
+	xdg_icon_cache_update
 }
