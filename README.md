@@ -16,7 +16,7 @@ sync-uri = git://github.com/dguglielmi/sunny-overlay.git
 auto-sync = yes
 EOF
 ```
-- Retrieve the overlay
+- Retrieve sunny overlay
 
 ```
 # emaint sync -r sunny-overlay
