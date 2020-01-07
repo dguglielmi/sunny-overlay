@@ -17,7 +17,7 @@ SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE="X bash-completion gnome introspection systemd vala zsh-completion"
 
-CDEPEND="dev-libs/appstream-glib
+DEPEND="dev-libs/appstream-glib
 	>=dev-libs/gjs-1.54.0
 	>=dev-libs/glib-2.58:2
 	>=dev-libs/gobject-introspection-1.58.0
@@ -35,11 +35,13 @@ CDEPEND="dev-libs/appstream-glib
 		>=x11-wm/mutter-3.32.0:0/4
 	)
 	systemd? ( sys-apps/systemd )"
-RDEPEND="${CDEPEND}
+RDEPEND="${DEPEND}
 	gnome? ( gnome-base/gnome-shell )"
-DEPEND="${CDEPEND}
-	virtual/pkgconfig
-	vala? ( $(vala_depend) )"
+
+BDEPEND="vala? ( $(vala_depend) )
+	virtual/pkgconfig"
+
+REQUIRED_USE="vala? ( introspection )"
 
 PATCHES=(
 	"${FILESDIR}/${P}-detect-when-images-are-growing.patch"
@@ -48,7 +50,9 @@ PATCHES=(
 
 src_prepare() {
 	default
-	vala_src_prepare
+	if use vala; then
+		vala_src_prepare
+	fi
 }
 
 src_configure() {
