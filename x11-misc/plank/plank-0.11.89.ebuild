@@ -29,6 +29,7 @@ DEPEND="${RDEPEND}
 	gnome-base/gnome-common
 	>=sys-devel/gettext-0.19.6
 	virtual/pkgconfig"
+
 DOCS=( AUTHORS COPYRIGHT )
 
 PATCHES=(
