@@ -22,10 +22,8 @@ RDEPEND="dev-libs/libgee:0.8
 	x11-libs/gdk-pixbuf
 	x11-libs/libwnck:3
 	x11-libs/gtksourceview:4"
-DEPEND="
-	${RDEPEND}
-	$(vala_depend)
-"
+DEPEND="${RDEPEND}
+	$(vala_depend)"
 
 PATCHES=(
 	"${FILESDIR}/${P}-Port-to-GtkSourceView-4.patch"
