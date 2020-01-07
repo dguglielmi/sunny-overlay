@@ -2,6 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=7
+
 PYTHON_COMPAT=( python{3_6,3_7} )
 
 inherit meson udev python-r1
@@ -15,13 +16,13 @@ SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE="doc systemd test"
 
-DEPEND="virtual/pkgconfig
-	dev-lang/swig
+DEPEND="dev-lang/swig
 	doc? ( app-doc/doxygen )
 	!systemd? ( sys-auth/elogind )
 	test? ( dev-util/valgrind )"
 RDEPEND="dev-libs/libevdev
 	virtual/libudev"
+BDEPEND="virtual/pkgconfig"
 
 src_prepare() {
 	python_setup
