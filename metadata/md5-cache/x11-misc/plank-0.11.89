@@ -10,4 +10,4 @@ RDEPEND=>=dev-libs/glib-2.32:2 dev-libs/libgee:0.8 x11-libs/gtk+:3 x11-libs/bamf
 SLOT=0
 SRC_URI=http://launchpad.net/plank/1.0/0.11.89/+download/plank-0.11.89.tar.xz
 _eclasses_=eutils	fcb2aa98e1948b835b5ae66ca52868c5	gnome2-utils	532371cfcba45b2ab0d2950547c97d95	multilib	1d91b03d42ab6308b5f4f6b598ed110e	toolchain-funcs	512eb3367f507ebaa1d1d43ab7d66e6c	vala	682da46cf615b9f7a7d3680058139dcd	xdg-utils	ff2ff954e6b17929574eee4efc5152ba
-_md5_=795d5adb95163c47a829645d6538cc5b
+_md5_=f5c4faa8cd98ec66dcee8fc7d7b8c357
