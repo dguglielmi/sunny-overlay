@@ -30,8 +30,8 @@ DEPEND="${RDEPEND}
 	${PYTHON_DEPS}
 	dev-libs/libxml2[python]
 	dev-libs/libxslt[python]
-	introspection? ( dev-libs/gobject-introspection )
-	virtual/pkgconfig"
+	introspection? ( dev-libs/gobject-introspection )"
+BDEPEND="virtual/pkgconfig"
 
 DOCS=(AUTHORS COPYING COPYING.LGPL ChangeLog NEWS README TODO)
 
