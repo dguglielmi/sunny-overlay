@@ -12,4 +12,4 @@ REQUIRED_USE=vala? ( introspection )
 SLOT=0
 SRC_URI=https://github.com/Keruspe/GPaste/archive/v3.32.0.tar.gz -> gpaste-3.32.0.tar.gz
 _eclasses_=eutils	fcb2aa98e1948b835b5ae66ca52868c5	gnome2-utils	532371cfcba45b2ab0d2950547c97d95	meson	b5ee7a05833ab91225acf30ffdeed006	multilib	1d91b03d42ab6308b5f4f6b598ed110e	multiprocessing	cac3169468f893670dac3e7cb940e045	ninja-utils	132cbb376048d079b5a012f5467c4e7f	python-utils-r1	611c493a4cfef5254350fabc04b606f5	toolchain-funcs	512eb3367f507ebaa1d1d43ab7d66e6c	vala	682da46cf615b9f7a7d3680058139dcd	vcs-snapshot	b1abf460a493fc59ebb25de0df3f09dd	xdg-utils	ff2ff954e6b17929574eee4efc5152ba
-_md5_=5f0fb081a2fbdc05506af0c323b2e255
+_md5_=1d2584ece5ec108ac48a22edc1a04c5c

@@ -37,7 +37,6 @@ DEPEND="dev-libs/appstream-glib
 	systemd? ( sys-apps/systemd )"
 RDEPEND="${DEPEND}
 	gnome? ( gnome-base/gnome-shell )"
-
 BDEPEND="vala? ( $(vala_depend) )
 	virtual/pkgconfig"
 

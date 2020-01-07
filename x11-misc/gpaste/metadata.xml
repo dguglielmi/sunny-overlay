@@ -3,16 +3,19 @@
 <pkgmetadata>
 	<maintainer type="person">
 		<email>leho@kraav.com</email>
-		<name>Leho Kraav </name>
+		<name>Leho Kraav</name>
+		<description>Original ebuild author</description>
+	</maintainer>
+	<maintainer type="person">
+		<email>david.guglielmi@gmail.com</email>
+		<name>David GUGLIELMI</name>
 	</maintainer>
 	<maintainer type="project">
 		<email>proxy-maint@gentoo.org</email>
 		<name>Proxy Maintainers</name>
 	</maintainer>
 	<use>
-		<flag name="applet">Enable gpaste-applet</flag>
-		<flag name="gnome">Enable proper gnome support and
-			enable gnome shell extension.</flag>
+		<flag name="gnome">Enable gnome shell extension</flag>
 	</use>
 	<upstream>
 		<remote-id type="github">Keruspe/GPaste</remote-id>
