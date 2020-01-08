@@ -14,7 +14,7 @@ SRC_URI="https://archives.fedoraproject.org/pub/fedora/linux/development/rawhide
 LICENSE="MIT CC-BY-4.0"
 SLOT="0"
 KEYWORDS="~amd64 ~arm ~arm64 ~x86"
-DEPEND="app-arch/libarchive[zstd]"
+BDEPEND="app-arch/libarchive[zstd]"
 
 S="${WORKDIR}/usr/share/fonts/${MY_PN}"
 FONT_S="${S}"
