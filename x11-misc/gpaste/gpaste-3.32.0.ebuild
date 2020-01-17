@@ -21,7 +21,7 @@ DEPEND="dev-libs/appstream-glib
 	>=dev-libs/gjs-1.54.0
 	>=dev-libs/glib-2.58:2
 	>=dev-libs/gobject-introspection-1.58.0
-	sys-apps/dbus
+	sys-apps/dbus[-user-session]
 	>=x11-libs/gdk-pixbuf-2.38:2
 	>=x11-libs/gtk+-3.24:3
 	X? (
