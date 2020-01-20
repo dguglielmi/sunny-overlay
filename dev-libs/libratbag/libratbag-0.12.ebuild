@@ -3,7 +3,7 @@
 
 EAPI=7
 
-PYTHON_COMPAT=( python3_{6,3_7} )
+PYTHON_COMPAT=( python3_{6,7,8} )
 
 inherit meson udev python-r1
 
