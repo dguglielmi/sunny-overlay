@@ -1,0 +1,14 @@
+BDEPEND=vala? ( || ( dev-lang/vala:0.46[vapigen(+)] dev-lang/vala:0.44[vapigen(+)] ) ) virtual/pkgconfig >=dev-util/meson-0.51.2 >=dev-util/ninja-1.8.2
+DEFINED_PHASES=compile configure install postinst postrm prepare test unpack
+DEPEND=dev-libs/appstream-glib >=dev-libs/gjs-1.54.0 >=dev-libs/glib-2.58:2 >=dev-libs/gobject-introspection-1.58.0 sys-apps/dbus[-user-session] >=x11-libs/gdk-pixbuf-2.38:2 >=x11-libs/gtk+-3.24:3 X? ( x11-libs/libX11 x11-libs/libXi ) gnome? ( gnome-base/gnome-control-center:2 media-libs/clutter x11-libs/pango >=x11-wm/mutter-3.34.0:0/5 ) systemd? ( sys-apps/systemd )
+DESCRIPTION=Clipboard management system
+EAPI=7
+HOMEPAGE=https://github.com/Keruspe/GPaste
+IUSE=X bash-completion gnome introspection systemd vala zsh-completion
+LICENSE=GPL-3
+RDEPEND=dev-libs/appstream-glib >=dev-libs/gjs-1.54.0 >=dev-libs/glib-2.58:2 >=dev-libs/gobject-introspection-1.58.0 sys-apps/dbus[-user-session] >=x11-libs/gdk-pixbuf-2.38:2 >=x11-libs/gtk+-3.24:3 X? ( x11-libs/libX11 x11-libs/libXi ) gnome? ( gnome-base/gnome-control-center:2 media-libs/clutter x11-libs/pango >=x11-wm/mutter-3.34.0:0/5 ) systemd? ( sys-apps/systemd ) gnome? ( gnome-base/gnome-shell )
+REQUIRED_USE=vala? ( introspection )
+SLOT=0
+SRC_URI=https://github.com/Keruspe/GPaste/archive/v3.34.1.tar.gz -> gpaste-3.34.1.tar.gz
+_eclasses_=eutils	fcb2aa98e1948b835b5ae66ca52868c5	gnome2-utils	532371cfcba45b2ab0d2950547c97d95	meson	10d1eb1da93c5fc17e3814e6923beb57	multilib	1d91b03d42ab6308b5f4f6b598ed110e	multiprocessing	cac3169468f893670dac3e7cb940e045	ninja-utils	132cbb376048d079b5a012f5467c4e7f	python-utils-r1	611c493a4cfef5254350fabc04b606f5	toolchain-funcs	512eb3367f507ebaa1d1d43ab7d66e6c	vala	cd46635fb3b81d6bc07830b4afe87066	vcs-snapshot	b1abf460a493fc59ebb25de0df3f09dd	xdg-utils	ff2ff954e6b17929574eee4efc5152ba
+_md5_=e8088cea279105f41ee33d4c72f098f9
