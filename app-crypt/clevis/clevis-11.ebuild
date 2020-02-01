@@ -22,7 +22,7 @@ DEPEND="app-text/asciidoc
 	>=sys-fs/cryptsetup-2.0.4[pwquality]
 	sys-apps/systemd
 	dracut?	( sys-kernel/dracut )
-	udisks? ( sys-fs/udisks:2
-	>=sys-process/audit-2.7.8 )
+	udisks? ( sys-fs/udisks:2 )
+	>=sys-process/audit-2.7.8
 	bash-completion? ( app-shells/bash-completion )"
 RDEPEND="${DEPEND}"
