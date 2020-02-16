@@ -42,6 +42,10 @@ BDEPEND="vala? ( $(vala_depend) )
 
 REQUIRED_USE="vala? ( introspection )"
 
+PATCHES=(
+	"${FILESDIR}/${PN}-3.32.0-install-systemd-user-units.patch"
+)
+
 src_prepare() {
 	default
 	if use vala; then
