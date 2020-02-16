@@ -1,0 +1,30 @@
+From a474d8c1f2bd600476ba52dc19f517787845533b Mon Sep 17 00:00:00 2001
+From: "Jan Alexander Steffens (heftig)" <jan.steffens@gmail.com>
+Date: Fri, 13 Sep 2019 20:15:25 +0200
+Subject: [PATCH] meson: Install systemd user units
+
+---
+ data/systemd/meson.build | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/data/systemd/meson.build b/data/systemd/meson.build
+index a42f7179..dec3f95d 100644
+--- a/data/systemd/meson.build
++++ b/data/systemd/meson.build
+@@ -2,10 +2,14 @@ configure_file(
+   input: 'org.gnome.GPaste.Ui.systemd.in',
+   configuration: conf,
+   output: 'org.gnome.GPaste.Ui.service',
++  install: get_option('systemd'),
++  install_dir: userunit_dir,
+ )
+ 
+ configure_file(
+   input: 'org.gnome.GPaste.systemd.in',
+   configuration: conf,
+   output: 'org.gnome.GPaste.service',
+-)
+\ No newline at end of file
++  install: get_option('systemd'),
++  install_dir: userunit_dir,
++)
