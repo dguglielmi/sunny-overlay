@@ -37,6 +37,7 @@ PATCHES=(
 	"${FILESDIR}/${P}-correct-a-long-standing-led-state-bug-in-xspice.patch" # From master
 	"${FILESDIR}/${P}-qxl-include-only-the-dpms-headers-we-need.patch" # From master
 	"${FILESDIR}/${PN}-avoid-crashing-xserver-on-previous-active-vt-when-shutting-down-this-xserver.patch" # Upstream bug 99102
+	"${FILESDIR}/${PN}-xf86-video-qxl-kms-call-leavevt-on-shutdown.patch"
 )
 
 src_configure() {
