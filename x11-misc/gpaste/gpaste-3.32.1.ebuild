@@ -43,8 +43,6 @@ BDEPEND="vala? ( $(vala_depend) )
 REQUIRED_USE="vala? ( introspection )"
 
 PATCHES=(
-	"${FILESDIR}/${P}-detect-when-images-are-growing.patch"
-	"${FILESDIR}/${P}-gnome-shel-only-var-should-be-exported.patch"
 	"${FILESDIR}/${P}-install-systemd-user-units.patch"
 )
 
