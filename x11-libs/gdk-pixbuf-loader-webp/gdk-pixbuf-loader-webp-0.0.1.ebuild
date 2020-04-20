@@ -19,11 +19,26 @@ DEPEND=">=media-libs/libwebp-0.4.3
 	>=x11-libs/gdk-pixbuf-2.22"
 RDEPEND="${DEPEND}"
 
+src_prepare() {
+	sed \
+		-e "s#@bindir@#${EPREFIX}/usr/bin#g" \
+		"${FILESDIR}"/gdk-pixbuf-webp-thumbnailer.thumbnailer > "${T}"/gdk-pixbuf-webp-thumbnailer.thumbnailer || die
+
+	default
+}
+
 src_configure() {
 	local emesonargs=(
 		-Dgdk_pixbuf_query_loaders_path=/bin/true
 	)
 	meson_src_configure
+}
+
+src_install() {
+	insinto "/usr/share/thumbnailers/"
+	doins "${T}"/gdk-pixbuf-webp-thumbnailer.thumbnailer
+
+	meson_src_install
 }
 
 pkg_preinst() {
