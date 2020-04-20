@@ -14,7 +14,7 @@ SRC_URI="https://github.com/Keruspe/GPaste/archive/v${PV}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS=""
+KEYWORDS="~amd64 ~x86"
 IUSE="X bash-completion gnome introspection systemd vala zsh-completion"
 
 DEPEND="dev-libs/appstream-glib
