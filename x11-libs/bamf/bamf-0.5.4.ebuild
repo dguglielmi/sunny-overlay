@@ -20,7 +20,7 @@ IUSE="+introspection doc static-libs"
 
 RDEPEND="dev-libs/dbus-glib
 	dev-util/gdbus-codegen
-	dev-libs/glib:2
+	>=dev-libs/glib-2.38.0:2
 	gnome-base/libgtop:2
 	x11-libs/gtk+:3
 	x11-libs/libX11
@@ -35,14 +35,18 @@ BDEPEND="virtual/pkgconfig"
 
 DOCS=(AUTHORS COPYING COPYING.LGPL ChangeLog NEWS README TODO)
 
+PATCHES=(
+	"${FILESDIR}/${P}-fix-deprecated-g-type-class-add-private.patch"
+)
+
 src_prepare() {
 	if use introspection; then
 		vala_src_prepare
 		export VALA_API_GEN="${VAPIGEN}"
 	fi
 
-	eautoreconf
 	default
+	eautoreconf
 }
 
 src_configure() {
