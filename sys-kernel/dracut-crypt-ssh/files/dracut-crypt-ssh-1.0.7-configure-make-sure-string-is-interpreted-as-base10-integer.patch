@@ -1,0 +1,25 @@
+From cc349b6df4eb85e27c0bc5dc2621f0cb4281f0cf Mon Sep 17 00:00:00 2001
+From: Jan Delgado <jdelgado@gmx.net>
+Date: Sun, 27 Oct 2019 21:03:58 +0100
+Subject: [PATCH] make sure string is interpreted as base10 integer
+
+Current implementation leads to error when e.g.
+DRACUT_VERSION == 049, since 049 will be interpreted as
+an (invalid) octal value in bash.
+---
+ configure | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/configure b/configure
+index 1c283a1..3fc48df 100755
+--- a/configure
++++ b/configure
+@@ -114,7 +114,7 @@ else
+ fi
+ 
+ OLDDRACUT=0
+-[[ $DRACUT_VERSION -le 4 ]] && OLDDRACUT=1
++[[ 10#$DRACUT_VERSION -le 4 ]] && OLDDRACUT=1
+ 
+ cat >config.mk <<EOF
+ export DRACUT=${DRACUT}
