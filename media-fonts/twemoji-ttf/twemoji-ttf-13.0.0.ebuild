@@ -9,7 +9,7 @@ MY_PN="${PN%-ttf}"
 
 DESCRIPTION="Twitter Emoji for everyone"
 HOMEPAGE="https://twemoji.twitter.com/"
-SRC_URI="https://archives.fedoraproject.org/pub/fedora/linux/development/rawhide/Everything/x86_64/os/Packages/t/twitter-${MY_PN}-fonts-${PV}-1.fc32.noarch.rpm"
+SRC_URI="https://kojipkgs.fedoraproject.org/packages/twitter-${MY_PN}-fonts/${PV}/1.fc33/noarch/twitter-${MY_PN}-fonts-${PV}-1.fc33.noarch.rpm"
 
 LICENSE="MIT CC-BY-4.0"
 SLOT="0"
