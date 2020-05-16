@@ -26,6 +26,7 @@ src_install() {
 
 	insinto /usr/lib/dracut/modules.d/48openssh
 	doins "${FILESDIR}"/sshd_config
+	doins "${FILESDIR}"/sshd-banner
 	doins "${FILESDIR}"/sshd.service
 
 	exeinto /usr/lib/dracut/modules.d/48openssh
@@ -33,4 +34,9 @@ src_install() {
 
 	insinto /etc/dracut.conf.d
 	doins "${FILESDIR}/dracut-openssh.conf"
+	if use systemd-networkd; then
+	sed -i \
+		's@^#network_provider=.*@network_provider="systemd-networkd"@1' \
+		"${D}"/etc/dracut.conf.d/dracut-openssh.conf || die
+	fi
 }
