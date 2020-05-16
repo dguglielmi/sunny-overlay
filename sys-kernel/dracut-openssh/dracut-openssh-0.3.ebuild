@@ -5,7 +5,7 @@ EAPI=7
 
 DESCRIPTION="Dracut OpenSSH module"
 HOMEPAGE="https://github.com/dguglielmi/dracut-openssh"
-SRC_URI="https://github.com/dguglielmi/dracut-openssh/archive/0.3.tar.gz -> ${P}.tar.gz"
+SRC_URI="https://github.com/dguglielmi/dracut-openssh/archive/v0.3.tar.gz -> ${P}.tar.gz"
 
 LICENSE="GPL-3+"
 SLOT="0"
