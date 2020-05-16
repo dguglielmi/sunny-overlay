@@ -1,0 +1,19 @@
+[Unit]
+Description=OpenSSH server daemon
+DefaultDependencies=no
+Before=cryptsetup.target
+
+[Service]
+Type=simple
+
+EnvironmentFile=-/etc/sysconfig/sshd
+
+ExecStart=/usr/sbin/sshd -D $SSHD_OPTS
+
+ExecReload=/bin/kill -HUP $MAINPID
+KillMode=process
+Restart=on-failure
+RestartSec=42s
+
+[Install]
+WantedBy=sysinit.target
