@@ -11,7 +11,9 @@ LICENSE="GPL-3+"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 
-DEPEND="net-misc/dhcp
+IUSE="systemd-networkd"
+
+DEPEND="!systemd-networkd? ( net-misc/dhcp )
 	net-misc/openssh
 	sys-apps/systemd
 	sys-kernel/dracut"

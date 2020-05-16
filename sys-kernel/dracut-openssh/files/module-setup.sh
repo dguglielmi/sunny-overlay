@@ -9,25 +9,36 @@ check() {
 }
 
 depends() {
-  echo network
+  [ -z ${network_provider} ] && network_provider="auto"
+
+  if [ "${network_provider}" = "auto" ]; then
+    if systemctl -q is-active systemd-networkd; then
+      network_provider="systemd-networkd"
+    else
+      network_provider="network"
+    fi
+  fi
+
+  echo ${network_provider}
   return 0
 }
 
 install() {
-  [ -z ${AUTHORIZED_KEYS} ] && AUTHORIZED_KEYS="/root/.ssh/authorized_keys"
-  [ -z ${SSHD_OPTS} ] && SSHD_OPTS="-e -p 22"
-  [ -z ${DSA_HOST_KEY} ] && DSA_HOST_KEY="/etc/ssh/ssh_host_dsa_key"
-  [ -z ${ECDSA_HOST_KEY} ] && ECDSA_HOST_KEY="/etc/ssh/ssh_host_ecdsa_key"
-  [ -z ${ED25519_HOST_KEY} ] && ED25519_HOST_KEY="/etc/ssh/ssh_host_ed25519_key"
-  [ -z ${RSA_HOST_KEY} ] && RSA_HOST_KEY="/etc/ssh/ssh_host_rsa_key"
+  [ -z ${authorized_keys} ] && authorized_keys="/root/.ssh/authorized_keys"
+  [ -z ${sshd_opts} ] && sshd_opts="-e -p 22"
+  [ -z ${dsa_host_key} ] && dsa_host_key="/etc/ssh/ssh_host_dsa_key"
+  [ -z ${ecdsa_host_key} ] && ecdsa_host_key="/etc/ssh/ssh_host_ecdsa_key"
+  [ -z ${ed25519_host_key} ] && ed25519_host_key="/etc/ssh/ssh_host_ed25519_key"
+  [ -z ${rsa_host_key} ] && rsa_host_key="/etc/ssh/ssh_host_rsa_key"
+  [ -z ${systemd_networkd_files} ] && systemd_networkd_files="/etc/systemd/network/*"
 
   local keytype keyfile
   for keytype in dsa ecdsa ed25519 rsa; do
     case ${keytype} in
-      dsa) keyfile=${DSA_HOST_KEY} ;;
-      ecdsa) keyfile=${ECDSA_HOST_KEY} ;;
-      ed25519) keyfile=${ED25519_HOST_KEY} ;;
-      rsa) keyfile=${RSA_HOST_KEY} ;;
+      dsa) keyfile=${dsa_host_key} ;;
+      ecdsa) keyfile=${ecdsa_host_key} ;;
+      ed25519) keyfile=${ed25519_host_key} ;;
+      rsa) keyfile=${rsa_host_key} ;;
     esac
 
     [ -f ${keyfile} ] && inst_simple "${keyfile}" /etc/ssh/ssh_host_${keytype}_key
@@ -38,14 +49,14 @@ install() {
 
   inst_simple "${moddir}/sshd.service" ${systemdsystemunitdir}/sshd.service
   mkdir -p "${initdir}/etc/sysconfig"
-  echo "SSHD_OPTS=\"${SSHD_OPTS}\"" > "${initdir}/etc/sysconfig/sshd"
+  echo "SSHD_OPTS=\"${sshd_opts}\"" > "${initdir}/etc/sysconfig/sshd"
 
-  if [ -f ${AUTHORIZED_KEYS} ]; then
-    inst_simple ${AUTHORIZED_KEYS} /root/.ssh/authorized_keys
-  else
-    dfatal "No authorized_keys for root user found!"
+  if [ ! -r "${authorized_keys}" ]; then
+    dfatal "No authorized_keys found!"
     return 1
   fi
+
+  inst_simple ${authorized_keys} /root/.ssh/authorized_keys
 
   getent passwd sshd >> "${initdir}/etc/passwd"
   getent group sshd >> "${initdir}/etc/group"
@@ -56,6 +67,13 @@ install() {
 
   mkdir -p -m 0755 "${initdir}/var/log"
   touch "${initdir}/var/log/lastlog"
+
+  local nf
+  if [ "${network_provider}" = "systemd-networkd" ]; then
+    for nf in ${systemd_networkd_files}; do
+      inst_simple "${nf}"
+    done
+  fi
 
   return 0
 }
