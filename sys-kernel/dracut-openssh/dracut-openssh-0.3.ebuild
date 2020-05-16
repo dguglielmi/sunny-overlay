@@ -5,7 +5,7 @@ EAPI=7
 
 DESCRIPTION="Dracut OpenSSH module"
 HOMEPAGE="https://github.com/dguglielmi/dracut-openssh"
-SRC_URI=""
+SRC_URI="https://github.com/dguglielmi/dracut-openssh/archive/0.3.tar.gz -> ${P}.tar.gz"
 
 LICENSE="GPL-3+"
 SLOT="0"
@@ -19,21 +19,9 @@ DEPEND="!systemd-networkd? ( net-misc/dhcp )
 	sys-kernel/dracut"
 RDEPEND="${DEPEND}"
 
-S="${WORKDIR}"
-
 src_install() {
-	dodir /usr/lib/dracut/modules.d/48openssh
+	emake PREFIX=${D} install
 
-	insinto /usr/lib/dracut/modules.d/48openssh
-	doins "${FILESDIR}"/sshd_config
-	doins "${FILESDIR}"/sshd-banner
-	doins "${FILESDIR}"/sshd.service
-
-	exeinto /usr/lib/dracut/modules.d/48openssh
-	doexe "${FILESDIR}/module-setup.sh"
-
-	insinto /etc/dracut.conf.d
-	doins "${FILESDIR}/dracut-openssh.conf"
 	if use systemd-networkd; then
 	sed -i \
 		's@^#network_provider=.*@network_provider="systemd-networkd"@1' \
