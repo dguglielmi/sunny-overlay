@@ -1,0 +1,44 @@
+From a7f455cf83cb3067ede3d04316b17f347a539c46 Mon Sep 17 00:00:00 2001
+From: Emmanuele Bassi <ebassi@gnome.org>
+Date: Sat, 20 Jun 2020 13:28:51 +0100
+Subject: [PATCH] Add a thumbnailer file
+
+If we want gdk-pixbuf-thumbnailer to generate thumbnails for WebP files,
+we need to ship our own thumbnailer file.
+
+Fixes: #16
+---
+ meson.build                | 8 ++++++++
+ webp-pixbuf.thumbnailer.in | 4 ++++
+ 2 files changed, 12 insertions(+)
+ create mode 100644 webp-pixbuf.thumbnailer.in
+
+diff --git a/meson.build b/meson.build
+index 2ae10ca..b66de57 100644
+--- a/meson.build
++++ b/meson.build
+@@ -15,6 +15,14 @@ pbl_webp = shared_library('pixbufloader-webp', 'io-webp.c',
+                           install: true,
+                           install_dir: gdk_pb_moddir)
+ 
++cdata = configuration_data()
++cdata.set('bindir', get_option('prefix') / get_option('bindir'))
++configure_file(input: 'webp-pixbuf.thumbnailer.in',
++               output: 'webp-pixbuf.thumbnailer',
++               configuration: cdata,
++               install: true,
++               install_dir: get_option('datadir') / 'thumbnailer')
++
+ meson.add_install_script(gdk_pb_query_loaders.path(), '--update-cache')
+ 
+ subdir('tests')
+diff --git a/webp-pixbuf.thumbnailer.in b/webp-pixbuf.thumbnailer.in
+new file mode 100644
+index 0000000..ed3347e
+--- /dev/null
++++ b/webp-pixbuf.thumbnailer.in
+@@ -0,0 +1,4 @@
++[Thumbnailer Entry]
++TryExec=@bindir@/gdk-pixbuf-thumbnailer
++Exec=@bindir@/gdk-pixbuf-thumbnailer -s %s %u %o
++MimeType=image/webp;
