@@ -32,7 +32,7 @@ DEPEND="dev-libs/appstream-glib
 		gnome-base/gnome-control-center:2
 		media-libs/clutter
 		x11-libs/pango
-		>=x11-wm/mutter-3.32.0:0/4
+		>=x11-wm/mutter-3.36.0:0/6
 	)
 	systemd? ( sys-apps/systemd )"
 RDEPEND="${DEPEND}
@@ -41,10 +41,6 @@ BDEPEND="vala? ( $(vala_depend) )
 	virtual/pkgconfig"
 
 REQUIRED_USE="vala? ( introspection )"
-
-PATCHES=(
-	"${FILESDIR}/${P}-install-systemd-user-units.patch"
-)
 
 src_prepare() {
 	default
