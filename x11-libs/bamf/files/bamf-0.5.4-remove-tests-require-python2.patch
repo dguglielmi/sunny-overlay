@@ -1,0 +1,43 @@
+diff -dNur a/configure.ac b/configure.ac
+--- a/configure.ac	2018-11-07 23:39:11.355315678 +0100
++++ b/configure.ac	2020-09-03 14:49:53.437337251 +0200
+@@ -110,18 +110,6 @@
+ GTK_DOC_CHECK(1.0)
+ 
+ ###########################
+-# gtester2xunit checks    #
+-###########################
+-
+-AC_PATH_PROG([PYTHON],[python])
+-AC_MSG_CHECKING(for gtester2xunit dependencies)
+-if !($PYTHON -c "import libxslt, libxml2" 2> /dev/null); then
+-  AC_MSG_RESULT([no])
+-  AC_MSG_ERROR([You need to install python-libxslt1 and python-libxml2]);
+-fi
+-AC_MSG_RESULT([yes])
+-
+-###########################
+ # Headless tests
+ ###########################
+ AC_ARG_ENABLE([headless-tests],
+@@ -171,9 +159,6 @@
+ lib/libbamf/Makefile
+ lib/libbamf/libbamf3.pc
+ src/Makefile
+-tests/Makefile
+-tests/bamfdaemon/Makefile
+-tests/libbamf/Makefile
+ data/Makefile
+ doc/Makefile
+ doc/reference/Makefile
+diff -dNur a/Makefile.am b/Makefile.am
+--- a/Makefile.am	2018-11-07 23:39:11.355315678 +0100
++++ b/Makefile.am	2020-09-03 14:50:00.505337289 +0200
+@@ -6,7 +6,6 @@
+   lib/libbamf-private \
+   lib/libbamf \
+   src \
+-  tests \
+   data \
+   doc
+ 
