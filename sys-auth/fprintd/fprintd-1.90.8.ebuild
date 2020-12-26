@@ -53,9 +53,9 @@ src_install() {
 	newdoc pam/README README.pam_fprintd
 	if use doc ; then
 		insinto /usr/share/doc/${PF}/html
-		doins doc/{fprintd-docs,version}.xml
+		doins ${BUILD_DIR}/doc/{fprintd-docs,version}.xml
 		insinto /usr/share/doc/${PF}/html/dbus
-		doins doc/dbus/net.reactivated.Fprint.{Device,Manager}.ref.xml
+		doins ${BUILD_DIR}/doc/dbus/net.reactivated.Fprint.{Device,Manager}.ref.xml
 	fi
 }
 
