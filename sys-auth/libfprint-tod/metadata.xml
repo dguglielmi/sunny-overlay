@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+<maintainer type="person">
+	<email>david.guglielmi@gmail.com</email>
+	<name>David Guglielmi</name>
+</maintainer>
+<upstream>
+	<bugs-to>https://gitlab.freedesktop.org/3v1n0/libfprint/-/issues</bugs-to>
+</upstream>
+</pkgmetadata>
