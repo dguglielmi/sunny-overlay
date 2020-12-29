@@ -35,8 +35,8 @@ S="${WORKDIR}/${PN/-tod/}-v${PV}+tod1"
 
 src_configure() {
 		local emesonargs=(
+			$(meson_use examples gtk-examples)
 			-Ddoc=false
-			-Dgtk-examples=$(usex examples true false)
 			-Ddrivers=all
 			-Dtod=true
 			-Dudev_rules=true
