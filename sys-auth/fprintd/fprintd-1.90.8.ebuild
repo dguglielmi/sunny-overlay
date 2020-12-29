@@ -34,11 +34,11 @@ S="${WORKDIR}/${PN}-v${PV}"
 
 src_configure() {
 	local emesonargs=(
-		-Dpam=$(usex pam true false)
-		-Dpam_modules_dir="$(getpam_mod_dir)"
+		$(meson_use pam)
+		$(meson_use doc gtk_doc)
 		-Dsystemd=true
+		-Dpam_modules_dir="$(getpam_mod_dir)"
 		-Dsystemd_system_unit_dir="$(systemd_get_systemunitdir)"
-		-Dgtk_doc=$(usex doc true false)
 	)
 	meson_src_configure
 }
