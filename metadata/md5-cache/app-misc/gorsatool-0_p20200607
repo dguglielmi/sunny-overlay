@@ -1,0 +1,12 @@
+BDEPEND=sci-mathematics/gmp-ecm sci-mathematics/flint >=dev-lang/go-1.10
+DEFINED_PHASES=compile install test unpack
+DESCRIPTION=goRsaTool is an RSA tool for CTF challenges
+EAPI=7
+HOMEPAGE=https://github.com/sourcekris/goRsaTool
+KEYWORDS=amd64 x86
+LICENSE=Apache-2.0
+RESTRICT=strip
+SLOT=0
+SRC_URI=https://github.com/sourcekris/goRsaTool/archive/b6524bfca6bdaf6ae4d79e9eb08a8ad2d07e326e.tar.gz -> gorsatool-0_p20200607.tar.gz https://github.com/sourcekris/goflint/archive/f23b1b2709282f6b7d2f86842301c46aafdaf507.tar.gz -> github.com-sourcekris-goflint-f23b1b2709282f6b7d2f86842301c46aafdaf507.tar.gz https://github.com/sourcekris/gogmpecm/archive/c6536ae30853abdc238aed082ffd5b723cb66b84.tar.gz -> github.com-sourcekris-gogmpecm-c6536ae30853abdc238aed082ffd5b723cb66b84.tar.gz https://github.com/sourcekris/mathparse/archive/dc40b3863ac840b889536fda2eac0244d7794a24.tar.gz -> github.com-sourcekris-mathparse-dc40b3863ac840b889536fda2eac0244d7794a24.tar.gz https://github.com/sourcekris/x509big/archive/321a26314a1d6bc4edf904a477d39293795fb72a.tar.gz -> github.com-sourcekris-x509big-321a26314a1d6bc4edf904a477d39293795fb72a.tar.gz https://github.com/jbarham/primegen/archive/8ce4838491a027d937a87fd521b3b11aabaeb568.tar.gz -> github.com-jbarham-primegen-8ce4838491a027d937a87fd521b3b11aabaeb568.tar.gz https://github.com/kavehmz/prime/archive/789f3f91353209ceb30376f0c92374aacc82d9bf.tar.gz -> github.com-kavehmz-prime-789f3f91353209ceb30376f0c92374aacc82d9bf.tar.gz
+_eclasses_=golang-base	b8fb27dacacea08140c53857f439fc7d	golang-build	91472d4e18894e738c69b415e236a664	golang-vcs-snapshot	ff485cabd3f37b060f110b0be95092ec
+_md5_=9ec2326a0506072db1b92493064f9112

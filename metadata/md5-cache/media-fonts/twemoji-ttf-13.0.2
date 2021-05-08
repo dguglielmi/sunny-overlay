@@ -1,6 +1,5 @@
-BDEPEND=app-arch/libarchive[zstd]
+BDEPEND=app-arch/libarchive[zstd] X? ( >=x11-apps/mkfontscale-1.2.0 media-fonts/encodings )
 DEFINED_PHASES=install postinst postrm setup unpack
-DEPEND=X? ( >=x11-apps/mkfontscale-1.2.0 media-fonts/encodings )
 DESCRIPTION=Twitter Emoji for everyone
 EAPI=7
 HOMEPAGE=https://twemoji.twitter.com/
@@ -9,5 +8,5 @@ KEYWORDS=~amd64 ~arm ~arm64 ~x86
 LICENSE=MIT CC-BY-4.0
 SLOT=0
 SRC_URI=https://kojipkgs.fedoraproject.org/packages/twitter-twemoji-fonts/13.0.2/1.fc33/noarch/twitter-twemoji-fonts-13.0.2-1.fc33.noarch.rpm
-_eclasses_=font	dd073b36fe3fd8b868c23bc23209db45
+_eclasses_=font	0667878c2b594871023dd1833d05996f
 _md5_=6b33794d4fb1fe2a0eb38ef186a1203e
