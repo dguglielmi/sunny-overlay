@@ -10,4 +10,4 @@ REQUIRED_USE=^^ ( lua_single_target_lua5-1 )
 SLOT=5.1
 SRC_URI=https://github.com/viruscamp/luadec/archive/895d92313fabaee260121c758c8320d1b21dd741.tar.gz -> luadec-0_p20170106.tar.gz https://www.lua.org/ftp/lua-5.1.5.tar.gz
 _eclasses_=lua-single	f91b5656f00869c220a6e35ae0521c54	lua-utils	736947973cfbc9de01fdb8548f942f82	multilib	d410501a125f99ffb560b0c523cd3d1e	toolchain-funcs	24921b57d6561d87cbef4916a296ada4
-_md5_=da5b9c4b9e045b33ca591f015e67e48f
+_md5_=4f6b11cfa1cae72ef107b523e6259c08
