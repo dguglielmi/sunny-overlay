@@ -34,9 +34,11 @@ src_prepare() {
 
 src_compile() {
 	emake -C lua-${SLOT} linux || die
-	LUAVER=${SLOT} emake -C luadec || die
+	emake LUAVER=${SLOT} -C luadec || die
 }
 
 src_install() {
-	newbin luadec/luadec luadec-${SLOT}
+	for b in luadec luareplace luaopswap; do
+		newbin luadec/${b} ${b}-${SLOT}
+	done
 }
