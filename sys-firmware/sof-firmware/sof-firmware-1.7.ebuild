@@ -6,22 +6,18 @@ EAPI=7
 DESCRIPTION="Sound Open Firmware (SOF) binary files"
 
 HOMEPAGE="https://www.sofproject.org https://github.com/thesofproject/sof https://github.com/thesofproject/sof-bin"
-SRC_URI="https://github.com/thesofproject/sof-bin/archive/stable-v${PV}.tar.gz -> ${P}.tar.gz"
+SRC_URI="https://github.com/thesofproject/sof-bin/archive/refs/tags/v1.7.tar.gz -> ${P}.tar.gz"
 
 LICENSE="BSD"
 SLOT="0"
 KEYWORDS="~amd64"
 IUSE=""
 
-S=${WORKDIR}/sof-bin-stable-v${PV}
-
-src_compile() {
-	sed -i -e '2i set -e\n' go.sh || die
-	# fix missing sof-jsl from v1.6.1
-	sed -i -e '/sof-jsl.ri$/d' go.sh || die
-}
+S=${WORKDIR}/sof-bin-${PV}
 
 src_install() {
-	mkdir -p ${D}/lib/firmware || die
-	SOF_VERSION=v${PV} ROOT=${D} ${S}/go.sh || die
+	mkdir -p ${D}/lib/firmware/intel || die
+
+	cp -rf sof-v${PV} ${D}/lib/firmware/intel/sof || die
+	cp -rf sof-tplg-v${PV} ${D}/lib/firmware/intel/sof-tplg || die
 }
