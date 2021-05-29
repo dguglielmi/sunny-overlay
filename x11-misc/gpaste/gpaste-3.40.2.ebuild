@@ -32,7 +32,7 @@ DEPEND="dev-libs/appstream-glib
 		gnome-base/gnome-control-center:2
 		media-libs/clutter
 		x11-libs/pango
-		>=x11-wm/mutter-3.36.0:0/6
+		>=x11-wm/mutter-40.1:0/8
 	)
 	systemd? ( sys-apps/systemd )"
 RDEPEND="${DEPEND}
