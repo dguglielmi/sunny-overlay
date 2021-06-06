@@ -16,4 +16,5 @@ RDEPEND="dev-python/wcwidth"
 LICENSE="MIT"
 SLOT="0"
 KEYWORDS="amd64 x86"
-IUSE=""
+
+distutils_enable_tests pytest
