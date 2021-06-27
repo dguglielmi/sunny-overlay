@@ -9,17 +9,20 @@ MY_PN=${PN%%-ng}
 
 DESCRIPTION="an IPv4/IPv6 ipcalc tool"
 HOMEPAGE="https://gitlab.com/ipcalc/ipcalc"
-SRC_URI="https://gitlab.com/${MY_PN}/${MY_PN}/repository/archive.tar.bz2?ref=${PV} -> ${P}.tar.bz2"
+SRC_URI="https://gitlab.com/${MY_PN}/${MY_PN}/-/archive/${PV}/${MY_PN}-${PV}.tar.bz2 -> ${P}.tar.bz2"
 
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE="geoip +geoip2"
 
-DEPEND="!net-misc/ipcalc
+BDEPEND="app-text/ronn"
+
+DEPEND="
 	geoip? ( dev-libs/geoip )
 	geoip2? ( dev-libs/libmaxminddb:= )"
-RDEPEND="${DEPEND}"
+
+RDEPEND="!!net-misc/ipcalc"
 
 REQUIRED_USE="?? ( geoip geoip2 )"
 
