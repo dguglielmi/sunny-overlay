@@ -29,7 +29,8 @@ DEPEND="${RDEPEND}
 	dev-libs/libxml2
 	dev-libs/libxslt
 	introspection? ( dev-libs/gobject-introspection )"
-BDEPEND="virtual/pkgconfig"
+BDEPEND="virtual/pkgconfig
+	dev-util/gtk-doc"
 
 DOCS=(AUTHORS COPYING COPYING.LGPL ChangeLog NEWS README TODO)
 
