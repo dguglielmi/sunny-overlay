@@ -9,5 +9,5 @@ LICENSE=GPL-3
 RDEPEND=app-text/asciidoc >=net-libs/http-parser-2.8.0 sys-apps/systemd >=dev-libs/jose-8
 SLOT=0
 SRC_URI=https://github.com/latchset/tang/releases/download/v7/tang-7.tar.bz2
-_eclasses_=autotools	9e63f92c2a5d867fea55ecb160c7d354	gnuconfig	262062cef0ba4f22b397193da514a350	libtool	241a8f577b9781a42a7421e53448a44e	multilib	97566c1a256d07b00848aa767e38a352	systemd	fdf0d765c3f11f91fe54f8def9a8c0e6	toolchain-funcs	9ea1c67b6f8315fdc2568abb674519aa
+_eclasses_=autotools	2a36908d5f63f41614b450a2459567da	gnuconfig	262062cef0ba4f22b397193da514a350	libtool	241a8f577b9781a42a7421e53448a44e	multilib	97566c1a256d07b00848aa767e38a352	systemd	c846b9e02ac8293bfc9ca38a195c2a18	toolchain-funcs	9ea1c67b6f8315fdc2568abb674519aa
 _md5_=623958d408184a316e8046ca8ae0c123
