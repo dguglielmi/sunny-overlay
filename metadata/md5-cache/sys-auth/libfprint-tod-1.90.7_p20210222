@@ -10,5 +10,5 @@ LICENSE=LGPL-2.1
 RDEPEND=dev-libs/glib:2 dev-libs/nss >=dev-libs/libgusb-0.3.1 !sys-auth/libfprint virtual/libusb:1= x11-libs/gtk+:3 x11-libs/pixman x11-libs/libX11 x11-libs/libXv
 SLOT=0
 SRC_URI=https://gitlab.freedesktop.org/3v1n0/libfprint/-/archive/v1.90.7+git20210222+tod1/libfprint-v1.90.7+git20210222+tod1.tar.bz2 -> libfprint-tod-1.90.7_p20210222.tar.bz2
-_eclasses_=eapi8-dosym	cd7d420bb5be5ee079f27239ce76b8f5	meson	5bc3f1b890f90cc00cf1d1dddc10233e	multilib	97566c1a256d07b00848aa767e38a352	multiprocessing	61c959fc55c15c00bbb1079d6a71370b	ninja-utils	a4dab848a4490e8e48cf0baab3e61bc2	python-utils-r1	2f5967e7ced9abfa71ff7b0ea8d61b3a	toolchain-funcs	9ea1c67b6f8315fdc2568abb674519aa	udev	26207b5d4f4708920b9fcb7302d94068
+_eclasses_=eapi8-dosym	cd7d420bb5be5ee079f27239ce76b8f5	meson	5bc3f1b890f90cc00cf1d1dddc10233e	multilib	97566c1a256d07b00848aa767e38a352	multiprocessing	61c959fc55c15c00bbb1079d6a71370b	ninja-utils	a4dab848a4490e8e48cf0baab3e61bc2	python-utils-r1	08d890890f70fe0096093016e55438d5	toolchain-funcs	9ea1c67b6f8315fdc2568abb674519aa	udev	0a92682c0f65a60d01453db598fc6490
 _md5_=0f6a4b01c8e3d3b07b80df228db9f2ea
