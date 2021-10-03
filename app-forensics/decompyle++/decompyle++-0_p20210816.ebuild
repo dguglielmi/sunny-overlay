@@ -7,7 +7,7 @@ PYTHON_COMPAT=( python3_{7..9} )
 
 inherit cmake python-single-r1
 
-EGIT_COMMIT="fbf9d24de3e5322d75658c0733afd5b139280ad8"
+EGIT_COMMIT="6140b4b33ef0c1d87e233c8fb064142233f9f4b9"
 
 DESCRIPTION="A Python Byte-code Disassembler/Decompiler"
 HOMEPAGE="https://github.com/zrax/pycdc"
