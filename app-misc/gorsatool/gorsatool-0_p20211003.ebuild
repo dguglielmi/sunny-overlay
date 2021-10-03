@@ -6,15 +6,15 @@ EAPI=7
 EGO_PN="github.com/sourcekris/goRsaTool"
 
 EGO_VENDOR=(
-    "github.com/sourcekris/goflint f23b1b2709282f6b7d2f86842301c46aafdaf507"
+    "github.com/sourcekris/goflint f9662cf830a9a609de85397ca58995bc9c43b24a"
     "github.com/sourcekris/gogmpecm c6536ae30853abdc238aed082ffd5b723cb66b84"
     "github.com/sourcekris/mathparse dc40b3863ac840b889536fda2eac0244d7794a24"
     "github.com/sourcekris/x509big 321a26314a1d6bc4edf904a477d39293795fb72a"
     "github.com/jbarham/primegen 8ce4838491a027d937a87fd521b3b11aabaeb568"
-    "github.com/kavehmz/prime 789f3f91353209ceb30376f0c92374aacc82d9bf"
+    "github.com/kavehmz/prime a94ad56341db886ae3346de1e6b341387c3c01d3"
 )
 
-EGIT_COMMIT="b6524bfca6bdaf6ae4d79e9eb08a8ad2d07e326e"
+EGIT_COMMIT="f8844041768feecb9d54cfad86cda1f72ae9f2e0"
 
 inherit golang-build golang-vcs-snapshot
 
@@ -32,7 +32,7 @@ SLOT="0"
 DEPEND=""
 RDEPEND="${DEPEND}"
 BDEPEND="sci-mathematics/gmp-ecm
-	sci-mathematics/flint"
+	sci-mathematics/flint:0/14"
 
 src_install() {
 	newbin goRsaTool gorsatool
