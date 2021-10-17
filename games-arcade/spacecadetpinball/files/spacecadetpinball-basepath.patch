@@ -1,0 +1,13 @@
+diff -dNur a/SpaceCadetPinball/winmain.cpp b/SpaceCadetPinball/winmain.cpp
+--- a/SpaceCadetPinball/winmain.cpp	2021-10-17 17:18:29.000000000 +0200
++++ b/SpaceCadetPinball/winmain.cpp	2021-10-17 21:11:46.800147799 +0200
+@@ -56,7 +56,8 @@
+ 		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Could not initialize SDL2", SDL_GetError(), nullptr);
+ 		return 1;
+ 	}
+-	BasePath = SDL_GetBasePath();
++	/* BasePath = SDL_GetBasePath(); */
++	BasePath = "/usr/share/spacecadetpinball/";
+ 
+ 	pinball::quickFlag = strstr(lpCmdLine, "-quick") != nullptr;
+ 	DatFileName = options::get_string("Pinball Data", pinball::get_rc_string(168, 0));
