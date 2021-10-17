@@ -29,7 +29,7 @@ PATCHES="${FILESDIR}/${PN}-basepath.patch"
 src_install() {
 	dobin ${S}/bin/${MY_PN} || die
 	doicon ${FILESDIR}/${MY_PN}.png
-	make_desktop_entry ${MY_PN} '3D Pinball Space Cadet' ${MY_PN}-icon "Game;ArcadeGame"
+	make_desktop_entry ${MY_PN} '3D Pinball Space Cadet' ${MY_PN} "Game;ArcadeGame"
 
 	insopts -m 0644
 	insinto /usr/share/spacecadetpinball
