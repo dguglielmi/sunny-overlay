@@ -10,4 +10,4 @@ RDEPEND=media-libs/libsdl2[haptic] media-libs/sdl2-mixer[wav,midi,timidity]
 SLOT=0
 SRC_URI=https://github.com/k4zmu2a/SpaceCadetPinball/archive/06b760e8dd1b8ace5ef7c427c047ca9e911f93b3.tar.gz -> spacecadetpinball-1.1.2_p20211710.tar.gz https://davipinheiro.com/wp-content/uploads/2021/02/Full-Tilt-Pinball_Win_EN.zip
 _eclasses_=cmake	11fee991ab428a3370e5c20fa8231fb6	desktop	c0d27bf73aa08ca05b663dbd31fbef28	flag-o-matic	4134b5c0fb719b9161d10bdaba9e09e5	multilib	4b66d835ec72e021e359bb81eacfe988	multiprocessing	61c959fc55c15c00bbb1079d6a71370b	ninja-utils	a4dab848a4490e8e48cf0baab3e61bc2	toolchain-funcs	9ea1c67b6f8315fdc2568abb674519aa	xdg-utils	27f9a2f19502b925ac117bd657aa2979
-_md5_=5e8efc81b886fafb5e614a73e5b5c66b
+_md5_=39968c702ac614497bda28697739e44e
