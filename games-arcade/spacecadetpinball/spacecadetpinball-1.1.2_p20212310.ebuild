@@ -6,7 +6,7 @@ EAPI=8
 inherit cmake desktop
 
 MY_PN="SpaceCadetPinball"
-EGIT_COMMIT="06b760e8dd1b8ace5ef7c427c047ca9e911f93b3"
+EGIT_COMMIT="5cd01807b2737103845c4977ced36857159e3b1f"
 
 DESCRIPTION="Reverse engineering of 3D Pinball Space Cadet"
 HOMEPAGE="https://github.com/k4zmu2a/SpaceCadetPinball"
