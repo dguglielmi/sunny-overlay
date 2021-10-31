@@ -6,11 +6,10 @@ EAPI=8
 inherit cmake desktop
 
 MY_PN="SpaceCadetPinball"
-EGIT_COMMIT="5cd01807b2737103845c4977ced36857159e3b1f"
 
 DESCRIPTION="Reverse engineering of 3D Pinball Space Cadet"
 HOMEPAGE="https://github.com/k4zmu2a/SpaceCadetPinball"
-SRC_URI="https://github.com/k4zmu2a/${MY_PN}/archive/${EGIT_COMMIT}.tar.gz -> ${P}.tar.gz
+SRC_URI="https://github.com/k4zmu2a/${MY_PN}/archive/refs/tags/Release_${PV}.tar.gz -> ${P}.tar.gz
 	https://davipinheiro.com/wp-content/uploads/2021/02/Full-Tilt-Pinball_Win_EN.zip"
 
 LICENSE="MIT"
@@ -22,7 +21,7 @@ DEPEND="media-libs/libsdl2[haptic]
 RDEPEND="${DEPEND}"
 BDEPEND=""
 
-S="${WORKDIR}/${MY_PN}-${EGIT_COMMIT}"
+S="${WORKDIR}/${MY_PN}-Release_${PV}"
 
 PATCHES="${FILESDIR}/${PN}-basepath.patch"
 
