@@ -10,7 +10,7 @@ HOMEPAGE="https://gitlab.freedesktop.org/3v1n0/libfprint/-/tree/tod/"
 SRC_URI="https://gitlab.freedesktop.org/3v1n0/libfprint/-/archive/v${PV/_p/+git}+tod1/libfprint-v${PV/_p/+git}+tod1.tar.bz2 -> ${P}.tar.bz2"
 
 LICENSE="LGPL-2.1"
-SLOT="0"
+SLOT="2"
 KEYWORDS="~alpha ~amd64 ~arm ~arm64 ~ia64 ~ppc ~ppc64 ~sparc ~x86"
 IUSE="examples"
 
