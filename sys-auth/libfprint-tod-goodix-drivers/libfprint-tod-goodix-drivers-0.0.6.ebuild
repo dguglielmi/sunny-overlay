@@ -15,7 +15,7 @@ KEYWORDS="~amd64"
 
 RESTRICT="strip"
 
-DEPEND="sys-auth/libfprint-tod"
+DEPEND="sys-auth/libfprint-tod:2"
 RDEPEND="${DEPEND}
 	acct-group/plugdev"
 BDEPEND=""
