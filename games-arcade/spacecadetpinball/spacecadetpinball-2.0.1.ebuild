@@ -3,7 +3,7 @@
 
 EAPI=8
 
-inherit cmake desktop
+inherit cmake xdg-utils
 
 MY_PN="SpaceCadetPinball"
 
@@ -22,21 +22,26 @@ RDEPEND="${DEPEND}"
 BDEPEND=""
 
 S="${WORKDIR}/${MY_PN}-Release_${PV}"
-
-PATCHES="${FILESDIR}/${PN}-basepath.patch"
+PATCHES=( "$FILESDIR/${P}-fix-cmake-install-path.patch" )
 
 src_install() {
-	dobin ${S}/bin/${MY_PN} || die
-	doicon ${FILESDIR}/${MY_PN}.png
-	make_desktop_entry ${MY_PN} '3D Pinball Space Cadet' ${MY_PN} "Game;ArcadeGame"
-
 	insopts -m 0644
-	insinto /usr/share/spacecadetpinball
+	insinto /usr/share/SpaceCadetPinball/
 	doins ${WORKDIR}/FULLTILT/CADET/CADET.DAT
 
-	insinto /usr/share/spacecadetpinball/SOUND
+	insinto /usr/share/SpaceCadetPinball/SOUND
 	for snd in ${WORKDIR}/FULLTILT/CADET/SOUND/*
 	do
 		doins "${snd}"
 	done
+
+	cmake_src_install
+}
+
+pkg_postinst() {
+	xdg_icon_cache_update
+}
+
+pkg_postrm() {
+	xdg_icon_cache_update
 }
