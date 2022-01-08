@@ -17,7 +17,8 @@ SLOT="0"
 KEYWORDS="~amd64 ~x86"
 
 DEPEND="media-libs/libsdl2[haptic]
-	media-libs/sdl2-mixer[wav,midi,timidity]"
+	media-libs/sdl2-mixer[wav,midi,fluidsynth]
+	media-sound/fluid-soundfont"
 RDEPEND="${DEPEND}"
 BDEPEND=""
 
