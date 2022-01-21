@@ -14,6 +14,7 @@ location = /usr/local/portage/overlay/sunny-overlay
 sync-type = git
 sync-uri = git://github.com/dguglielmi/sunny-overlay.git
 auto-sync = yes
+masters = gentoo
 EOF
 ```
 - Retrieve sunny overlay
