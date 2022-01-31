@@ -1,4 +1,4 @@
-BDEPEND=python_targets_python3_8? ( dev-lang/python:3.8 ) >=dev-lang/python-exec-2:=[python_targets_python3_8(-)?] >=dev-python/setuptools-42.0.2[python_targets_python3_8(-)?]
+BDEPEND=python_targets_python3_8? ( >=dev-lang/python-3.8.12_p1-r1:3.8 ) >=dev-python/setuptools-42.0.2[python_targets_python3_8(-)?]
 DEFINED_PHASES=compile configure install prepare test
 DESCRIPTION=Python library that makes it easy to access and parse data from Wikipedia
 EAPI=7
@@ -7,9 +7,9 @@ INHERIT=distutils-r1
 IUSE=python_targets_python3_8
 KEYWORDS=amd64 x86
 LICENSE=MIT
-RDEPEND=dev-python/beautifulsoup:4 >=dev-python/requests-2.6.0 python_targets_python3_8? ( dev-lang/python:3.8 ) >=dev-lang/python-exec-2:=[python_targets_python3_8(-)?]
+RDEPEND=dev-python/beautifulsoup:4 >=dev-python/requests-2.6.0 python_targets_python3_8? ( >=dev-lang/python-3.8.12_p1-r1:3.8 )
 REQUIRED_USE=|| ( python_targets_python3_8 )
 SLOT=0
 SRC_URI=mirror://pypi/w/wikipedia/wikipedia-1.4.0.tar.gz
-_eclasses_=distutils-r1	63df6e5a6bbff9ec3cf60cf7cdc94f23	eapi8-dosym	cd7d420bb5be5ee079f27239ce76b8f5	multibuild	05a584848db4901c97fcd94ae7cc3a97	multilib	de4beb52bfa93c4c5d96792a6b5e1784	multiprocessing	61c959fc55c15c00bbb1079d6a71370b	python-r1	e574a3642f886323f18f867ecc4d91c4	python-utils-r1	a8b7938ade305f087865de7e52d079b5	toolchain-funcs	badd6e329e1f3e6bee99b35bf8763ce8
+_eclasses_=distutils-r1	46a97aac0e3039b269e9738b9132e60d	eapi8-dosym	cd7d420bb5be5ee079f27239ce76b8f5	multibuild	d79bd5b4bc4edcb1f5bc19591f8d4714	multilib	de4beb52bfa93c4c5d96792a6b5e1784	multiprocessing	61c959fc55c15c00bbb1079d6a71370b	python-r1	0e7a98958af67ee30e3c2b2e3b37c0be	python-utils-r1	7ee47726753a2bd062a05f6643d849da	toolchain-funcs	badd6e329e1f3e6bee99b35bf8763ce8
 _md5_=9c681e1938e95c94be144af6ffcaf37b
