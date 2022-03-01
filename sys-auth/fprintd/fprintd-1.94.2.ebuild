@@ -1,7 +1,7 @@
-# Copyright 1999-2021 Gentoo Authors
+# Copyright 1999-2022 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=7
+EAPI=8
 
 PYTHON_COMPAT=( python3_{8..10} )
 
@@ -14,14 +14,14 @@ SRC_URI="https://gitlab.freedesktop.org/libfprint/${PN}/-/archive/v${PV}/${MY_P}
 
 LICENSE="GPL-2+"
 SLOT="0"
-KEYWORDS="~amd64 ~arm ~ia64 ~sparc ~x86"
+KEYWORDS="~amd64 ~arm ~ia64 ~ppc ~sparc ~x86"
 IUSE="doc pam systemd test"
 RESTRICT="!test? ( test )"
 
 RDEPEND="
 	dev-libs/dbus-glib
 	dev-libs/glib:2
-	|| ( sys-auth/libfprint:2 sys-auth/libfprint-tod:2 )
+	|| ( >=sys-auth/libfprint-1.94.0:2 >=sys-auth/libfprint-tod-1.94.2:2 )
 	sys-auth/polkit
 	pam? (
 		sys-libs/pam
@@ -42,6 +42,7 @@ DEPEND="
 
 BDEPEND="
 	dev-lang/perl
+	dev-util/gdbus-codegen
 	virtual/pkgconfig
 	doc? (
 		dev-libs/libxml2
