@@ -11,5 +11,5 @@ RDEPEND=dev-python/beautifulsoup:4 >=dev-python/requests-2.6.0 python_targets_py
 REQUIRED_USE=|| ( python_targets_python3_8 )
 SLOT=0
 SRC_URI=mirror://pypi/w/wikipedia/wikipedia-1.4.0.tar.gz
-_eclasses_=distutils-r1	d540d96908dd5622f3dfa41d167e632d	eapi8-dosym	cd7d420bb5be5ee079f27239ce76b8f5	multibuild	d79bd5b4bc4edcb1f5bc19591f8d4714	multilib	de4beb52bfa93c4c5d96792a6b5e1784	multiprocessing	61c959fc55c15c00bbb1079d6a71370b	python-r1	bcd408f1e4a9669198ef4dfcd5ab8696	python-utils-r1	d3d7da5aff94a677154819e0cb95ee36	toolchain-funcs	badd6e329e1f3e6bee99b35bf8763ce8
+_eclasses_=distutils-r1	3b871cf4724e3abc9b4ff059289f0d45	eapi8-dosym	cd7d420bb5be5ee079f27239ce76b8f5	multibuild	d26d81f242cb193d899a72bca423d0bd	multilib	4fbbbc98f236f1b43acd99476bc3cd85	multiprocessing	b4e253ab22cef7b1085e9b67c7a3b730	python-r1	8638751691200e941f26fe0ac3aef1d1	python-utils-r1	5dc84801daa87406aafaf535cb947a64	toolchain-funcs	fd9cde67030b26e479eeadaced488253
 _md5_=9c681e1938e95c94be144af6ffcaf37b

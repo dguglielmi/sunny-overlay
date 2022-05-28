@@ -1,5 +1,5 @@
 DEFINED_PHASES=install postinst postrm prepare
-DEPEND=>=dev-libs/glib-2.32:2 dev-libs/libgee:0.8 x11-libs/gtk+:3 x11-libs/bamf x11-libs/libX11 dev-libs/libdbusmenu x11-libs/libwnck:3 || ( dev-lang/vala:0.54[vapigen(+)] dev-lang/vala:0.52[vapigen(+)] dev-lang/vala:0.50[vapigen(+)] dev-lang/vala:0.48[vapigen(+)] dev-lang/vala:0.46[vapigen(+)] ) gnome-base/gnome-common >=sys-devel/gettext-0.19.6 virtual/pkgconfig
+DEPEND=>=dev-libs/glib-2.32:2 dev-libs/libgee:0.8 x11-libs/gtk+:3 x11-libs/bamf x11-libs/libX11 dev-libs/libdbusmenu x11-libs/libwnck:3 || ( dev-lang/vala:0.56[vapigen(+)] dev-lang/vala:0.54[vapigen(+)] dev-lang/vala:0.52[vapigen(+)] dev-lang/vala:0.50[vapigen(+)] dev-lang/vala:0.48[vapigen(+)] dev-lang/vala:0.46[vapigen(+)] ) gnome-base/gnome-common >=sys-devel/gettext-0.19.6 virtual/pkgconfig
 DESCRIPTION=Dock panel famious docky
 EAPI=7
 HOMEPAGE=https://launchpad.net/plank
@@ -10,5 +10,5 @@ LICENSE=LGPL-3
 RDEPEND=>=dev-libs/glib-2.32:2 dev-libs/libgee:0.8 x11-libs/gtk+:3 x11-libs/bamf x11-libs/libX11 dev-libs/libdbusmenu x11-libs/libwnck:3
 SLOT=0
 SRC_URI=http://launchpad.net/plank/1.0/0.11.89/+download/plank-0.11.89.tar.xz
-_eclasses_=edos2unix	33e347e171066657f91f8b0c72ec8773	eutils	dab5d8ec471d025b79c9e6906bcf3bff	gnome2-utils	239e7afa214b50012f83b8bb61de7555	multilib	de4beb52bfa93c4c5d96792a6b5e1784	strip-linguas	ac3ee41ee2d31d8c41a77c0838320cc7	toolchain-funcs	badd6e329e1f3e6bee99b35bf8763ce8	vala	77f49b69eeaec5a1f2aeb4dc688e0e80	wrapper	4251d4c84c25f59094fd557e0063a974	xdg-utils	4f29a8b760a594a212abe9c2ba957c31
+_eclasses_=edos2unix	33e347e171066657f91f8b0c72ec8773	eutils	dab5d8ec471d025b79c9e6906bcf3bff	gnome2-utils	2116cec8f46f4d1b0a88c5b1f1575dd3	multilib	4fbbbc98f236f1b43acd99476bc3cd85	strip-linguas	ac3ee41ee2d31d8c41a77c0838320cc7	toolchain-funcs	fd9cde67030b26e479eeadaced488253	vala	9badd41d5aab740ae5ac301c4416c5f8	wrapper	4a1902f969e5718126434fc35f3a0d9c	xdg-utils	fffb53a53cf17c9c0c998a3c0a590c7e
 _md5_=f5c4faa8cd98ec66dcee8fc7d7b8c357
