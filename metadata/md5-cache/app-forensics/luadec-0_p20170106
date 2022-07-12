@@ -10,5 +10,5 @@ LICENSE=MIT
 REQUIRED_USE=^^ ( lua_single_target_lua5-1 )
 SLOT=5.1
 SRC_URI=https://github.com/viruscamp/luadec/archive/895d92313fabaee260121c758c8320d1b21dd741.tar.gz -> luadec-0_p20170106.tar.gz https://www.lua.org/ftp/lua-5.1.5.tar.gz
-_eclasses_=lua-single	f2c2fb82c912dd65d53bdae3613a331f	lua-utils	e69ff116248d78546ae1a234c086fe80	multilib	4fbbbc98f236f1b43acd99476bc3cd85	toolchain-funcs	fd9cde67030b26e479eeadaced488253
+_eclasses_=lua-single	f2c2fb82c912dd65d53bdae3613a331f	lua-utils	e69ff116248d78546ae1a234c086fe80	multilib	4fbbbc98f236f1b43acd99476bc3cd85	toolchain-funcs	e9da88162e7a3c60376e80c2c2adcdfb
 _md5_=4f6b11cfa1cae72ef107b523e6259c08

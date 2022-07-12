@@ -1,4 +1,4 @@
-BDEPEND=python_single_target_python3_8? ( >=dev-lang/python-3.8.12_p1-r1:3.8 ) python_single_target_python3_9? ( >=dev-lang/python-3.9.9-r1:3.9 ) dev-util/ninja >=dev-util/cmake-3.20.5
+BDEPEND=python_single_target_python3_8? ( >=dev-lang/python-3.8.13:3.8 ) python_single_target_python3_9? ( >=dev-lang/python-3.9.12:3.9 ) >=dev-util/ninja-1.8.2 >=dev-util/cmake-3.20.5
 DEFINED_PHASES=compile configure install prepare setup test
 DESCRIPTION=A Python Byte-code Disassembler/Decompiler
 EAPI=7
@@ -9,5 +9,5 @@ KEYWORDS=~amd64 ~x86
 LICENSE=GPL-3
 SLOT=0
 SRC_URI=https://github.com/zrax/pycdc/archive/6140b4b33ef0c1d87e233c8fb064142233f9f4b9.tar.gz -> decompyle++-0_p20210816.tar.gz
-_eclasses_=cmake	90e2b29417d53718328f3a95227137a0	eapi8-dosym	cd7d420bb5be5ee079f27239ce76b8f5	edos2unix	33e347e171066657f91f8b0c72ec8773	eutils	dab5d8ec471d025b79c9e6906bcf3bff	flag-o-matic	a500d7cc40da3de38c361e889153bdf7	multilib	4fbbbc98f236f1b43acd99476bc3cd85	multiprocessing	b4e253ab22cef7b1085e9b67c7a3b730	ninja-utils	58ec4e54962bf45d065fb95030701514	python-single-r1	a5747fe6dc0651d95cb78eddd5e160a8	python-utils-r1	5dc84801daa87406aafaf535cb947a64	strip-linguas	ac3ee41ee2d31d8c41a77c0838320cc7	toolchain-funcs	fd9cde67030b26e479eeadaced488253	wrapper	4a1902f969e5718126434fc35f3a0d9c	xdg-utils	fffb53a53cf17c9c0c998a3c0a590c7e
+_eclasses_=cmake	44afbf15c35884f7c840470f1cf05d0d	eapi8-dosym	cd7d420bb5be5ee079f27239ce76b8f5	edos2unix	33e347e171066657f91f8b0c72ec8773	eutils	dab5d8ec471d025b79c9e6906bcf3bff	flag-o-matic	a3abd6002fafb3022597be6b8d01f88b	multilib	4fbbbc98f236f1b43acd99476bc3cd85	multiprocessing	b4e253ab22cef7b1085e9b67c7a3b730	ninja-utils	58ec4e54962bf45d065fb95030701514	python-single-r1	a5747fe6dc0651d95cb78eddd5e160a8	python-utils-r1	32313e7e2fbfba8f62a99ef923fc923c	strip-linguas	ac3ee41ee2d31d8c41a77c0838320cc7	toolchain-funcs	e9da88162e7a3c60376e80c2c2adcdfb	wrapper	4a1902f969e5718126434fc35f3a0d9c	xdg-utils	fffb53a53cf17c9c0c998a3c0a590c7e
 _md5_=5b9a05a664d92666075aa8782287babe

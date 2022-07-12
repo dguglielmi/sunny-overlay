@@ -1,4 +1,4 @@
-BDEPEND=doc? ( dev-python/sphinx app-text/texlive-core dev-texlive/texlive-latex dev-texlive/texlive-latexextra ) || ( >=dev-lang/python-3.9.9-r1:3.9 >=dev-lang/python-3.8.12_p1-r1:3.8 ) dev-util/ninja >=dev-util/cmake-3.9.6
+BDEPEND=doc? ( dev-python/sphinx app-text/texlive-core dev-texlive/texlive-latex dev-texlive/texlive-latexextra ) || ( >=dev-lang/python-3.9.12:3.9 >=dev-lang/python-3.8.13:3.8 ) dev-util/ninja >=dev-util/cmake-3.9.6
 DEFINED_PHASES=compile configure install prepare setup test
 DEPEND=dev-libs/gmp:= dev-libs/mpfr:= ntl? ( dev-libs/ntl:= )
 DESCRIPTION=Fast Library for Number Theory
@@ -12,5 +12,5 @@ RDEPEND=dev-libs/gmp:= dev-libs/mpfr:= ntl? ( dev-libs/ntl:= )
 RESTRICT=!test? ( test )
 SLOT=0/14
 SRC_URI=http://www.flintlib.org/flint-2.6.3.tar.gz
-_eclasses_=cmake-utils	f87188bbc572b252f1f7ab26bc72a568	eapi8-dosym	cd7d420bb5be5ee079f27239ce76b8f5	edos2unix	33e347e171066657f91f8b0c72ec8773	eutils	dab5d8ec471d025b79c9e6906bcf3bff	flag-o-matic	a500d7cc40da3de38c361e889153bdf7	multilib	4fbbbc98f236f1b43acd99476bc3cd85	multiprocessing	b4e253ab22cef7b1085e9b67c7a3b730	ninja-utils	58ec4e54962bf45d065fb95030701514	python-any-r1	9006edf4b9c90f9ba1dc9ea9fee1b0bd	python-utils-r1	5dc84801daa87406aafaf535cb947a64	strip-linguas	ac3ee41ee2d31d8c41a77c0838320cc7	toolchain-funcs	fd9cde67030b26e479eeadaced488253	wrapper	4a1902f969e5718126434fc35f3a0d9c	xdg-utils	fffb53a53cf17c9c0c998a3c0a590c7e
+_eclasses_=cmake-utils	9e91c7445357e208267f5ab7e693d456	eapi8-dosym	cd7d420bb5be5ee079f27239ce76b8f5	edos2unix	33e347e171066657f91f8b0c72ec8773	eutils	dab5d8ec471d025b79c9e6906bcf3bff	flag-o-matic	a3abd6002fafb3022597be6b8d01f88b	multilib	4fbbbc98f236f1b43acd99476bc3cd85	multiprocessing	b4e253ab22cef7b1085e9b67c7a3b730	ninja-utils	58ec4e54962bf45d065fb95030701514	python-any-r1	a3e9c0524a795d7f2767a2cf12a2e8c0	python-utils-r1	32313e7e2fbfba8f62a99ef923fc923c	strip-linguas	ac3ee41ee2d31d8c41a77c0838320cc7	toolchain-funcs	e9da88162e7a3c60376e80c2c2adcdfb	wrapper	4a1902f969e5718126434fc35f3a0d9c	xdg-utils	fffb53a53cf17c9c0c998a3c0a590c7e
 _md5_=c42c1585fec80fce37db73bc28842957
