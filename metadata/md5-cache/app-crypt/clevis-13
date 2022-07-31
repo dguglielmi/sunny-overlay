@@ -1,4 +1,4 @@
-BDEPEND=>=dev-util/meson-0.59.4 >=dev-util/ninja-1.8.2 dev-util/meson-format-array virtual/pkgconfig
+BDEPEND=>=dev-util/meson-0.62.2 >=dev-util/ninja-1.8.2 dev-util/meson-format-array virtual/pkgconfig
 DEFINED_PHASES=compile configure install test
 DEPEND=tpm2? ( app-crypt/tpm2-tools ) app-text/asciidoc >=sys-fs/luksmeta-8 dev-libs/openssl:0= >=dev-libs/jansson-2.10 >=dev-libs/jose-8 >=sys-fs/cryptsetup-2.0.4[pwquality] sys-apps/systemd dracut? ( sys-kernel/dracut ) udisks? ( sys-fs/udisks:2 ) >=sys-process/audit-2.7.8 bash-completion? ( app-shells/bash-completion )
 DESCRIPTION=Clevis is a plugable framework for automated decryption
@@ -11,5 +11,5 @@ LICENSE=GPL-3
 RDEPEND=tpm2? ( app-crypt/tpm2-tools ) app-text/asciidoc >=sys-fs/luksmeta-8 dev-libs/openssl:0= >=dev-libs/jansson-2.10 >=dev-libs/jose-8 >=sys-fs/cryptsetup-2.0.4[pwquality] sys-apps/systemd dracut? ( sys-kernel/dracut ) udisks? ( sys-fs/udisks:2 ) >=sys-process/audit-2.7.8 bash-completion? ( app-shells/bash-completion )
 SLOT=0
 SRC_URI=https://github.com/latchset/clevis/releases/download/v13/clevis-13.tar.xz
-_eclasses_=eapi8-dosym	cd7d420bb5be5ee079f27239ce76b8f5	meson	2cc95670908abda0d67e9e16a6b4341e	multilib	4fbbbc98f236f1b43acd99476bc3cd85	multiprocessing	b4e253ab22cef7b1085e9b67c7a3b730	ninja-utils	58ec4e54962bf45d065fb95030701514	python-utils-r1	32313e7e2fbfba8f62a99ef923fc923c	systemd	2736b403a83f194b59b767f3b344c2c1	toolchain-funcs	e9da88162e7a3c60376e80c2c2adcdfb
+_eclasses_=eapi8-dosym	cd7d420bb5be5ee079f27239ce76b8f5	meson	1994a5aef5d4f5798b92f64d6f9a6003	multilib	5ca4e49abed8e3a2f7b56920eadee157	multiprocessing	b4e253ab22cef7b1085e9b67c7a3b730	ninja-utils	58ec4e54962bf45d065fb95030701514	python-utils-r1	6f8f68a64a4304f487bb725227f2fdac	systemd	2736b403a83f194b59b767f3b344c2c1	toolchain-funcs	1542e649be915f43f6908a9e93909961
 _md5_=1d00d497502acbce9e7ad7afd2f2fa31

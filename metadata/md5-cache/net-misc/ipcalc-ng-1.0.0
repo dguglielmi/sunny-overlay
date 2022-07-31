@@ -1,4 +1,4 @@
-BDEPEND=app-text/ronn >=dev-util/meson-0.59.4 >=dev-util/ninja-1.8.2 dev-util/meson-format-array
+BDEPEND=app-text/ronn >=dev-util/meson-0.62.2 >=dev-util/ninja-1.8.2 dev-util/meson-format-array
 DEFINED_PHASES=compile configure install test unpack
 DEPEND=geoip? ( dev-libs/geoip ) geoip2? ( dev-libs/libmaxminddb:= )
 DESCRIPTION=an IPv4/IPv6 ipcalc tool
@@ -12,5 +12,5 @@ RDEPEND=!!net-misc/ipcalc
 REQUIRED_USE=?? ( geoip geoip2 )
 SLOT=0
 SRC_URI=https://gitlab.com/ipcalc/ipcalc/repository/archive.tar.bz2?ref=1.0.0 -> ipcalc-ng-1.0.0.tar.bz2
-_eclasses_=eapi8-dosym	cd7d420bb5be5ee079f27239ce76b8f5	edos2unix	33e347e171066657f91f8b0c72ec8773	eutils	dab5d8ec471d025b79c9e6906bcf3bff	meson	2cc95670908abda0d67e9e16a6b4341e	multilib	4fbbbc98f236f1b43acd99476bc3cd85	multiprocessing	b4e253ab22cef7b1085e9b67c7a3b730	ninja-utils	58ec4e54962bf45d065fb95030701514	python-utils-r1	32313e7e2fbfba8f62a99ef923fc923c	strip-linguas	ac3ee41ee2d31d8c41a77c0838320cc7	toolchain-funcs	e9da88162e7a3c60376e80c2c2adcdfb	vcs-snapshot	19dc666868420457132a7514d4621476	wrapper	4a1902f969e5718126434fc35f3a0d9c
+_eclasses_=eapi8-dosym	cd7d420bb5be5ee079f27239ce76b8f5	edos2unix	33e347e171066657f91f8b0c72ec8773	eutils	8f942ebdcf04334697649d4a0bf65a32	meson	1994a5aef5d4f5798b92f64d6f9a6003	multilib	5ca4e49abed8e3a2f7b56920eadee157	multiprocessing	b4e253ab22cef7b1085e9b67c7a3b730	ninja-utils	58ec4e54962bf45d065fb95030701514	python-utils-r1	6f8f68a64a4304f487bb725227f2fdac	strip-linguas	ac3ee41ee2d31d8c41a77c0838320cc7	toolchain-funcs	1542e649be915f43f6908a9e93909961	vcs-snapshot	eab6d8533446763c2e9777d8bbd1594e	wrapper	4a1902f969e5718126434fc35f3a0d9c
 _md5_=f8c314cdc2d48b753c3830903dd5fa02
