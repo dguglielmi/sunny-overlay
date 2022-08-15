@@ -1,0 +1,11 @@
+diff -dNur a/src/Makefile b/src/Makefile
+--- a/src/Makefile	2022-08-14 00:20:29.499231275 +0200
++++ b/src/Makefile	2022-08-14 00:21:54.135805153 +0200
+@@ -157,7 +157,7 @@
+ 	for prog in $(PROGS); do \
+ 		$(INSTALL_PROGRAM) $(INSTALL_FLAGS) $(pev_BUILDDIR)/$$prog $(DESTDIR)$(bindir); \
+ 		$(CHK_FILE_EXISTS) $(MANDIR)/$$prog$(man1ext) && \
+-			gzip -c -9 $(MANDIR)/$$prog$(man1ext) > $(DESTDIR)$(man1dir)/$$prog$(man1ext).gz || \
++			mv $(MANDIR)/$$prog$(man1ext) $(DESTDIR)$(man1dir)/$$prog$(man1ext) || \
+ 			echo -n; \
+ 	done
