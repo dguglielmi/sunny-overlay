@@ -1,4 +1,4 @@
-BDEPEND=python_targets_python3_8? ( >=dev-lang/python-3.8.13:3.8 ) >=dev-python/setuptools-42.0.2[python_targets_python3_8(-)?]
+BDEPEND=python_targets_python3_8? ( >=dev-lang/python-3.8.13:3.8 ) >=dev-python/setuptools-65.3.0[python_targets_python3_8(-)?]
 DEFINED_PHASES=compile configure install prepare test
 DESCRIPTION=Python library that makes it easy to access and parse data from Wikipedia
 EAPI=7
@@ -11,5 +11,5 @@ RDEPEND=dev-python/beautifulsoup:4 >=dev-python/requests-2.6.0 python_targets_py
 REQUIRED_USE=|| ( python_targets_python3_8 )
 SLOT=0
 SRC_URI=mirror://pypi/w/wikipedia/wikipedia-1.4.0.tar.gz
-_eclasses_=distutils-r1	e3b0f72d558eb613ff83262d22cbf887	eapi8-dosym	cd7d420bb5be5ee079f27239ce76b8f5	multibuild	d26d81f242cb193d899a72bca423d0bd	multilib	5ca4e49abed8e3a2f7b56920eadee157	multiprocessing	b4e253ab22cef7b1085e9b67c7a3b730	python-r1	7b65c41111cd80a4d4a0921e8d4a310c	python-utils-r1	dd5e1098e305ad508d21f496e9e37046	toolchain-funcs	1542e649be915f43f6908a9e93909961
+_eclasses_=distutils-r1	8c1ceb6b71a65547b0ea7bc901d906cb	eapi8-dosym	cd7d420bb5be5ee079f27239ce76b8f5	multibuild	d26d81f242cb193d899a72bca423d0bd	multilib	5ca4e49abed8e3a2f7b56920eadee157	multiprocessing	b4e253ab22cef7b1085e9b67c7a3b730	python-r1	2d51fd03931e743811ce30d198e4dcfd	python-utils-r1	b9fc5e97e886514e5132f50465185401	toolchain-funcs	1542e649be915f43f6908a9e93909961
 _md5_=9c681e1938e95c94be144af6ffcaf37b
