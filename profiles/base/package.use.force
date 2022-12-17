@@ -1,2 +1,0 @@
-# Allow -vanilla as we use Ubuntu patches
->x11-terms/gnome-terminal-3.46.3 -vanilla
