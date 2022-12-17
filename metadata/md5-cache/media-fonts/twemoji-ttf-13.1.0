@@ -9,5 +9,5 @@ KEYWORDS=~amd64 ~arm ~arm64 ~x86
 LICENSE=MIT CC-BY-4.0
 SLOT=0
 SRC_URI=https://kojipkgs.fedoraproject.org/packages/twitter-twemoji-fonts/13.1.0/1.fc35/noarch/twitter-twemoji-fonts-13.1.0-1.fc35.noarch.rpm
-_eclasses_=font	bc7d91ca9054e47ad87b5763214665a4
+_eclasses_=font	5e03cb70902daa9ff8967c61130f0f60
 _md5_=8df080d049b3e81b8f37fe0885f132ac
