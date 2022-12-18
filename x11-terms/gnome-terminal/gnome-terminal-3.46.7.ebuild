@@ -54,7 +54,6 @@ src_prepare() {
 		eapply "${FILESDIR}"/Provide-fallback-for-reading-current-directory-if-OS.patch
 		eapply "${FILESDIR}"/0001-Restore-transparency.patch
 		eapply "${FILESDIR}"/0001-Add-style-classes-and-CSS-names-to-some-of-our-widge.patch
-		eapply "${FILESDIR}"/0001-screen-window-Extra-padding-around-transparent-termi.patch
 		eapply "${FILESDIR}"/scrollbar-background-theming.patch
 		eapply "${FILESDIR}"/screen-Use-clean-env-when-creating-new-tab.patch
 	fi
