@@ -1,15 +1,15 @@
-BDEPEND=python_targets_python3_8? ( >=dev-lang/python-3.8.16:3.8 ) >=dev-python/setuptools-65.5.1[python_targets_python3_8(-)?]
+BDEPEND=python_targets_python3_9? ( >=dev-lang/python-3.9.16:3.9 ) python_targets_python3_10? ( >=dev-lang/python-3.10.9:3.10 ) python_targets_python3_11? ( >=dev-lang/python-3.11.1:3.11 ) >=dev-python/setuptools-65.5.1[python_targets_python3_9(-)?,python_targets_python3_10(-)?,python_targets_python3_11(-)?]
 DEFINED_PHASES=compile configure install prepare test
 DESCRIPTION=Python library that makes it easy to access and parse data from Wikipedia
 EAPI=7
 HOMEPAGE=https://github.com/goldsmith/Wikipedia
 INHERIT=distutils-r1
-IUSE=python_targets_python3_8
+IUSE=python_targets_python3_9 python_targets_python3_10 python_targets_python3_11
 KEYWORDS=amd64 x86
 LICENSE=MIT
-RDEPEND=dev-python/beautifulsoup:4 >=dev-python/requests-2.6.0 python_targets_python3_8? ( >=dev-lang/python-3.8.16:3.8 )
-REQUIRED_USE=|| ( python_targets_python3_8 )
+RDEPEND=dev-python/beautifulsoup:4 >=dev-python/requests-2.6.0 python_targets_python3_9? ( >=dev-lang/python-3.9.16:3.9 ) python_targets_python3_10? ( >=dev-lang/python-3.10.9:3.10 ) python_targets_python3_11? ( >=dev-lang/python-3.11.1:3.11 )
+REQUIRED_USE=|| ( python_targets_python3_9 python_targets_python3_10 python_targets_python3_11 )
 SLOT=0
 SRC_URI=mirror://pypi/w/wikipedia/wikipedia-1.4.0.tar.gz
-_eclasses_=distutils-r1	9c5f8e35fdc556c29573796aca3e87ea	eapi8-dosym	cd7d420bb5be5ee079f27239ce76b8f5	multibuild	d26d81f242cb193d899a72bca423d0bd	multilib	5ca4e49abed8e3a2f7b56920eadee157	multiprocessing	b4e253ab22cef7b1085e9b67c7a3b730	ninja-utils	8ed38f92fe095be374d6c4c8d4c0dda7	python-r1	2d51fd03931e743811ce30d198e4dcfd	python-utils-r1	6a75203e8a499f0fb42971452ce15388	toolchain-funcs	37a4612ce5522df5a100359a8dbc8491
-_md5_=9c681e1938e95c94be144af6ffcaf37b
+_eclasses_=distutils-r1	dcd5f48510105eb95e550ab968147365	eapi8-dosym	cd7d420bb5be5ee079f27239ce76b8f5	multibuild	bddcb51b74f4a76724ff7cf8e7388869	multilib	5ca4e49abed8e3a2f7b56920eadee157	multiprocessing	b4e253ab22cef7b1085e9b67c7a3b730	ninja-utils	38c85b725d0467e51954ea921b6c104b	out-of-source-utils	1a9007554652a6e627edbccb3c25a439	python-r1	666be58f658d6b32affe30f80e39a49e	python-utils-r1	a1a985ddd8795a8634b4b7f820b93143	toolchain-funcs	ec8bbc28394c7305b43ea07164bd8f5f
+_md5_=2ae98751637b95e93bd334082f17701b

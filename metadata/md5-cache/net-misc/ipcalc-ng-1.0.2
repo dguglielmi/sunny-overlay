@@ -1,0 +1,16 @@
+BDEPEND=>=dev-util/meson-0.62.2 >=dev-util/ninja-1.8.2 dev-util/meson-format-array
+DEFINED_PHASES=compile configure install test unpack
+DEPEND=geoip? ( dev-libs/geoip ) geoip2? ( dev-libs/libmaxminddb:= )
+DESCRIPTION=an IPv4/IPv6 ipcalc tool
+EAPI=8
+HOMEPAGE=https://gitlab.com/ipcalc/ipcalc
+INHERIT=meson vcs-snapshot
+IUSE=geoip +geoip2
+KEYWORDS=~amd64 ~x86
+LICENSE=GPL-2
+RDEPEND=!!net-misc/ipcalc
+REQUIRED_USE=?? ( geoip geoip2 )
+SLOT=0
+SRC_URI=https://gitlab.com/ipcalc/ipcalc/-/archive/1.0.2/ipcalc-1.0.2.tar.bz2 -> ipcalc-ng-1.0.2.tar.bz2
+_eclasses_=meson	1994a5aef5d4f5798b92f64d6f9a6003	multilib	5ca4e49abed8e3a2f7b56920eadee157	multiprocessing	b4e253ab22cef7b1085e9b67c7a3b730	ninja-utils	38c85b725d0467e51954ea921b6c104b	python-utils-r1	a1a985ddd8795a8634b4b7f820b93143	toolchain-funcs	ec8bbc28394c7305b43ea07164bd8f5f	vcs-snapshot	eab6d8533446763c2e9777d8bbd1594e
+_md5_=87bac4eb686a183f16cc601f7154d477
