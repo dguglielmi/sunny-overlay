@@ -1,22 +1,20 @@
 # Copyright 2020 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=7
+EAPI=8
 
-inherit eutils meson vcs-snapshot
+inherit meson vcs-snapshot
 
 MY_PN=${PN%%-ng}
 
 DESCRIPTION="an IPv4/IPv6 ipcalc tool"
 HOMEPAGE="https://gitlab.com/ipcalc/ipcalc"
-SRC_URI="https://gitlab.com/${MY_PN}/${MY_PN}/repository/archive.tar.bz2?ref=${PV} -> ${P}.tar.bz2"
+SRC_URI="https://gitlab.com/${MY_PN}/${MY_PN}/-/archive/${PV}/${MY_PN}-${PV}.tar.bz2 -> ${P}.tar.bz2"
 
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE="geoip +geoip2"
-
-BDEPEND="app-text/ronn"
 
 DEPEND="
 	geoip? ( dev-libs/geoip )
@@ -26,6 +24,10 @@ RDEPEND="!!net-misc/ipcalc"
 
 REQUIRED_USE="?? ( geoip geoip2 )"
 
+PATCHES=(
+	"${FILESDIR}"/${P}-remove-man-generation.patch
+)
+
 src_configure() {
 	local emesonargs=(
 		$(meson_feature geoip use_geoip)
@@ -33,4 +35,9 @@ src_configure() {
 		-Duse_runtime_linking=disabled
 	)
 	meson_src_configure
+}
+
+src_install() {
+	meson_src_install
+	doman "${FILESDIR}"/${MY_PN}.1
 }
