@@ -5,5 +5,5 @@ if loadfont (memdisk)/fonts/unicode.pf2 ; then
 fi
 
 search --no-floppy --fs-uuid --set=root @BOOT_PART_UUID@
-set prefix=(\$root)/boot/grub
-source \$prefix/grub.cfg
+set prefix=($root)/boot/grub
+source $prefix/grub.cfg
