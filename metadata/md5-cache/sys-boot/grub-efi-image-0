@@ -1,0 +1,14 @@
+BDEPEND=sys-apps/util-linux
+DEFINED_PHASES=compile install postinst postrm preinst prepare prerm pretend
+DEPEND=sys-boot/grub:2=[fonts]
+DESCRIPTION=Make GRUB EFI boot image
+EAPI=8
+HOMEPAGE=https://www.gentoo.org/
+INHERIT=mount-boot
+IUSE=+grub_platforms_efi-64 grub_platforms_efi-32
+KEYWORDS=-* ~amd64 ~x86
+LICENSE=GPL-3
+RDEPEND=sys-boot/grub:2=[fonts]
+SLOT=0
+_eclasses_=mount-boot	02a45c5e022c08dbc05178522b2772f2
+_md5_=6e6b874f7f9e02e85a7ef338683010f7
