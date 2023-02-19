@@ -61,7 +61,7 @@ src_compile() {
 	if use grub_platforms_efi-64; then
 		platform="x86_64-efi"
 		efi_name="x64"
-	elif use grub_platforms_efi-64; then
+	elif use grub_platforms_efi-32; then
 		platform="i386-efi"
 		efi_name="x32"
 	else
