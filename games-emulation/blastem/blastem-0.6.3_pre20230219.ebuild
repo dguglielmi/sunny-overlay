@@ -41,7 +41,7 @@ src_install() {
 	doins -r shaders images default.cfg rom.db gamecontrollerdb.txt
 
 	newicon "${S}/android/res/drawable-xxhdpi/ic_launcher.png" ${PN}.png
-	make_desktop_entry "${PN}" 'Blastem' "${PN}" 'Game;Emulator'
+	make_desktop_entry "${PN}" 'BlastEm' "${PN}" 'Game;Emulator'
 }
 
 pkg_postinst() {
