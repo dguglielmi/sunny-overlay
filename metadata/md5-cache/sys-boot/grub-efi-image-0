@@ -10,5 +10,5 @@ KEYWORDS=-* ~amd64 ~x86
 LICENSE=GPL-3
 RDEPEND=sys-boot/grub:2=[fonts]
 SLOT=0
-_eclasses_=mount-boot	02a45c5e022c08dbc05178522b2772f2
+_eclasses_=mount-boot	3945d351ee3192381911f938f4ee527a
 _md5_=21d2f56131f2a338d86e099a348dab16
