@@ -10,7 +10,7 @@ inherit vala autotools
 
 DESCRIPTION="BAMF Application Matching Framework"
 HOMEPAGE="https://launchpad.net/bamf"
-SRC_URI="http://launchpad.net/${PN}/0.5/${PV}/+download/${P}.tar.xz"
+SRC_URI="http://launchpad.net/${PN}/0.5/${PV}/+download/${P}.tar.gz"
 
 LICENSE="LGPL-3"
 SLOT="0"
@@ -33,10 +33,6 @@ BDEPEND="virtual/pkgconfig
 	dev-util/gtk-doc"
 
 DOCS=(AUTHORS COPYING COPYING.LGPL ChangeLog NEWS README TODO)
-
-PATCHES=(
-	"${FILESDIR}/${PN}-0.5.4-fix-deprecated-g-type-class-add-private.patch"
-)
 
 src_prepare() {
 	if use introspection; then
