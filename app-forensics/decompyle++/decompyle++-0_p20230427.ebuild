@@ -3,11 +3,11 @@
 
 EAPI=7
 
-PYTHON_COMPAT=( python3_{7..10} )
+PYTHON_COMPAT=( python3_{8..11} )
 
 inherit cmake python-single-r1
 
-EGIT_COMMIT="44a730f3a889503014fec94ae6e62d8401cb75e5"
+EGIT_COMMIT="c8156739f187c7ddbbeb8c52488405e83bea0ddd"
 
 DESCRIPTION="A Python Byte-code Disassembler/Decompiler"
 HOMEPAGE="https://github.com/zrax/pycdc"
