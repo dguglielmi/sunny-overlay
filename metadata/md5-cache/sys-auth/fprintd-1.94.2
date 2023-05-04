@@ -1,16 +1,16 @@
 BDEPEND=dev-lang/perl dev-util/gdbus-codegen virtual/pkgconfig doc? ( dev-libs/libxml2 dev-libs/libxslt dev-util/gtk-doc ) >=dev-util/meson-0.62.2 >=dev-util/ninja-1.8.2 dev-util/meson-format-array virtual/pkgconfig
 DEFINED_PHASES=compile configure install postinst setup test
-DEPEND=dev-libs/dbus-glib dev-libs/glib:2 || ( >=sys-auth/libfprint-1.94.0:2 >=sys-auth/libfprint-tod-1.94.2:2 ) sys-auth/polkit pam? ( sys-libs/pam systemd? ( sys-apps/systemd ) !systemd? ( sys-auth/elogind ) ) test? ( || ( ( >=dev-lang/python-3.10.9-r1:3.10 dev-python/python-dbusmock[python_targets_python3_10(-)] dev-python/dbus-python[python_targets_python3_10(-)] dev-python/pycairo[python_targets_python3_10(-)] pam? ( sys-libs/pam_wrapper[python_targets_python3_10(-)] ) ) ( >=dev-lang/python-3.9.16-r1:3.9 dev-python/python-dbusmock[python_targets_python3_9(-)] dev-python/dbus-python[python_targets_python3_9(-)] dev-python/pycairo[python_targets_python3_9(-)] pam? ( sys-libs/pam_wrapper[python_targets_python3_9(-)] ) ) ) )
+DEPEND=dev-libs/dbus-glib dev-libs/glib:2 || ( >=sys-auth/libfprint-1.94.0:2 >=sys-auth/libfprint-tod-1.94.2:2 ) sys-auth/polkit pam? ( sys-libs/pam systemd? ( sys-apps/systemd:= ) !systemd? ( sys-auth/elogind:= ) ) test? ( || ( ( >=dev-lang/python-3.11.1-r1:3.11 dev-python/python-dbusmock[python_targets_python3_11(-)] dev-python/dbus-python[python_targets_python3_11(-)] dev-python/pycairo[python_targets_python3_11(-)] pam? ( sys-libs/pam_wrapper[python_targets_python3_11(-)] ) ) ( >=dev-lang/python-3.10.9-r1:3.10 dev-python/python-dbusmock[python_targets_python3_10(-)] dev-python/dbus-python[python_targets_python3_10(-)] dev-python/pycairo[python_targets_python3_10(-)] pam? ( sys-libs/pam_wrapper[python_targets_python3_10(-)] ) ) ) )
 DESCRIPTION=D-Bus service to access fingerprint readers
 EAPI=8
 HOMEPAGE=https://gitlab.freedesktop.org/libfprint/fprintd
 INHERIT=meson pam python-any-r1 systemd
 IUSE=doc pam systemd test
-KEYWORDS=~amd64 ~arm ~ia64 ~ppc ~sparc ~x86
+KEYWORDS=~alpha amd64 arm arm64 ~ia64 ppc ppc64 ~riscv sparc x86
 LICENSE=GPL-2+
-RDEPEND=dev-libs/dbus-glib dev-libs/glib:2 || ( >=sys-auth/libfprint-1.94.0:2 >=sys-auth/libfprint-tod-1.94.2:2 ) sys-auth/polkit pam? ( sys-libs/pam systemd? ( sys-apps/systemd ) !systemd? ( sys-auth/elogind ) )
+RDEPEND=dev-libs/dbus-glib dev-libs/glib:2 || ( >=sys-auth/libfprint-1.94.0:2 >=sys-auth/libfprint-tod-1.94.2:2 ) sys-auth/polkit pam? ( sys-libs/pam systemd? ( sys-apps/systemd:= ) !systemd? ( sys-auth/elogind:= ) )
 RESTRICT=!test? ( test )
 SLOT=0
 SRC_URI=https://gitlab.freedesktop.org/libfprint/fprintd/-/archive/v1.94.2/fprintd-v1.94.2.tar.bz2
-_eclasses_=flag-o-matic	514815b1cc0dd4aeac177c2e812b3b1a	meson	915ec7c25e08d7886558215e6809ca1e	multilib	d1408425c7c4a7669b9b17735404b693	multiprocessing	b4e253ab22cef7b1085e9b67c7a3b730	ninja-utils	76050953ad5b70d7e09a6ca55558db92	pam	4efe951aa8ce2c16288d7c915196fe29	python-any-r1	d2955aaac8daaaa69fcc6dc93ed19f29	python-utils-r1	429bfd4e8d8e39db5385ba5744f30788	systemd	5f4bb0758df2e483babf68cd517078ca	toolchain-funcs	14a8ae365191b518fad51caad7a08f3e
-_md5_=8653830e61445590f6810fa6f012d642
+_eclasses_=flag-o-matic	514815b1cc0dd4aeac177c2e812b3b1a	meson	915ec7c25e08d7886558215e6809ca1e	multilib	d1408425c7c4a7669b9b17735404b693	multiprocessing	b4e253ab22cef7b1085e9b67c7a3b730	ninja-utils	76050953ad5b70d7e09a6ca55558db92	pam	4efe951aa8ce2c16288d7c915196fe29	python-any-r1	d2955aaac8daaaa69fcc6dc93ed19f29	python-utils-r1	4544ab96b58e177dc52d75e42f5ee307	systemd	5f4bb0758df2e483babf68cd517078ca	toolchain-funcs	14a8ae365191b518fad51caad7a08f3e
+_md5_=b9287b0851475470122bb9628143b3df
