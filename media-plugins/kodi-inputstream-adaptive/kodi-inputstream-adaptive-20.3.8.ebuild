@@ -9,7 +9,7 @@ DESCRIPTION="Kodi's Adaptive inputstream addon"
 HOMEPAGE="https://github.com/xbmc/inputstream.adaptive.git"
 
 CODENAME="Nexus"
-BENTO4_VERSION="1.6.0-639-6-${CODENAME}"
+BENTO4_VERSION="1.6.0-639-7-Omega"
 
 KEYWORDS="~amd64 ~x86"
 SRC_URI="https://github.com/xbmc/inputstream.adaptive/archive/${PV}-${CODENAME}.tar.gz -> ${P}.tar.gz
