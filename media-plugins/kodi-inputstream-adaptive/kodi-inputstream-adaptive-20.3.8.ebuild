@@ -33,6 +33,10 @@ RDEPEND="
 	${COMMON_DEPEND}
 	"
 
+src_unpack() {
+	unpack ${P}.tar.gz
+}
+
 src_configure() {
 	local mycmakeargs=(
 		-DBUILD_TESTING=$(usex test)
