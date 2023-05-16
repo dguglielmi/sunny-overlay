@@ -13,7 +13,7 @@ SRC_URI="https://www.retrodev.com/repos/blastem/archive/${COMMIT_ID}.tar.bz2 -> 
 
 LICENSE="GPL-3+"
 SLOT="0"
-KEYWORDS="~amd64 ~i686"
+KEYWORDS="~amd64 ~x86"
 
 DEPEND="
 	media-libs/glew
