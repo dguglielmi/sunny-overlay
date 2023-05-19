@@ -1,9 +1,9 @@
-# Copyright 1999-2021 Gentoo Authors
+# Copyright 2023 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
 
-inherit cmake kodi-addon
+inherit kodi-addon
 
 DESCRIPTION="Kodi's Adaptive inputstream addon"
 HOMEPAGE="https://github.com/xbmc/inputstream.adaptive.git"
