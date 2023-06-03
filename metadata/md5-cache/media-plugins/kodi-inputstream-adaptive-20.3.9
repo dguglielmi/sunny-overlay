@@ -1,0 +1,16 @@
+BDEPEND=>=dev-util/ninja-1.8.2 >=dev-util/cmake-3.20.5
+DEFINED_PHASES=compile configure install prepare test unpack
+DEPEND=dev-libs/expat =media-tv/kodi-20* test? ( dev-cpp/gtest )
+DESCRIPTION=Kodi's Adaptive inputstream addon
+EAPI=8
+HOMEPAGE=https://github.com/xbmc/inputstream.adaptive.git
+INHERIT=kodi-addon
+IUSE=test
+KEYWORDS=~amd64 ~x86
+LICENSE=GPL-2
+RDEPEND=dev-libs/expat =media-tv/kodi-20*
+RESTRICT=!test? ( test )
+SLOT=0
+SRC_URI=https://github.com/xbmc/inputstream.adaptive/archive/20.3.9-Nexus.tar.gz -> kodi-inputstream-adaptive-20.3.9.tar.gz https://github.com/xbmc/Bento4/archive/1.6.0-639-7-Omega.tar.gz -> bento4-1.6.0-639-7-Omega.tar.gz
+_eclasses_=cmake	7fb5980de96325cbab639f5b2187357c	flag-o-matic	16483e58fadb0d47b4528f0aa7e171f6	kodi-addon	6be6829ba2a8f3a3f057ac4d6fa65bd6	multilib	c19072c3cd7ac5cb21de013f7e9832e0	multiprocessing	b4e253ab22cef7b1085e9b67c7a3b730	ninja-utils	76050953ad5b70d7e09a6ca55558db92	toolchain-funcs	14a8ae365191b518fad51caad7a08f3e	xdg-utils	baea6080dd821f5562d715887954c9d3
+_md5_=aa57bd874cf5568a50a9cc59ee858ee8
