@@ -189,6 +189,11 @@ In some cases Kodi needs to access multicast addresses.
 Please consider enabling IP_MULTICAST under Networking options.
 "
 
+PATCHES=(
+	"${FILESDIR}"/${P}-VideoPlayerAudio-invalidate-previous-sync-type-after-Audio.patch
+	"${FILESDIR}"/${P}-ffmpeg5.patch
+)
+
 pkg_setup() {
 	check_extra_config
 	python-single-r1_pkg_setup
