@@ -1,0 +1,24 @@
+From 52a424a3ca743c9a6ad9ab21bea8b17df7999311 Mon Sep 17 00:00:00 2001
+From: mglae <mglmail@arcor.de>
+Date: Sun, 16 Apr 2023 19:38:54 +0200
+Subject: [PATCH] VideoPlayerAudio: invalidate previous sync type after Audio
+ Sink created
+
+Sync type will be set for the new created Sink
+---
+ xbmc/cores/VideoPlayer/VideoPlayerAudio.cpp | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/xbmc/cores/VideoPlayer/VideoPlayerAudio.cpp b/xbmc/cores/VideoPlayer/VideoPlayerAudio.cpp
+index 01be866fcf9ed..2c246da6204f5 100644
+--- a/xbmc/cores/VideoPlayer/VideoPlayerAudio.cpp
++++ b/xbmc/cores/VideoPlayer/VideoPlayerAudio.cpp
+@@ -526,6 +526,8 @@ bool CVideoPlayerAudio::ProcessDecoderOutput(DVDAudioFrame &audioframe)
+       if (!m_audioSink.Create(audioframe, m_streaminfo.codec, m_synctype == SYNC_RESAMPLE))
+         CLog::Log(LOGERROR, "{} - failed to create audio renderer", __FUNCTION__);
+ 
++      m_prevsynctype = -1;
++
+       if (m_syncState == IDVDStreamPlayer::SYNC_INSYNC)
+         m_audioSink.Resume();
+     }
