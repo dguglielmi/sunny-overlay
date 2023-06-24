@@ -61,6 +61,10 @@ RDEPEND="${DEPEND}
 
 S="${WORKDIR}/GPaste-${PV}"
 
+PATCHES=(
+	"${FILESDIR}"/${P}-fix-vanish-history-items.patch
+)
+
 src_prepare() {
 	use vala && vala_src_prepare
 	default

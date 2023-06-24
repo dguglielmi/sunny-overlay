@@ -1,0 +1,32 @@
+From 3a85c23ec96797d558e958fab209f417e6eac255 Mon Sep 17 00:00:00 2001
+From: bobi32 <bobi32@users.noreply.github.com>
+Date: Wed, 10 May 2023 14:44:03 +0200
+Subject: [PATCH] #365 fix (#421)
+
+---
+ src/daemon/tmp/gpaste-file-backend.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/src/daemon/tmp/gpaste-file-backend.c b/src/daemon/tmp/gpaste-file-backend.c
+index 6ce30914..9923ee17 100644
+--- a/src/daemon/tmp/gpaste-file-backend.c
++++ b/src/daemon/tmp/gpaste-file-backend.c
+@@ -339,7 +339,6 @@ add_item (Data *data)
+             data->uuid = g_uuid_string_random ();
+ 
+         g_paste_item_set_uuid (item, data->uuid);
+-        data->mem_size += g_paste_item_get_size (item);
+         data->history = g_list_append (data->history, item);
+         ++data->current_size;;
+     }
+@@ -354,6 +353,10 @@ add_item (Data *data)
+         g_free (v->data);
+         g_free (v);
+     }
++    
++    if (item)
++        data->mem_size += g_paste_item_get_size (item);
++
+     g_clear_pointer(&data->special_values, g_slist_free);
+ }
+ 
