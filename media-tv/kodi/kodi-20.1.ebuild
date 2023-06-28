@@ -191,6 +191,7 @@ Please consider enabling IP_MULTICAST under Networking options.
 
 PATCHES=(
 	"${FILESDIR}"/${P}-VideoPlayerAudio-invalidate-previous-sync-type-after-Audio.patch
+	"${FILESDIR}"/${P}-SavestateFlatBuffer-Remove-forward-declararion-of-FlatBufferBuilder.patch
 	"${FILESDIR}"/${P}-ffmpeg5.patch
 )
 
