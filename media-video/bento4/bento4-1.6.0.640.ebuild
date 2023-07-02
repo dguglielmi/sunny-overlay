@@ -15,7 +15,7 @@ IUSE="+apps"
 
 MY_PV="$(ver_cut 1-3)-$(ver_cut 4)"
 
-SRC_URI="https://github.com/axiomatic-systems/Bento4/archive/refs/tags/v${MY_PV}tar.gz -> ${P}.tar.gz"
+SRC_URI="https://github.com/axiomatic-systems/Bento4/archive/refs/tags/v${MY_PV}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="0"
