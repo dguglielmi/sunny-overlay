@@ -1,0 +1,15 @@
+BDEPEND=virtual/pkgconfig >=dev-util/meson-0.62.2 >=dev-util/ninja-1.8.2 dev-util/meson-format-array
+DEFINED_PHASES=compile configure install postinst postrm preinst test
+DEPEND=>x11-libs/gdk-pixbuf-2.22.0:2[abi_x86_32(-)?,abi_x86_64(-)?,abi_x86_x32(-)?,abi_mips_n32(-)?,abi_mips_n64(-)?,abi_mips_o32(-)?,abi_s390_32(-)?,abi_s390_64(-)?] >media-libs/libwebp-0.4.3:=[abi_x86_32(-)?,abi_x86_64(-)?,abi_x86_x32(-)?,abi_mips_n32(-)?,abi_mips_n64(-)?,abi_mips_o32(-)?,abi_s390_32(-)?,abi_s390_64(-)?]
+DESCRIPTION=WebP GDK Pixbuf Loader library
+EAPI=8
+HOMEPAGE=https://github.com/aruiz/webp-pixbuf-loader
+INHERIT=gnome2-utils meson-multilib
+IUSE=abi_x86_32 abi_x86_64 abi_x86_x32 abi_mips_n32 abi_mips_n64 abi_mips_o32 abi_s390_32 abi_s390_64
+KEYWORDS=~alpha ~amd64 ~arm ~arm64 ~ia64 ~ppc ~ppc64 ~riscv ~sparc ~x86
+LICENSE=LGPL-2+
+RDEPEND=>x11-libs/gdk-pixbuf-2.22.0:2[abi_x86_32(-)?,abi_x86_64(-)?,abi_x86_x32(-)?,abi_mips_n32(-)?,abi_mips_n64(-)?,abi_mips_o32(-)?,abi_s390_32(-)?,abi_s390_64(-)?] >media-libs/libwebp-0.4.3:=[abi_x86_32(-)?,abi_x86_64(-)?,abi_x86_x32(-)?,abi_mips_n32(-)?,abi_mips_n64(-)?,abi_mips_o32(-)?,abi_s390_32(-)?,abi_s390_64(-)?]
+SLOT=0
+SRC_URI=https://github.com/aruiz/webp-pixbuf-loader/archive/0.2.4.tar.gz -> gdk-pixbuf-loader-webp-0.2.4.tar.gz
+_eclasses_=gnome2-utils	b0183db3b2e07b18f3b77bffec72e116	meson	18d046bdb14e1bdb22cce6e5d953e364	meson-multilib	8989922d980e5e870cc3de949d1b2586	multibuild	bddcb51b74f4a76724ff7cf8e7388869	multilib	c19072c3cd7ac5cb21de013f7e9832e0	multilib-build	e8aed98bd43dbd25694310a660ad562c	multilib-minimal	4b0f1857965db8869a729948d5277e0b	multiprocessing	b4e253ab22cef7b1085e9b67c7a3b730	ninja-utils	76050953ad5b70d7e09a6ca55558db92	out-of-source-utils	1a9007554652a6e627edbccb3c25a439	python-utils-r1	a34d5f83235297b76d71eaf8deb53768	toolchain-funcs	513c31b3346458ed1f3878b57da6d61c	xdg-utils	baea6080dd821f5562d715887954c9d3
+_md5_=aca0bef5862902267c9eebd60fff221c
