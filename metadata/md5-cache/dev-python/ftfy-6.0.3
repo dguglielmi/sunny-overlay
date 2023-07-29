@@ -1,4 +1,4 @@
-BDEPEND=test? ( dev-python/wcwidth >=dev-python/pytest-7.3.1[python_targets_python3_10(-)?,python_targets_python3_11(-)?] ) python_targets_python3_10? ( >=dev-lang/python-3.10.11:3.10 ) python_targets_python3_11? ( >=dev-lang/python-3.11.3:3.11 ) >=dev-python/setuptools-65.7.0[python_targets_python3_10(-)?,python_targets_python3_11(-)?]
+BDEPEND=test? ( dev-python/wcwidth >=dev-python/pytest-7.3.1[python_targets_python3_10(-)?,python_targets_python3_11(-)?] ) python_targets_python3_10? ( dev-lang/python:3.10 ) python_targets_python3_11? ( dev-lang/python:3.11 ) >=dev-python/setuptools-67.8.0-r1[python_targets_python3_10(-)?,python_targets_python3_11(-)?]
 DEFINED_PHASES=compile configure install prepare test
 DESCRIPTION=Python library that fixes text for you
 EAPI=7
@@ -7,10 +7,10 @@ INHERIT=distutils-r1
 IUSE=test python_targets_python3_10 python_targets_python3_11
 KEYWORDS=amd64 x86
 LICENSE=MIT
-RDEPEND=dev-python/wcwidth python_targets_python3_10? ( >=dev-lang/python-3.10.11:3.10 ) python_targets_python3_11? ( >=dev-lang/python-3.11.3:3.11 )
+RDEPEND=dev-python/wcwidth python_targets_python3_10? ( dev-lang/python:3.10 ) python_targets_python3_11? ( dev-lang/python:3.11 )
 REQUIRED_USE=|| ( python_targets_python3_10 python_targets_python3_11 )
 RESTRICT=!test? ( test )
 SLOT=0
 SRC_URI=mirror://pypi/f/ftfy/ftfy-6.0.3.tar.gz
-_eclasses_=distutils-r1	2d32e797ee29a8ffdd452f4a85860666	eapi8-dosym	5ac4857ad078256d939c44f7c64197a9	multibuild	bddcb51b74f4a76724ff7cf8e7388869	multilib	c19072c3cd7ac5cb21de013f7e9832e0	multiprocessing	b4e253ab22cef7b1085e9b67c7a3b730	ninja-utils	76050953ad5b70d7e09a6ca55558db92	out-of-source-utils	1a9007554652a6e627edbccb3c25a439	python-r1	3c6cd0f418ba702c186a9865b85e704d	python-utils-r1	a34d5f83235297b76d71eaf8deb53768	toolchain-funcs	513c31b3346458ed1f3878b57da6d61c
+_eclasses_=distutils-r1	b7cd5736a595ec0df9b164d5aec6f228	eapi8-dosym	5ac4857ad078256d939c44f7c64197a9	flag-o-matic	ad475baa777c9978fa035216c8264a10	multibuild	30dbf3c5a31db09a19f31ad0a68f2405	multilib	c19072c3cd7ac5cb21de013f7e9832e0	multiprocessing	b4e253ab22cef7b1085e9b67c7a3b730	ninja-utils	f3010c780f65d1bb5aea15a9af1adc9c	out-of-source-utils	1a9007554652a6e627edbccb3c25a439	python-r1	b3f874304c1bda6ffc3450ebb4ae5169	python-utils-r1	7661dc585f75dd1f81eccefe37bef093	toolchain-funcs	8e3fb781f3258ae2757d1dfc2c7c170e
 _md5_=b7cfb825a0a318bec12e24ea803f8c3c
