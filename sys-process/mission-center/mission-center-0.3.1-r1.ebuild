@@ -336,12 +336,12 @@ declare -A GIT_CRATES=(
 
 inherit cargo gnome2-utils meson xdg
 
-NVTOP_COMMIT="be47f8c560487efc6e6a419d59c69bfbdb819324"
+NVTOP_PV="3.0.2"
 
 DESCRIPTION="Monitor your CPU, Memory, Disk, Network and GPU usage"
 HOMEPAGE="https://missioncenter.io https://gitlab.com/mission-center-devs/mission-center"
 SRC_URI="https://gitlab.com/${PN}-devs/${PN}/-/archive/v${PV}/${PN}-v${PV}.tar.bz2
-	https://github.com/Syllo/nvtop/archive/${NVTOP_COMMIT}.tar.gz -> nvtop-${NVTOP_COMMIT}.tar.gz
+	https://github.com/Syllo/nvtop/archive/refs/tags/${NVTOP_PV}.tar.gz -> nvtop-${NVTOP_PV}.tar.gz
 	${CARGO_CRATE_URIS}
 "
 
@@ -353,6 +353,8 @@ LICENSE+="
 "
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
+
+IUSE="video_cards_intel"
 
 DEPEND="
 	dev-python/pygobject
@@ -372,15 +374,21 @@ PATCHES="
 	"${FILESDIR}"/${P}-cargo_home.patch
 	"${FILESDIR}"/${P}-metainfo.patch
 	"${FILESDIR}"/${P}-no-browsers-in-applications.patch
+	"${FILESDIR}"/${P}-nvtop-3.0.2.patch
 "
 
 S="${WORKDIR}/${PN}-v${PV}"
 
 src_prepare() {
-	ln -s "${WORKDIR}/nvtop-${NVTOP_COMMIT}" "${S}/subprojects/nvtop-${NVTOP_COMMIT}"
+	ln -s "${WORKDIR}/nvtop-${NVTOP_PV}" "${S}/subprojects/nvtop-${NVTOP_PV}"
 	for p in "${S}"/subprojects/packagefiles/nvtop-*.patch; do
-		patch -p1 -d "${WORKDIR}/nvtop-${NVTOP_COMMIT}" < ${p}
+		patch -p1 -d "${WORKDIR}/nvtop-${NVTOP_PV}" < ${p}
 	done
+
+	if use video_cards_intel; then
+		eapply "${FILESDIR}"/${P}-intel-gpu-support.patch
+	fi
+
 	default
 }
 
