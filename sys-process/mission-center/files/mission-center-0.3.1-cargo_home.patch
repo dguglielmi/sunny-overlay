@@ -1,0 +1,31 @@
+diff -dNur a/src/meson.build b/src/meson.build
+--- a/src/meson.build	2023-08-22 19:43:58.000000000 +0200
++++ b/src/meson.build	2023-08-23 15:12:42.913477168 +0200
+@@ -27,14 +27,8 @@
+ cargo_bin  = find_program('cargo')
+ 
+ cargo_env = get_option('cargo_env')
+-if get_option('flatpak') == false
+-    cargo_env += [ 'CARGO_HOME=' + meson.project_build_root()  / 'cargo-home' ]
+-    cargo_opt  = []
+-else
+-    cargo_opt  = []
+-endif
+ 
+-cargo_opt += [ '--manifest-path', meson.project_source_root() / 'Cargo.toml' ]
++cargo_opt = [ '--manifest-path', meson.project_source_root() / 'Cargo.toml' ]
+ cargo_opt += [ '--target-dir', meson.project_build_root()  / 'src' ]
+ cargo_env += [ 'BUILD_ROOT=' + meson.project_build_root() ]
+ 
+diff -dNur a/src/sys_info_v2/gatherer/meson.build b/src/sys_info_v2/gatherer/meson.build
+--- a/src/sys_info_v2/gatherer/meson.build	2023-08-22 19:43:58.000000000 +0200
++++ b/src/sys_info_v2/gatherer/meson.build	2023-08-23 15:14:13.570236075 +0200
+@@ -4,7 +4,7 @@
+ cargo_bin  = find_program('cargo')
+ cargo_opt  = [ '--manifest-path', meson.project_source_root() / project_path / 'Cargo.toml' ]
+ cargo_opt += [ '--target-dir', meson.project_build_root()  / project_path / 'src' ]
+-cargo_env  = [ 'CARGO_HOME=' + meson.project_build_root()  / project_path/ 'cargo-home' ]
++cargo_env = get_option('cargo_env')
+ 
+ if get_option('buildtype') == 'release'
+   cargo_opt += [ '--release' ]

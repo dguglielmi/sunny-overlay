@@ -1,0 +1,46 @@
+From 0033ec8f596fcbae01dc49c93ecb4750e4589845 Mon Sep 17 00:00:00 2001
+From: Romeo Calota <2727510-kicsyromy@users.noreply.gitlab.com>
+Date: Wed, 23 Aug 2023 08:35:54 +0000
+Subject: [PATCH] Resolve "No browsers in Applications regression in 0.3"
+
+---
+ src/sys_info_v2/gatherer/common/apps.rs      | 8 +++++++-
+ src/sys_info_v2/gatherer/common/processes.rs | 3 ++-
+ 2 files changed, 9 insertions(+), 2 deletions(-)
+
+diff --git a/src/sys_info_v2/gatherer/common/apps.rs b/src/sys_info_v2/gatherer/common/apps.rs
+index b0f837e..df0b123 100644
+--- a/src/sys_info_v2/gatherer/common/apps.rs
++++ b/src/sys_info_v2/gatherer/common/apps.rs
+@@ -344,7 +344,13 @@ impl Apps {
+             return None;
+         }
+ 
+-        let ini = match Ini::load_from_file(path) {
++        let ini = match Ini::load_from_file_opt(
++            path,
++            ParseOption {
++                enabled_quote: false,
++                enabled_escape: true,
++            },
++        ) {
+             Ok(ini) => ini,
+             Err(e) => {
+                 eprintln!("Failed to load desktop file from {}: {}", path.display(), e);
+diff --git a/src/sys_info_v2/gatherer/common/processes.rs b/src/sys_info_v2/gatherer/common/processes.rs
+index 77a1210..743fab5 100644
+--- a/src/sys_info_v2/gatherer/common/processes.rs
++++ b/src/sys_info_v2/gatherer/common/processes.rs
+@@ -557,7 +557,8 @@ impl Processes {
+                             .split(':')
+                             .nth(2)
+                             .unwrap_or("/")
+-                            .trim_start_matches('/');
++                            .trim_start_matches('/')
++                            .trim_end_matches(&format!("/{}", pid));
+ 
+                         let cgroup_path = std::path::Path::new("/sys/fs/cgroup").join(cfc);
+                         if !cfc.is_empty() && cgroup_path.exists() && cgroup_path.is_dir() {
+-- 
+GitLab
+
