@@ -247,7 +247,7 @@ CRATES="
 	winnow@0.4.9
 	xml-rs@0.8.15
 "
-
+# missioncenter-gatherer
 CRATES+="
 	anyhow@1.0.72
 	arrayvec@0.7.4
@@ -336,12 +336,12 @@ declare -A GIT_CRATES=(
 
 inherit cargo gnome2-utils meson xdg
 
-NVTOP_PV="3.0.2"
+NVTOP_SNAPSHOT="be47f8c560487efc6e6a419d59c69bfbdb819324"
 
 DESCRIPTION="Monitor your CPU, Memory, Disk, Network and GPU usage"
 HOMEPAGE="https://missioncenter.io https://gitlab.com/mission-center-devs/mission-center"
 SRC_URI="https://gitlab.com/${PN}-devs/${PN}/-/archive/v${PV}/${PN}-v${PV}.tar.bz2
-	https://github.com/Syllo/nvtop/archive/refs/tags/${NVTOP_PV}.tar.gz -> nvtop-${NVTOP_PV}.tar.gz
+	https://github.com/Syllo/nvtop/archive/${NVTOP_SNAPSHOT}.tar.gz -> nvtop-${NVTOP_SNAPSHOT}.tar.gz
 	${CARGO_CRATE_URIS}
 "
 
@@ -374,15 +374,14 @@ PATCHES="
 	"${FILESDIR}"/${P}-cargo_home.patch
 	"${FILESDIR}"/${P}-metainfo.patch
 	"${FILESDIR}"/${P}-no-browsers-in-applications.patch
-	"${FILESDIR}"/${P}-nvtop-3.0.2.patch
 "
 
 S="${WORKDIR}/${PN}-v${PV}"
 
 src_prepare() {
-	ln -s "${WORKDIR}/nvtop-${NVTOP_PV}" "${S}/subprojects/nvtop-${NVTOP_PV}"
+	ln -s "${WORKDIR}/nvtop-${NVTOP_SNAPSHOT}" "${S}/subprojects/nvtop-${NVTOP_SNAPSHOT}"
 	for p in "${S}"/subprojects/packagefiles/nvtop-*.patch; do
-		patch -p1 -d "${WORKDIR}/nvtop-${NVTOP_PV}" < ${p}
+		patch -p1 -d "${WORKDIR}/nvtop-${NVTOP_SNAPSHOT}" < ${p}
 	done
 
 	if use video_cards_intel; then
@@ -402,6 +401,11 @@ src_configure() {
 pkg_postinst() {
 	gnome2_schemas_update
 	xdg_pkg_postinst
+
+	if use video_cards_intel; then
+		ewarn "Intel GPU monitoring isn't yet supported by upstream Mission Center"
+		ewarn "Please enable this for testing purpose only."
+	fi
 }
 
 pkg_postrm() {
