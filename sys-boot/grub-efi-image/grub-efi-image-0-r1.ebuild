@@ -24,7 +24,7 @@ BDEPEND="
 	media-fonts/dejavu
 "
 
-GRUB_VERSION="2.06-r6"
+GRUB_VERSION="2.06-r8"
 EFI_VENDOR="gentoo"
 GRUB_FONT_SIZE="16"
 
