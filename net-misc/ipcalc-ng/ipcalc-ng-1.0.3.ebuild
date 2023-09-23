@@ -18,15 +18,12 @@ IUSE="geoip +geoip2"
 
 DEPEND="
 	geoip? ( dev-libs/geoip )
-	geoip2? ( dev-libs/libmaxminddb:= )"
+	geoip2? ( dev-libs/libmaxminddb:= )
+	app-text/ronn-ng"
 
 RDEPEND="!!net-misc/ipcalc"
 
 REQUIRED_USE="?? ( geoip geoip2 )"
-
-PATCHES=(
-	"${FILESDIR}"/${P}-remove-man-generation.patch
-)
 
 S="${WORKDIR}/${MY_PN}-${PV}"
 
@@ -37,9 +34,4 @@ src_configure() {
 		-Duse_runtime_linking=disabled
 	)
 	meson_src_configure
-}
-
-src_install() {
-	meson_src_install
-	doman "${FILESDIR}"/${MY_PN}.1
 }
