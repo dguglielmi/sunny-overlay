@@ -1,14 +1,14 @@
 BDEPEND=>=dev-util/ninja-1.8.2 >=dev-util/cmake-3.20.5
 DEFINED_PHASES=compile configure install prepare test
-DEPEND==media-tv/kodi-20* dev-libs/libpcre dev-libs/tinyxml
-DESCRIPTION=Libretro compatibility layer for the Kodi Game API
+DEPEND=dev-libs/pugixml =media-tv/kodi-20* sys-libs/zlib
+DESCRIPTION=Kodi's IPTVSimple client addon
 EAPI=8
-HOMEPAGE=https://github.com/xbmc/peripheral.joystick
-INHERIT=kodi-addon
+HOMEPAGE=https://github.com/kodi-pvr/pvr.iptvsimple
+INHERIT=cmake kodi-addon
 KEYWORDS=~amd64 ~x86
 LICENSE=GPL-2
-RDEPEND==media-tv/kodi-20* dev-libs/libpcre dev-libs/tinyxml
+RDEPEND=dev-libs/pugixml =media-tv/kodi-20* sys-libs/zlib
 SLOT=0
-SRC_URI=https://github.com/xbmc/peripheral.joystick/archive/20.1.0-Nexus.tar.gz -> kodi-peripheral-joystick-20.1.0.tar.gz
+SRC_URI=https://github.com/kodi-pvr/pvr.iptvsimple/archive/20.11.0-Nexus.tar.gz -> kodi-pvr-iptvsimple-20.11.0.tar.gz
 _eclasses_=cmake	fc2f89084f590ac95c004ea95b0d2f80	flag-o-matic	be27a904c614cb93ae037762dc69bcc2	kodi-addon	6be6829ba2a8f3a3f057ac4d6fa65bd6	multilib	c19072c3cd7ac5cb21de013f7e9832e0	multiprocessing	b4e253ab22cef7b1085e9b67c7a3b730	ninja-utils	f3010c780f65d1bb5aea15a9af1adc9c	toolchain-funcs	862d337d98edb576796827be2c6b11ca	xdg-utils	baea6080dd821f5562d715887954c9d3
-_md5_=cd4bb37653976be470773720e2ea722d
+_md5_=a3beb97d409e66fefa2c1475a67bf517
