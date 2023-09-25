@@ -109,7 +109,7 @@ COMMON_TARGET_DEPEND="${PYTHON_DEPS}
 	>=media-libs/taglib-1.11.1
 	system-ffmpeg? (
 		>=media-video/ffmpeg-${FFMPEG_VERSION}:=[dav1d?,encode,postproc]
-		=media-video/ffmpeg-4*[openssl]
+		=media-video/ffmpeg-6*[openssl]
 	)
 	!system-ffmpeg? (
 		app-arch/bzip2
@@ -192,6 +192,7 @@ Please consider enabling IP_MULTICAST under Networking options.
 PATCHES=(
 	"${FILESDIR}"/${PN}-20.1-VideoPlayerAudio-invalidate-previous-sync-type-after-Audio.patch
 	"${FILESDIR}"/${PN}-20.1-ffmpeg5.patch
+	"${FILESDIR}"/${P}-ffmpeg6.patch
 )
 
 pkg_setup() {
