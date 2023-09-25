@@ -42,6 +42,7 @@ PATCHES=(
 	"${FILESDIR}"/${P}-Get-extradata-with-extract_extradata-BSF.patch
 	"${FILESDIR}"/${P}-Fix-use-after-free-in-TimeshiftSegment.patch
 	"${FILESDIR}"/${P}-ffmpeg6.patch
+	"${FILESDIR}"/${P}-gcc13.patch
 )
 
 src_prepare() {
