@@ -23,7 +23,7 @@ BDEPEND="
 	"
 
 COMMON_DEPEND="
-	media-video/ffmpeg[encode,libxml2,zlib]
+	media-video/ffmpeg:=[encode,libxml2,zlib]
 	virtual/libiconv
 	app-arch/bzip2
 	=media-tv/kodi-20*
@@ -36,6 +36,12 @@ DEPEND="
 RDEPEND="
 	${COMMON_DEPEND}
 	"
+
+PATCHES=(
+	"${FILESDIR}"/${P}-ffmpeg5.patch
+	"${FILESDIR}"/${P}-Get-extradata-with-extract_extradata-BSF.patch
+	"${FILESDIR}"/${P}-ffmpeg6.patch
+)
 
 src_prepare() {
 	[ -d depends ] && rm -rf depends || die
