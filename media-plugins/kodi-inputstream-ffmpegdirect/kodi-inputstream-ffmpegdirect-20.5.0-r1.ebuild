@@ -40,6 +40,7 @@ RDEPEND="
 PATCHES=(
 	"${FILESDIR}"/${P}-ffmpeg5.patch
 	"${FILESDIR}"/${P}-Get-extradata-with-extract_extradata-BSF.patch
+	"${FILESDIR}"/${P}-Fix-use-after-free-in-TimeshiftSegment.patch
 	"${FILESDIR}"/${P}-ffmpeg6.patch
 )
 
