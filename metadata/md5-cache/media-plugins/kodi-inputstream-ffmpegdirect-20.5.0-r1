@@ -1,14 +1,14 @@
 BDEPEND=virtual/pkgconfig >=dev-util/ninja-1.8.2 >=dev-util/cmake-3.20.5
 DEFINED_PHASES=compile configure install prepare test
-DEPEND=media-video/ffmpeg[encode,libxml2,zlib] virtual/libiconv app-arch/bzip2 =media-tv/kodi-20*
+DEPEND=media-video/ffmpeg:=[encode,libxml2,zlib] virtual/libiconv app-arch/bzip2 =media-tv/kodi-20*
 DESCRIPTION=Kodi's FFMpeg Direct Inputstream addon
 EAPI=8
 HOMEPAGE=https://github.com/xbmc/inputstream.ffmpegdirect
 INHERIT=kodi-addon
 KEYWORDS=~amd64 ~arm ~arm64 ~x86
 LICENSE=GPL-2
-RDEPEND=media-video/ffmpeg[encode,libxml2,zlib] virtual/libiconv app-arch/bzip2 =media-tv/kodi-20*
+RDEPEND=media-video/ffmpeg:=[encode,libxml2,zlib] virtual/libiconv app-arch/bzip2 =media-tv/kodi-20*
 SLOT=0
 SRC_URI=https://github.com/xbmc/inputstream.ffmpegdirect/archive/20.5.0-Nexus.tar.gz -> kodi-inputstream-ffmpegdirect-20.5.0.tar.gz
 _eclasses_=cmake	fc2f89084f590ac95c004ea95b0d2f80	flag-o-matic	be27a904c614cb93ae037762dc69bcc2	kodi-addon	6be6829ba2a8f3a3f057ac4d6fa65bd6	multilib	c19072c3cd7ac5cb21de013f7e9832e0	multiprocessing	b4e253ab22cef7b1085e9b67c7a3b730	ninja-utils	f3010c780f65d1bb5aea15a9af1adc9c	toolchain-funcs	862d337d98edb576796827be2c6b11ca	xdg-utils	baea6080dd821f5562d715887954c9d3
-_md5_=0e62c935f85412e9f3f5c029376cc24c
+_md5_=5814ba30c7a7b845dccb0573a5d4dfc6
