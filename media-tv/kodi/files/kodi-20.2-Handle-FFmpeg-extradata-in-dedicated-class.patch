@@ -1,0 +1,1122 @@
+From e5922ff2197c5276c7a38891c395a1297da03a96 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Markus=20H=C3=A4rer?= <markus.haerer@gmx.net>
+Date: Sat, 22 Apr 2023 00:21:09 +0200
+Subject: [PATCH] FFmpeg: Handle FFmpeg extradata in dedicated class
+
+This ensures that everything is allocated with av_malloc and freed with
+av_free. The padding is also handled consistently. And as a bonus it's more
+ergonomic than handling the raw data.
+---
+ xbmc/cores/FFmpeg.cpp                         | 105 ++++++++++++++----
+ xbmc/cores/FFmpeg.h                           |  30 ++++-
+ .../Audio/DVDAudioCodecAndroidMediaCodec.cpp  |  10 +-
+ .../DVDCodecs/Audio/DVDAudioCodecFFmpeg.cpp   |   9 +-
+ .../Overlay/DVDOverlayCodecFFmpeg.cpp         |  13 ++-
+ .../DVDCodecs/Overlay/DVDOverlayCodecSSA.cpp  |   3 +-
+ .../DVDCodecs/Overlay/OverlayCodecWebVTT.cpp  |   3 +-
+ .../DVDCodecs/Video/AddonVideoCodec.cpp       |   4 +-
+ .../Video/DVDVideoCodecAndroidMediaCodec.cpp  |  52 ++++-----
+ .../DVDCodecs/Video/DVDVideoCodecDRMPRIME.cpp |  11 +-
+ .../DVDCodecs/Video/DVDVideoCodecFFmpeg.cpp   |  12 +-
+ .../DVDCodecs/Video/DVDVideoCodecStarfish.cpp |  10 +-
+ xbmc/cores/VideoPlayer/DVDDemuxers/DVDDemux.h |   5 +-
+ .../DVDDemuxers/DVDDemuxClient.cpp            |  36 ++----
+ .../DVDDemuxers/DVDDemuxFFmpeg.cpp            |  17 ++-
+ .../DVDDemuxers/DVDDemuxVobsub.cpp            |   5 +-
+ .../DVDInputStreams/InputStreamAddon.cpp      |   5 +-
+ .../DVDInputStreams/InputStreamPVRBase.cpp    |  11 +-
+ xbmc/cores/VideoPlayer/DVDStreamInfo.cpp      |  59 ++++------
+ xbmc/cores/VideoPlayer/DVDStreamInfo.h        |   3 +-
+ xbmc/cores/VideoPlayer/VideoPlayerVideo.cpp   |   2 +-
+ xbmc/utils/BitstreamConverter.cpp             |  51 ++++-----
+ xbmc/utils/BitstreamConverter.h               |   8 +-
+ 23 files changed, 261 insertions(+), 203 deletions(-)
+
+diff --git a/xbmc/cores/FFmpeg.cpp b/xbmc/cores/FFmpeg.cpp
+index 73b7ea2ae875c..67dbaedaf92a3 100644
+--- a/xbmc/cores/FFmpeg.cpp
++++ b/xbmc/cores/FFmpeg.cpp
+@@ -135,15 +135,78 @@ void ff_avutil_log(void* ptr, int level, const char* format, va_list va)
+   buffer.erase(0, start);
+ }
+ 
+-std::tuple<uint8_t*, int> GetPacketExtradata(const AVPacket* pkt, const AVCodecParameters* codecPar)
++FFmpegExtraData::FFmpegExtraData(size_t size)
++  : m_data(reinterpret_cast<uint8_t*>(av_malloc(size + AV_INPUT_BUFFER_PADDING_SIZE))), m_size(size)
++{
++  if (!m_data)
++    throw std::bad_alloc();
++}
++
++FFmpegExtraData::FFmpegExtraData(const uint8_t* data, size_t size) : FFmpegExtraData(size)
++{
++  std::memcpy(m_data, data, size);
++}
++
++FFmpegExtraData::~FFmpegExtraData()
++{
++  av_free(m_data);
++}
++
++FFmpegExtraData::FFmpegExtraData(const FFmpegExtraData& e) : FFmpegExtraData(e.m_size)
++{
++  std::memcpy(m_data, e.m_data, m_size);
++}
++
++FFmpegExtraData::FFmpegExtraData(FFmpegExtraData&& other) noexcept : FFmpegExtraData()
++{
++  std::swap(m_data, other.m_data);
++  std::swap(m_size, other.m_size);
++}
++
++FFmpegExtraData& FFmpegExtraData::operator=(const FFmpegExtraData& other)
++{
++  if (this != &other)
++  {
++    if (m_size >= other.m_size) // reuse current buffer if large enough
++    {
++      std::memcpy(m_data, other.m_data, other.m_size);
++      m_size = other.m_size;
++    }
++    else
++    {
++      FFmpegExtraData extraData(other);
++      *this = std::move(extraData);
++    }
++  }
++  return *this;
++}
++
++FFmpegExtraData& FFmpegExtraData::operator=(FFmpegExtraData&& other) noexcept
++{
++  if (this != &other)
++  {
++    std::swap(m_data, other.m_data);
++    std::swap(m_size, other.m_size);
++  }
++  return *this;
++}
++
++bool FFmpegExtraData::operator==(const FFmpegExtraData& other) const
++{
++  return m_size == other.m_size && std::memcmp(m_data, other.m_data, m_size) == 0;
++}
++
++bool FFmpegExtraData::operator!=(const FFmpegExtraData& other) const
++{
++  return !(*this == other);
++}
++
++FFmpegExtraData GetPacketExtradata(const AVPacket* pkt, const AVCodecParameters* codecPar)
+ {
+   constexpr int FF_MAX_EXTRADATA_SIZE = ((1 << 28) - AV_INPUT_BUFFER_PADDING_SIZE);
+ 
+   if (!pkt)
+-    return std::make_tuple(nullptr, 0);
+-
+-  uint8_t* extraData = nullptr;
+-  int extraDataSize = 0;
++    return {};
+ 
+   /* extract_extradata bitstream filter is implemented only
+    * for certain codecs, as noted in discussion of PR#21248
+@@ -165,29 +228,29 @@ std::tuple<uint8_t*, int> GetPacketExtradata(const AVPacket* pkt, const AVCodecP
+     codecId != AV_CODEC_ID_CAVS
+   )
+     // clang-format on
+-    return std::make_tuple(nullptr, 0);
++    return {};
+ 
+   const AVBitStreamFilter* f = av_bsf_get_by_name("extract_extradata");
+   if (!f)
+-    return std::make_tuple(nullptr, 0);
++    return {};
+ 
+   AVBSFContext* bsf = nullptr;
+   int ret = av_bsf_alloc(f, &bsf);
+   if (ret < 0)
+-    return std::make_tuple(nullptr, 0);
++    return {};
+ 
+   ret = avcodec_parameters_copy(bsf->par_in, codecPar);
+   if (ret < 0)
+   {
+     av_bsf_free(&bsf);
+-    return std::make_tuple(nullptr, 0);
++    return {};
+   }
+ 
+   ret = av_bsf_init(bsf);
+   if (ret < 0)
+   {
+     av_bsf_free(&bsf);
+-    return std::make_tuple(nullptr, 0);
++    return {};
+   }
+ 
+   AVPacket* dstPkt = av_packet_alloc();
+@@ -196,7 +259,7 @@ std::tuple<uint8_t*, int> GetPacketExtradata(const AVPacket* pkt, const AVCodecP
+     CLog::LogF(LOGERROR, "failed to allocate packet");
+ 
+     av_bsf_free(&bsf);
+-    return std::make_tuple(nullptr, 0);
++    return {};
+   }
+   AVPacket* pktRef = dstPkt;
+ 
+@@ -205,7 +268,7 @@ std::tuple<uint8_t*, int> GetPacketExtradata(const AVPacket* pkt, const AVCodecP
+   {
+     av_bsf_free(&bsf);
+     av_packet_free(&dstPkt);
+-    return std::make_tuple(nullptr, 0);
++    return {};
+   }
+ 
+   ret = av_bsf_send_packet(bsf, pktRef);
+@@ -214,9 +277,10 @@ std::tuple<uint8_t*, int> GetPacketExtradata(const AVPacket* pkt, const AVCodecP
+     av_packet_unref(pktRef);
+     av_bsf_free(&bsf);
+     av_packet_free(&dstPkt);
+-    return std::make_tuple(nullptr, 0);
++    return {};
+   }
+ 
++  FFmpegExtraData extraData;
+   ret = 0;
+   while (ret >= 0)
+   {
+@@ -234,23 +298,22 @@ std::tuple<uint8_t*, int> GetPacketExtradata(const AVPacket* pkt, const AVCodecP
+         av_packet_get_side_data(pktRef, AV_PKT_DATA_NEW_EXTRADATA, &retExtraDataSize);
+     if (retExtraData && retExtraDataSize > 0 && retExtraDataSize < FF_MAX_EXTRADATA_SIZE)
+     {
+-      extraData = static_cast<uint8_t*>(av_malloc(retExtraDataSize + AV_INPUT_BUFFER_PADDING_SIZE));
+-      if (!extraData)
++      try
++      {
++        extraData = FFmpegExtraData(retExtraData, retExtraDataSize);
++      }
++      catch (const std::bad_alloc&)
+       {
+         CLog::LogF(LOGERROR, "failed to allocate {} bytes for extradata", retExtraDataSize);
+ 
+         av_packet_unref(pktRef);
+         av_bsf_free(&bsf);
+         av_packet_free(&dstPkt);
+-        return std::make_tuple(nullptr, 0);
++        return {};
+       }
+ 
+       CLog::LogF(LOGDEBUG, "fetching extradata, extradata_size({})", retExtraDataSize);
+ 
+-      memcpy(extraData, retExtraData, retExtraDataSize);
+-      memset(extraData + retExtraDataSize, 0, AV_INPUT_BUFFER_PADDING_SIZE);
+-      extraDataSize = retExtraDataSize;
+-
+       av_packet_unref(pktRef);
+       break;
+     }
+@@ -261,5 +324,5 @@ std::tuple<uint8_t*, int> GetPacketExtradata(const AVPacket* pkt, const AVCodecP
+   av_bsf_free(&bsf);
+   av_packet_free(&dstPkt);
+ 
+-  return std::make_tuple(extraData, extraDataSize);
++  return extraData;
+ }
+diff --git a/xbmc/cores/FFmpeg.h b/xbmc/cores/FFmpeg.h
+index 5e35d58c6b0a6..9f99389a2c3e3 100644
+--- a/xbmc/cores/FFmpeg.h
++++ b/xbmc/cores/FFmpeg.h
+@@ -72,5 +72,31 @@ class CFFmpegLog
+   int level;
+ };
+ 
+-std::tuple<uint8_t*, int> GetPacketExtradata(const AVPacket* pkt,
+-                                             const AVCodecParameters* codecPar);
++class FFmpegExtraData
++{
++public:
++  FFmpegExtraData() = default;
++  explicit FFmpegExtraData(size_t size);
++  FFmpegExtraData(const uint8_t* data, size_t size);
++  FFmpegExtraData(const FFmpegExtraData& other);
++  FFmpegExtraData(FFmpegExtraData&& other) noexcept;
++
++  ~FFmpegExtraData();
++
++  FFmpegExtraData& operator=(const FFmpegExtraData& other);
++  FFmpegExtraData& operator=(FFmpegExtraData&& other) noexcept;
++
++  bool operator==(const FFmpegExtraData& other) const;
++  bool operator!=(const FFmpegExtraData& other) const;
++
++  operator bool() const { return m_data != nullptr && m_size != 0; }
++  uint8_t* GetData() { return m_data; }
++  const uint8_t* GetData() const { return m_data; }
++  size_t GetSize() const { return m_size; }
++
++private:
++  uint8_t* m_data{nullptr};
++  size_t m_size{};
++};
++
++FFmpegExtraData GetPacketExtradata(const AVPacket* pkt, const AVCodecParameters* codecPar);
+diff --git a/xbmc/cores/VideoPlayer/DVDCodecs/Audio/DVDAudioCodecAndroidMediaCodec.cpp b/xbmc/cores/VideoPlayer/DVDCodecs/Audio/DVDAudioCodecAndroidMediaCodec.cpp
+index 5c2ee81af8be3..30aca1c8d3de6 100644
+--- a/xbmc/cores/VideoPlayer/DVDCodecs/Audio/DVDAudioCodecAndroidMediaCodec.cpp
++++ b/xbmc/cores/VideoPlayer/DVDCodecs/Audio/DVDAudioCodecAndroidMediaCodec.cpp
+@@ -109,7 +109,7 @@ bool CDVDAudioCodecAndroidMediaCodec::Open(CDVDStreamInfo &hints, CDVDCodecOptio
+ 
+   CLog::Log(LOGDEBUG,
+             "CDVDAudioCodecAndroidMediaCodec::Open codec({}), profile({}), tag({}), extrasize({})",
+-            hints.codec, hints.profile, hints.codec_tag, hints.extrasize);
++            hints.codec, hints.profile, hints.codec_tag, hints.extradata.GetSize());
+ 
+   // First check if passthrough decoder is supported
+   CAEStreamInfo::DataType ptStreamType = CAEStreamInfo::STREAM_TYPE_NULL;
+@@ -132,7 +132,7 @@ bool CDVDAudioCodecAndroidMediaCodec::Open(CDVDStreamInfo &hints, CDVDCodecOptio
+   {
+     case AV_CODEC_ID_AAC:
+     case AV_CODEC_ID_AAC_LATM:
+-      if (!m_hints.extrasize)
++      if (!m_hints.extradata)
+       {
+         CLog::Log(LOGINFO, "CDVDAudioCodecAndroidMediaCodec: extradata required for aac decoder!");
+         return false;
+@@ -529,10 +529,10 @@ bool CDVDAudioCodecAndroidMediaCodec::ConfigureMediaCodec(void)
+   if (!m_decryptCodec)
+   {
+     // handle codec extradata
+-    if (m_hints.extrasize)
++    if (m_hints.extradata)
+     {
+-      size_t size = m_hints.extrasize;
+-      void  *src_ptr = m_hints.extradata;
++      size_t size = m_hints.extradata.GetSize();
++      void* src_ptr = m_hints.extradata.GetData();
+       // Allocate a byte buffer via allocateDirect in java instead of NewDirectByteBuffer,
+       // since the latter doesn't allocate storage of its own, and we don't know how long
+       // the codec uses the buffer.
+diff --git a/xbmc/cores/VideoPlayer/DVDCodecs/Audio/DVDAudioCodecFFmpeg.cpp b/xbmc/cores/VideoPlayer/DVDCodecs/Audio/DVDAudioCodecFFmpeg.cpp
+index d1fb2cfe96afc..cbc806030dc19 100644
+--- a/xbmc/cores/VideoPlayer/DVDCodecs/Audio/DVDAudioCodecFFmpeg.cpp
++++ b/xbmc/cores/VideoPlayer/DVDCodecs/Audio/DVDAudioCodecFFmpeg.cpp
+@@ -103,13 +103,14 @@ bool CDVDAudioCodecFFmpeg::Open(CDVDStreamInfo &hints, CDVDCodecOptions &options
+   if(m_pCodecContext->bits_per_coded_sample == 0)
+     m_pCodecContext->bits_per_coded_sample = 16;
+ 
+-  if( hints.extradata && hints.extrasize > 0 )
++  if (hints.extradata)
+   {
+-    m_pCodecContext->extradata = (uint8_t*)av_mallocz(hints.extrasize + AV_INPUT_BUFFER_PADDING_SIZE);
++    m_pCodecContext->extradata =
++        (uint8_t*)av_mallocz(hints.extradata.GetSize() + AV_INPUT_BUFFER_PADDING_SIZE);
+     if(m_pCodecContext->extradata)
+     {
+-      m_pCodecContext->extradata_size = hints.extrasize;
+-      memcpy(m_pCodecContext->extradata, hints.extradata, hints.extrasize);
++      m_pCodecContext->extradata_size = hints.extradata.GetSize();
++      memcpy(m_pCodecContext->extradata, hints.extradata.GetData(), hints.extradata.GetSize());
+     }
+   }
+ 
+diff --git a/xbmc/cores/VideoPlayer/DVDCodecs/Overlay/DVDOverlayCodecFFmpeg.cpp b/xbmc/cores/VideoPlayer/DVDCodecs/Overlay/DVDOverlayCodecFFmpeg.cpp
+index 5c74c50229d83..3eb85be4eec7d 100644
+--- a/xbmc/cores/VideoPlayer/DVDCodecs/Overlay/DVDOverlayCodecFFmpeg.cpp
++++ b/xbmc/cores/VideoPlayer/DVDCodecs/Overlay/DVDOverlayCodecFFmpeg.cpp
+@@ -60,16 +60,17 @@ bool CDVDOverlayCodecFFmpeg::Open(CDVDStreamInfo &hints, CDVDCodecOptions &optio
+   m_pCodecContext->pkt_timebase.num = 1;
+   m_pCodecContext->pkt_timebase.den = DVD_TIME_BASE;
+ 
+-  if( hints.extradata && hints.extrasize > 0 )
++  if (hints.extradata)
+   {
+-    m_pCodecContext->extradata_size = hints.extrasize;
+-    m_pCodecContext->extradata = (uint8_t*)av_mallocz(hints.extrasize + AV_INPUT_BUFFER_PADDING_SIZE);
+-    memcpy(m_pCodecContext->extradata, hints.extradata, hints.extrasize);
++    m_pCodecContext->extradata_size = hints.extradata.GetSize();
++    m_pCodecContext->extradata =
++        (uint8_t*)av_mallocz(hints.extradata.GetSize() + AV_INPUT_BUFFER_PADDING_SIZE);
++    memcpy(m_pCodecContext->extradata, hints.extradata.GetData(), hints.extradata.GetSize());
+ 
+     // start parsing of extra data - create a copy to be safe and make it zero-terminating to avoid access violations!
+-    unsigned int parse_extrasize = hints.extrasize;
++    unsigned int parse_extrasize = hints.extradata.GetSize();
+     char* parse_extra = new char[parse_extrasize + 1];
+-    memcpy(parse_extra, hints.extradata, parse_extrasize);
++    memcpy(parse_extra, hints.extradata.GetData(), parse_extrasize);
+     parse_extra[parse_extrasize] = '\0';
+ 
+     // assume that the extra data is formatted as a concatenation of lines ('\n' terminated)
+diff --git a/xbmc/cores/VideoPlayer/DVDCodecs/Overlay/DVDOverlayCodecSSA.cpp b/xbmc/cores/VideoPlayer/DVDCodecs/Overlay/DVDOverlayCodecSSA.cpp
+index 82c1c76dd5564..33e0c7bcc83d4 100644
+--- a/xbmc/cores/VideoPlayer/DVDCodecs/Overlay/DVDOverlayCodecSSA.cpp
++++ b/xbmc/cores/VideoPlayer/DVDCodecs/Overlay/DVDOverlayCodecSSA.cpp
+@@ -38,7 +38,8 @@ bool CDVDOverlayCodecSSA::Open(CDVDStreamInfo& hints, CDVDCodecOptions& options)
+ 
+   m_pOverlay.reset();
+ 
+-  return m_libass->DecodeHeader(static_cast<char*>(hints.extradata), hints.extrasize);
++  return m_libass->DecodeHeader(reinterpret_cast<char*>(hints.extradata.GetData()),
++                                hints.extradata.GetSize());
+ }
+ 
+ OverlayMessage CDVDOverlayCodecSSA::Decode(DemuxPacket* pPacket)
+diff --git a/xbmc/cores/VideoPlayer/DVDCodecs/Overlay/OverlayCodecWebVTT.cpp b/xbmc/cores/VideoPlayer/DVDCodecs/Overlay/OverlayCodecWebVTT.cpp
+index e33ab1dad503e..d1c03af8d4851 100644
+--- a/xbmc/cores/VideoPlayer/DVDCodecs/Overlay/OverlayCodecWebVTT.cpp
++++ b/xbmc/cores/VideoPlayer/DVDCodecs/Overlay/OverlayCodecWebVTT.cpp
+@@ -39,7 +39,8 @@ bool COverlayCodecWebVTT::Open(CDVDStreamInfo& hints, CDVDCodecOptions& options)
+   // Extradata can be provided by Inputstream addons (e.g. inputstream.adaptive)
+   if (hints.extradata)
+   {
+-    std::string extradata{static_cast<char*>(hints.extradata), hints.extrasize};
++    std::string extradata{reinterpret_cast<char*>(hints.extradata.GetData()),
++                          hints.extradata.GetSize()};
+     if (extradata == "file")
+     {
+       // WebVTT data like single file are sent one time only,
+diff --git a/xbmc/cores/VideoPlayer/DVDCodecs/Video/AddonVideoCodec.cpp b/xbmc/cores/VideoPlayer/DVDCodecs/Video/AddonVideoCodec.cpp
+index 07b2d1b3ccf8d..daf64ea67ac43 100644
+--- a/xbmc/cores/VideoPlayer/DVDCodecs/Video/AddonVideoCodec.cpp
++++ b/xbmc/cores/VideoPlayer/DVDCodecs/Video/AddonVideoCodec.cpp
+@@ -231,8 +231,8 @@ bool CAddonVideoCodec::CopyToInitData(VIDEOCODEC_INITDATA &initData, CDVDStreamI
+             sizeof(initData.cryptoSession.sessionId) - 1);
+   }
+ 
+-  initData.extraData = reinterpret_cast<const uint8_t*>(hints.extradata);
+-  initData.extraDataSize = hints.extrasize;
++  initData.extraData = hints.extradata.GetData();
++  initData.extraDataSize = hints.extradata.GetSize();
+   initData.width = hints.width;
+   initData.height = hints.height;
+   initData.videoFormats = m_formats;
+diff --git a/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecAndroidMediaCodec.cpp b/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecAndroidMediaCodec.cpp
+index ede663ebe917b..8cc2431498ad2 100644
+--- a/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecAndroidMediaCodec.cpp
++++ b/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecAndroidMediaCodec.cpp
+@@ -387,7 +387,7 @@ bool CDVDVideoCodecAndroidMediaCodec::Open(CDVDStreamInfo &hints, CDVDCodecOptio
+       "CDVDVideoCodecAndroidMediaCodec::Open hints: Width {} x Height {}, Fpsrate {} / Fpsscale "
+       "{}, CodecID {}, Level {}, Profile {}, PTS_invalid {}, Tag {}, Extradata-Size: {}",
+       hints.width, hints.height, hints.fpsrate, hints.fpsscale, hints.codec, hints.level,
+-      hints.profile, hints.ptsinvalid, hints.codec_tag, hints.extrasize);
++      hints.profile, hints.ptsinvalid, hints.codec_tag, hints.extradata.GetSize());
+ 
+   m_render_surface = CServiceBroker::GetSettingsComponent()->GetSettings()->GetBool(CSettings::SETTING_VIDEOPLAYER_USEMEDIACODECSURFACE);
+   m_state = MEDIACODEC_STATE_UNINITIALIZED;
+@@ -447,9 +447,7 @@ bool CDVDVideoCodecAndroidMediaCodec::Open(CDVDStreamInfo &hints, CDVDCodecOptio
+       }
+       m_mime = "video/x-vnd.on2.vp9";
+       m_formatname = "amc-vp9";
+-      free(m_hints.extradata);
+-      m_hints.extradata = nullptr;
+-      m_hints.extrasize = 0;
++      m_hints.extradata = {};
+       break;
+     case AV_CODEC_ID_AVS:
+     case AV_CODEC_ID_CAVS:
+@@ -493,7 +491,8 @@ bool CDVDVideoCodecAndroidMediaCodec::Open(CDVDStreamInfo &hints, CDVDCodecOptio
+       if (m_hints.extradata && !m_hints.cryptoSession)
+       {
+         m_bitstream = std::make_unique<CBitstreamConverter>();
+-        if (!m_bitstream->Open(m_hints.codec, (uint8_t*)m_hints.extradata, m_hints.extrasize, true))
++        if (!m_bitstream->Open(m_hints.codec, m_hints.extradata.GetData(),
++                               m_hints.extradata.GetSize(), true))
+         {
+           m_bitstream.reset();
+         }
+@@ -564,7 +563,8 @@ bool CDVDVideoCodecAndroidMediaCodec::Open(CDVDStreamInfo &hints, CDVDCodecOptio
+       if (m_hints.extradata && !m_hints.cryptoSession)
+       {
+         m_bitstream = std::make_unique<CBitstreamConverter>();
+-        if (!m_bitstream->Open(m_hints.codec, (uint8_t*)m_hints.extradata, m_hints.extrasize, true))
++        if (!m_bitstream->Open(m_hints.codec, m_hints.extradata.GetData(),
++                               m_hints.extradata.GetSize(), true))
+         {
+           m_bitstream.reset();
+         }
+@@ -572,28 +572,26 @@ bool CDVDVideoCodecAndroidMediaCodec::Open(CDVDStreamInfo &hints, CDVDCodecOptio
+       break;
+     }
+     case AV_CODEC_ID_WMV3:
+-      if (m_hints.extrasize == 4 || m_hints.extrasize == 5)
++      if (m_hints.extradata.GetSize() == 4 || m_hints.extradata.GetSize() == 5)
+       {
+         // Convert to SMPTE 421M-2006 Annex-L
+         static uint8_t annexL_hdr1[] = {0x8e, 0x01, 0x00, 0xc5, 0x04, 0x00, 0x00, 0x00};
+         static uint8_t annexL_hdr2[] = {0x0c, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+-        free(m_hints.extradata);
+-        m_hints.extrasize = 36;
+-        m_hints.extradata = malloc(m_hints.extrasize);
++        m_hints.extradata = FFmpegExtraData(36);
+ 
+         unsigned int offset = 0;
+         char buf[4];
+-        memcpy(m_hints.extradata, annexL_hdr1, sizeof(annexL_hdr1));
++        memcpy(m_hints.extradata.GetData(), annexL_hdr1, sizeof(annexL_hdr1));
+         offset += sizeof(annexL_hdr1);
+-        memcpy(&((char *)(m_hints.extradata))[offset], hints.extradata, 4);
++        memcpy(m_hints.extradata.GetData() + offset, hints.extradata.GetData(), 4);
+         offset += 4;
+         BS_WL32(buf, hints.height);
+-        memcpy(&((char *)(m_hints.extradata))[offset], buf, 4);
++        memcpy(m_hints.extradata.GetData() + offset, buf, 4);
+         offset += 4;
+         BS_WL32(buf, hints.width);
+-        memcpy(&((char *)(m_hints.extradata))[offset], buf, 4);
++        memcpy(m_hints.extradata.GetData() + offset, buf, 4);
+         offset += 4;
+-        memcpy(&((char *)(m_hints.extradata))[offset], annexL_hdr2, sizeof(annexL_hdr2));
++        memcpy(m_hints.extradata.GetData() + offset, annexL_hdr2, sizeof(annexL_hdr2));
+       }
+ 
+       m_mime = "video/x-ms-wmv";
+@@ -601,26 +599,24 @@ bool CDVDVideoCodecAndroidMediaCodec::Open(CDVDStreamInfo &hints, CDVDCodecOptio
+       break;
+     case AV_CODEC_ID_VC1:
+     {
+-      if (m_hints.extrasize < 16)
++      if (m_hints.extradata.GetSize() < 16)
+         goto FAIL;
+ 
+       // Reduce extradata to first SEQ header
+       unsigned int seq_offset = 0;
+-      for (; seq_offset <= m_hints.extrasize-4; ++seq_offset)
++      for (; seq_offset <= m_hints.extradata.GetSize() - 4; ++seq_offset)
+       {
+-        char *ptr = &((char*)m_hints.extradata)[seq_offset];
++        const uint8_t* ptr = m_hints.extradata.GetData() + seq_offset;
+         if (ptr[0] == 0x00 && ptr[1] == 0x00 && ptr[2] == 0x01 && ptr[3] == 0x0f)
+           break;
+       }
+-      if (seq_offset > m_hints.extrasize-4)
++      if (seq_offset > m_hints.extradata.GetSize() - 4)
+         goto FAIL;
+ 
+       if (seq_offset)
+       {
+-        free(m_hints.extradata);
+-        m_hints.extrasize -= seq_offset;
+-        m_hints.extradata = malloc(m_hints.extrasize);
+-        memcpy(m_hints.extradata, &((char *)(hints.extradata))[seq_offset], m_hints.extrasize);
++        hints.extradata = FFmpegExtraData(hints.extradata.GetData() + seq_offset,
++                                          hints.extradata.GetSize() - seq_offset);
+       }
+ 
+       m_mime = "video/wvc1";
+@@ -643,9 +639,7 @@ bool CDVDVideoCodecAndroidMediaCodec::Open(CDVDStreamInfo &hints, CDVDCodecOptio
+       }
+       m_mime = "video/av01";
+       m_formatname = "amc-av1";
+-      free(m_hints.extradata);
+-      m_hints.extradata = nullptr;
+-      m_hints.extrasize = 0;
++      m_hints.extradata = {};
+       break;
+     }
+     default:
+@@ -1314,12 +1308,12 @@ void CDVDVideoCodecAndroidMediaCodec::SignalEndOfStream()
+ 
+ void CDVDVideoCodecAndroidMediaCodec::InjectExtraData(CJNIMediaFormat& mediaformat)
+ {
+-  if (!m_hints.extrasize)
++  if (!m_hints.extradata)
+     return;
+ 
+   CLog::Log(LOGDEBUG, "CDVDVideoCodecAndroidMediaCodec::{}", __func__);
+-  size_t size = m_hints.extrasize;
+-  void* src_ptr = m_hints.extradata;
++  size_t size = m_hints.extradata.GetSize();
++  void* src_ptr = m_hints.extradata.GetData();
+   if (m_bitstream)
+   {
+     size = m_bitstream->GetExtraSize();
+diff --git a/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecDRMPRIME.cpp b/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecDRMPRIME.cpp
+index ab65c4ecd44aa..eb2943bb8ccb9 100644
+--- a/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecDRMPRIME.cpp
++++ b/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecDRMPRIME.cpp
+@@ -351,12 +351,15 @@ bool CDVDVideoCodecDRMPRIME::Open(CDVDStreamInfo& hints, CDVDCodecOptions& optio
+   m_pCodecContext->time_base.den = DVD_TIME_BASE;
+   m_pCodecContext->thread_count = CServiceBroker::GetCPUInfo()->GetCPUCount();
+ 
+-  if (hints.extradata && hints.extrasize > 0)
++  if (hints.extradata)
+   {
+-    m_pCodecContext->extradata_size = hints.extrasize;
+     m_pCodecContext->extradata =
+-        static_cast<uint8_t*>(av_mallocz(hints.extrasize + AV_INPUT_BUFFER_PADDING_SIZE));
+-    memcpy(m_pCodecContext->extradata, hints.extradata, hints.extrasize);
++        static_cast<uint8_t*>(av_mallocz(hints.extradata.GetSize() + AV_INPUT_BUFFER_PADDING_SIZE));
++    if (m_pCodecContext->extradata)
++    {
++      m_pCodecContext->extradata_size = hints.extradata.GetSize();
++      memcpy(m_pCodecContext->extradata, hints.extradata.GetData(), hints.extradata.GetSize());
++    }
+   }
+ 
+   for (auto&& option : options.m_keys)
+diff --git a/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecFFmpeg.cpp b/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecFFmpeg.cpp
+index c775281791719..032ee16454492 100644
+--- a/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecFFmpeg.cpp
++++ b/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecFFmpeg.cpp
+@@ -400,11 +400,15 @@ bool CDVDVideoCodecFFmpeg::Open(CDVDStreamInfo &hints, CDVDCodecOptions &options
+   m_pCodecContext->bits_per_coded_sample = hints.bitsperpixel;
+   m_pCodecContext->bits_per_raw_sample = hints.bitdepth;
+ 
+-  if( hints.extradata && hints.extrasize > 0 )
++  if (hints.extradata)
+   {
+-    m_pCodecContext->extradata_size = hints.extrasize;
+-    m_pCodecContext->extradata = (uint8_t*)av_mallocz(hints.extrasize + AV_INPUT_BUFFER_PADDING_SIZE);
+-    memcpy(m_pCodecContext->extradata, hints.extradata, hints.extrasize);
++    m_pCodecContext->extradata =
++        (uint8_t*)av_mallocz(hints.extradata.GetSize() + AV_INPUT_BUFFER_PADDING_SIZE);
++    if (m_pCodecContext->extradata)
++    {
++      m_pCodecContext->extradata_size = hints.extradata.GetSize();
++      memcpy(m_pCodecContext->extradata, hints.extradata.GetData(), hints.extradata.GetSize());
++    }
+   }
+ 
+   // advanced setting override for skip loop filter (see avcodec.h for valid options)
+diff --git a/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecStarfish.cpp b/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecStarfish.cpp
+index fcdc441205958..dbf91ea5a54dd 100644
+--- a/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecStarfish.cpp
++++ b/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecStarfish.cpp
+@@ -93,7 +93,7 @@ bool CDVDVideoCodecStarfish::OpenInternal(CDVDStreamInfo& hints, CDVDCodecOption
+              "CDVDVideoCodecStarfish: hints: Width {} x Height {}, Fpsrate {} / Fpsscale {}, "
+              "CodecID {}, Level {}, Profile {}, PTS_invalid {}, Tag {}, Extradata-Size: {}",
+              hints.width, hints.height, hints.fpsrate, hints.fpsscale, hints.codec, hints.level,
+-             hints.profile, hints.ptsinvalid, hints.codec_tag, hints.extrasize);
++             hints.profile, hints.ptsinvalid, hints.codec_tag, hints.extradata.GetSize());
+ 
+   if (ms_codecMap.find(hints.codec) == ms_codecMap.cend() ||
+       ms_formatInfoMap.find(hints.codec) == ms_formatInfoMap.cend())
+@@ -115,8 +115,8 @@ bool CDVDVideoCodecStarfish::OpenInternal(CDVDStreamInfo& hints, CDVDCodecOption
+       if (m_hints.extradata && !m_hints.cryptoSession)
+       {
+         m_bitstream = std::make_unique<CBitstreamConverter>();
+-        if (!m_bitstream->Open(m_hints.codec, reinterpret_cast<uint8_t*>(m_hints.extradata),
+-                               m_hints.extrasize, true))
++        if (!m_bitstream->Open(m_hints.codec, m_hints.extradata.GetData(),
++                               m_hints.extradata.GetSize(), true))
+         {
+           m_bitstream.reset();
+         }
+@@ -153,8 +153,8 @@ bool CDVDVideoCodecStarfish::OpenInternal(CDVDStreamInfo& hints, CDVDCodecOption
+       if (m_hints.extradata && !m_hints.cryptoSession)
+       {
+         m_bitstream = std::make_unique<CBitstreamConverter>();
+-        if (!m_bitstream->Open(m_hints.codec, reinterpret_cast<uint8_t*>(m_hints.extradata),
+-                               m_hints.extrasize, true))
++        if (!m_bitstream->Open(m_hints.codec, m_hints.extradata.GetData(),
++                               m_hints.extradata.GetSize(), true))
+         {
+           m_bitstream.reset();
+         }
+diff --git a/xbmc/cores/VideoPlayer/DVDDemuxers/DVDDemux.h b/xbmc/cores/VideoPlayer/DVDDemuxers/DVDDemux.h
+index aeb6839177e71..af5ff8e513dae 100644
+--- a/xbmc/cores/VideoPlayer/DVDDemuxers/DVDDemux.h
++++ b/xbmc/cores/VideoPlayer/DVDDemuxers/DVDDemux.h
+@@ -9,6 +9,7 @@
+ #pragma once
+ 
+ #include "Interface/StreamInfo.h"
++#include "cores/FFmpeg.h"
+ 
+ #include <memory>
+ #include <string>
+@@ -83,7 +84,6 @@ class CDemuxStream
+     source = STREAM_SOURCE_NONE;
+     iDuration = 0;
+     pPrivate = NULL;
+-    ExtraSize = 0;
+     disabled = false;
+     changes = 0;
+     flags = StreamFlags::FLAG_NONE;
+@@ -106,8 +106,7 @@ class CDemuxStream
+ 
+   int iDuration; // in mseconds
+   void* pPrivate; // private pointer for the demuxer
+-  std::unique_ptr<uint8_t[]> ExtraData; // extra data for codec to use
+-  unsigned int ExtraSize; // size of extra data
++  FFmpegExtraData extraData;
+ 
+   StreamFlags flags;
+   std::string language; // RFC 5646 language code (empty string if undefined)
+diff --git a/xbmc/cores/VideoPlayer/DVDDemuxers/DVDDemuxClient.cpp b/xbmc/cores/VideoPlayer/DVDDemuxers/DVDDemuxClient.cpp
+index 2a42244b62b68..e6986467fa8b8 100644
+--- a/xbmc/cores/VideoPlayer/DVDDemuxers/DVDDemuxClient.cpp
++++ b/xbmc/cores/VideoPlayer/DVDDemuxers/DVDDemuxClient.cpp
+@@ -121,7 +121,7 @@ bool CDVDDemuxClient::ParsePacket(DemuxPacket* pkt)
+   bool change = false;
+ 
+   CDemuxStream* st = GetStream(pkt->iStreamId);
+-  if (st == nullptr || st->changes < 0 || st->ExtraSize || !CodecHasExtraData(st->codec))
++  if (st == nullptr || st->changes < 0 || st->extraData || !CodecHasExtraData(st->codec))
+     return change;
+ 
+   CDemuxStreamClientInternal* stream = dynamic_cast<CDemuxStreamClientInternal*>(st);
+@@ -174,13 +174,12 @@ bool CDVDDemuxClient::ParsePacket(DemuxPacket* pkt)
+       return false;
+     }
+ 
+-    auto [retExtraData, len] = GetPacketExtradata(avpkt, codecPar.get());
+-    if (len > 0)
++    FFmpegExtraData retExtraData = GetPacketExtradata(avpkt, codecPar.get());
++    if (retExtraData)
+     {
+       st->changes++;
+       st->disabled = false;
+-      st->ExtraSize = len;
+-      st->ExtraData = std::unique_ptr<uint8_t[]>(retExtraData);
++      st->extraData = std::move(retExtraData);
+       stream->m_parser_split = false;
+       change = true;
+       CLog::Log(LOGDEBUG, "CDVDDemuxClient::ParsePacket - split extradata");
+@@ -444,12 +443,9 @@ void CDVDDemuxClient::SetStreamProps(CDemuxStream *stream, std::map<int, std::sh
+     streamAudio->iBlockAlign     = source->iBlockAlign;
+     streamAudio->iBitRate        = source->iBitRate;
+     streamAudio->iBitsPerSample  = source->iBitsPerSample;
+-    if (source->ExtraSize > 0 && source->ExtraData)
++    if (source->extraData)
+     {
+-      streamAudio->ExtraData = std::make_unique<uint8_t[]>(source->ExtraSize);
+-      streamAudio->ExtraSize = source->ExtraSize;
+-      for (unsigned int j=0; j<source->ExtraSize; j++)
+-        streamAudio->ExtraData[j] = source->ExtraData[j];
++      streamAudio->extraData = source->extraData;
+     }
+     streamAudio->m_parser_split = true;
+     streamAudio->changes++;
+@@ -484,12 +480,9 @@ void CDVDDemuxClient::SetStreamProps(CDemuxStream *stream, std::map<int, std::sh
+       streamVideo->iFpsRate = source->iFpsRate;
+     }
+     streamVideo->iBitRate = source->iBitRate;
+-    if (source->ExtraSize > 0 && source->ExtraData)
++    if (source->extraData)
+     {
+-      streamVideo->ExtraData = std::make_unique<uint8_t[]>(source->ExtraSize);
+-      streamVideo->ExtraSize = source->ExtraSize;
+-      for (unsigned int j=0; j<source->ExtraSize; j++)
+-        streamVideo->ExtraData[j] = source->ExtraData[j];
++      streamVideo->extraData = source->extraData;
+     }
+     streamVideo->colorPrimaries = source->colorPrimaries;
+     streamVideo->colorRange = source->colorRange;
+@@ -526,12 +519,9 @@ void CDVDDemuxClient::SetStreamProps(CDemuxStream *stream, std::map<int, std::sh
+         streamSubtitle->m_parser->flags |= PARSER_FLAG_COMPLETE_FRAMES;
+     }
+ 
+-    if (source->ExtraSize == 4)
++    if (source->extraData.GetSize() == 4)
+     {
+-      streamSubtitle->ExtraData = std::make_unique<uint8_t[]>(4);
+-      streamSubtitle->ExtraSize = 4;
+-      for (int j=0; j<4; j++)
+-        streamSubtitle->ExtraData[j] = source->ExtraData[j];
++      streamSubtitle->extraData = source->extraData;
+     }
+     map[stream->uniqueId] = streamSubtitle;
+     toStream = streamSubtitle;
+@@ -656,10 +646,8 @@ bool CDVDDemuxClient::IsVideoReady()
+ {
+   for (const auto& stream : m_streams)
+   {
+-    if (stream.first == m_videoStreamPlaying &&
+-        stream.second->type == STREAM_VIDEO &&
+-        CodecHasExtraData(stream.second->codec) &&
+-        stream.second->ExtraData == nullptr)
++    if (stream.first == m_videoStreamPlaying && stream.second->type == STREAM_VIDEO &&
++        CodecHasExtraData(stream.second->codec) && !stream.second->extraData)
+       return false;
+   }
+   return true;
+diff --git a/xbmc/cores/VideoPlayer/DVDDemuxers/DVDDemuxFFmpeg.cpp b/xbmc/cores/VideoPlayer/DVDDemuxers/DVDDemuxFFmpeg.cpp
+index 9e696cfc8ff8b..4847cdde2900a 100644
+--- a/xbmc/cores/VideoPlayer/DVDDemuxers/DVDDemuxFFmpeg.cpp
++++ b/xbmc/cores/VideoPlayer/DVDDemuxers/DVDDemuxFFmpeg.cpp
+@@ -1881,10 +1881,8 @@ CDemuxStream* CDVDDemuxFFmpeg::AddStream(int streamIdx)
+ 
+     if (stream->type != STREAM_NONE && pStream->codecpar->extradata && pStream->codecpar->extradata_size > 0)
+     {
+-      stream->ExtraSize = pStream->codecpar->extradata_size;
+-      stream->ExtraData = std::make_unique<uint8_t[]>(pStream->codecpar->extradata_size);
+-      memcpy(stream->ExtraData.get(), pStream->codecpar->extradata,
+-             pStream->codecpar->extradata_size);
++      stream->extraData =
++          FFmpegExtraData(pStream->codecpar->extradata, pStream->codecpar->extradata_size);
+     }
+ 
+ #ifdef HAVE_LIBBLURAY
+@@ -2166,7 +2164,8 @@ bool CDVDDemuxFFmpeg::IsProgramChange()
+         return true;
+       }
+     }
+-    if (m_pFormatContext->streams[idx]->codecpar->extradata_size != static_cast<int>(stream->ExtraSize))
++    if (m_pFormatContext->streams[idx]->codecpar->extradata_size !=
++        static_cast<int>(stream->extraData.GetSize()))
+       return true;
+   }
+   return false;
+@@ -2299,11 +2298,11 @@ void CDVDDemuxFFmpeg::ParsePacket(AVPacket* pkt)
+         parser->second->m_parserCtx->parser &&
+         !st->codecpar->extradata)
+     {
+-      auto [retExtraData, i] = GetPacketExtradata(pkt, st->codecpar);
+-      if (i > 0)
++      FFmpegExtraData retExtraData = GetPacketExtradata(pkt, st->codecpar);
++      if (retExtraData)
+       {
+-        st->codecpar->extradata_size = i;
+-        st->codecpar->extradata = retExtraData;
++        st->codecpar->extradata_size = retExtraData.GetSize();
++        st->codecpar->extradata = retExtraData.GetData();
+ 
+         if (parser->second->m_parserCtx->parser->parser_parse)
+         {
+diff --git a/xbmc/cores/VideoPlayer/DVDDemuxers/DVDDemuxVobsub.cpp b/xbmc/cores/VideoPlayer/DVDDemuxers/DVDDemuxVobsub.cpp
+index 5c7ef1bb907c7..ba02a306e5489 100644
+--- a/xbmc/cores/VideoPlayer/DVDDemuxers/DVDDemuxVobsub.cpp
++++ b/xbmc/cores/VideoPlayer/DVDDemuxers/DVDDemuxVobsub.cpp
+@@ -113,9 +113,8 @@ bool CDVDDemuxVobsub::Open(const std::string& filename, int source, const std::s
+ 
+   for(unsigned i=0;i<m_Streams.size();i++)
+   {
+-    m_Streams[i]->ExtraSize = state.extra.length()+1;
+-    m_Streams[i]->ExtraData = std::make_unique<uint8_t[]>(m_Streams[i]->ExtraSize);
+-    strcpy((char*)m_Streams[i]->ExtraData.get(), state.extra.c_str());
++    m_Streams[i]->extraData =
++        FFmpegExtraData(reinterpret_cast<uint8_t*>(state.extra.data()), state.extra.length() + 1);
+   }
+ 
+   return true;
+diff --git a/xbmc/cores/VideoPlayer/DVDInputStreams/InputStreamAddon.cpp b/xbmc/cores/VideoPlayer/DVDInputStreams/InputStreamAddon.cpp
+index 2ca5d01b2b053..f5bfe16264b2a 100644
+--- a/xbmc/cores/VideoPlayer/DVDInputStreams/InputStreamAddon.cpp
++++ b/xbmc/cores/VideoPlayer/DVDInputStreams/InputStreamAddon.cpp
+@@ -531,10 +531,7 @@ KODI_HANDLE CInputStreamAddon::cb_get_stream_transfer(KODI_HANDLE handle,
+ 
+   if (stream->m_ExtraData && stream->m_ExtraSize)
+   {
+-    demuxStream->ExtraData = std::make_unique<uint8_t[]>(stream->m_ExtraSize);
+-    demuxStream->ExtraSize = stream->m_ExtraSize;
+-    for (unsigned int j = 0; j < stream->m_ExtraSize; ++j)
+-      demuxStream->ExtraData[j] = stream->m_ExtraData[j];
++    demuxStream->extraData = FFmpegExtraData(stream->m_ExtraData, stream->m_ExtraSize);
+   }
+ 
+   if (stream->m_cryptoSession.keySystem != STREAM_CRYPTO_KEY_SYSTEM_NONE &&
+diff --git a/xbmc/cores/VideoPlayer/DVDInputStreams/InputStreamPVRBase.cpp b/xbmc/cores/VideoPlayer/DVDInputStreams/InputStreamPVRBase.cpp
+index 03c4bf4de7412..00199b6503e2f 100644
+--- a/xbmc/cores/VideoPlayer/DVDInputStreams/InputStreamPVRBase.cpp
++++ b/xbmc/cores/VideoPlayer/DVDInputStreams/InputStreamPVRBase.cpp
+@@ -322,12 +322,11 @@ void CInputStreamPVRBase::UpdateStreamMap()
+ 
+       if (stream.iSubtitleInfo)
+       {
+-        streamSubtitle->ExtraData = std::make_unique<uint8_t[]>(4);
+-        streamSubtitle->ExtraSize = 4;
+-        streamSubtitle->ExtraData[0] = (stream.iSubtitleInfo >> 8) & 0xff;
+-        streamSubtitle->ExtraData[1] = (stream.iSubtitleInfo >> 0) & 0xff;
+-        streamSubtitle->ExtraData[2] = (stream.iSubtitleInfo >> 24) & 0xff;
+-        streamSubtitle->ExtraData[3] = (stream.iSubtitleInfo >> 16) & 0xff;
++        streamSubtitle->extraData = FFmpegExtraData(4);
++        streamSubtitle->extraData.GetData()[0] = (stream.iSubtitleInfo >> 8) & 0xff;
++        streamSubtitle->extraData.GetData()[1] = (stream.iSubtitleInfo >> 0) & 0xff;
++        streamSubtitle->extraData.GetData()[2] = (stream.iSubtitleInfo >> 24) & 0xff;
++        streamSubtitle->extraData.GetData()[3] = (stream.iSubtitleInfo >> 16) & 0xff;
+       }
+       dStream = streamSubtitle;
+     }
+diff --git a/xbmc/cores/VideoPlayer/DVDStreamInfo.cpp b/xbmc/cores/VideoPlayer/DVDStreamInfo.cpp
+index 696cec5e03d49..f387301e56971 100644
+--- a/xbmc/cores/VideoPlayer/DVDStreamInfo.cpp
++++ b/xbmc/cores/VideoPlayer/DVDStreamInfo.cpp
+@@ -13,18 +13,25 @@
+ 
+ #include <cstring>
+ 
+-CDVDStreamInfo::CDVDStreamInfo()                                                     { extradata = NULL; Clear(); }
+-CDVDStreamInfo::CDVDStreamInfo(const CDVDStreamInfo &right, bool withextradata )     { extradata = NULL; Clear(); Assign(right, withextradata); }
+-CDVDStreamInfo::CDVDStreamInfo(const CDemuxStream &right, bool withextradata )       { extradata = NULL; Clear(); Assign(right, withextradata); }
+-
+-CDVDStreamInfo::~CDVDStreamInfo()
++CDVDStreamInfo::CDVDStreamInfo()
+ {
+-  if( extradata && extrasize ) free(extradata);
+-
+-  extradata = NULL;
+-  extrasize = 0;
++  extradata = {};
++  Clear();
++}
++CDVDStreamInfo::CDVDStreamInfo(const CDVDStreamInfo& right, bool withextradata)
++{
++  extradata = {};
++  Clear();
++  Assign(right, withextradata);
++}
++CDVDStreamInfo::CDVDStreamInfo(const CDemuxStream& right, bool withextradata)
++{
++  extradata = {};
++  Clear();
++  Assign(right, withextradata);
+ }
+ 
++CDVDStreamInfo::~CDVDStreamInfo() = default;
+ 
+ void CDVDStreamInfo::Clear()
+ {
+@@ -38,10 +45,7 @@ void CDVDStreamInfo::Clear()
+   filename.clear();
+   dvd = false;
+ 
+-  if( extradata && extrasize ) free(extradata);
+-
+-  extradata = NULL;
+-  extrasize = 0;
++  extradata = {};
+ 
+   cryptoSession = nullptr;
+   externalInterfaces = nullptr;
+@@ -87,13 +91,9 @@ bool CDVDStreamInfo::Equal(const CDVDStreamInfo& right, int compare)
+       flags != right.flags)
+     return false;
+ 
+-  if (compare & COMPARE_EXTRADATA)
++  if (compare & COMPARE_EXTRADATA && extradata != right.extradata)
+   {
+-    if( extrasize != right.extrasize ) return false;
+-    if( extrasize )
+-    {
+-      if( memcmp(extradata, right.extradata, extrasize) != 0 ) return false;
+-    }
++    return false;
+   }
+ 
+   // VIDEO
+@@ -200,20 +200,13 @@ void CDVDStreamInfo::Assign(const CDVDStreamInfo& right, bool withextradata)
+   filename = right.filename;
+   dvd = right.dvd;
+ 
+-  if( extradata && extrasize ) free(extradata);
+-
+-  if( withextradata && right.extrasize )
++  if (withextradata && right.extradata)
+   {
+-    extrasize = right.extrasize;
+-    extradata = malloc(extrasize);
+-    if (!extradata)
+-      return;
+-    memcpy(extradata, right.extradata, extrasize);
++    extradata = right.extradata;
+   }
+   else
+   {
+-    extrasize = 0;
+-    extradata = 0;
++    extradata = {};
+   }
+ 
+   cryptoSession = right.cryptoSession;
+@@ -270,13 +263,9 @@ void CDVDStreamInfo::Assign(const CDemuxStream& right, bool withextradata)
+   level = right.level;
+   flags = right.flags;
+ 
+-  if (withextradata && right.ExtraSize)
++  if (withextradata && right.extraData)
+   {
+-    extrasize = right.ExtraSize;
+-    extradata = malloc(extrasize);
+-    if (!extradata)
+-      return;
+-    memcpy(extradata, right.ExtraData.get(), extrasize);
++    extradata = right.extraData;
+   }
+ 
+   cryptoSession = right.cryptoSession;
+diff --git a/xbmc/cores/VideoPlayer/DVDStreamInfo.h b/xbmc/cores/VideoPlayer/DVDStreamInfo.h
+index 4acd85737c9e7..b3d0eb6bf4a3b 100644
+--- a/xbmc/cores/VideoPlayer/DVDStreamInfo.h
++++ b/xbmc/cores/VideoPlayer/DVDStreamInfo.h
+@@ -91,8 +91,7 @@ class CDVDStreamInfo
+   // SUBTITLE
+ 
+   // CODEC EXTRADATA
+-  void*        extradata; // extra data for codec to use
+-  unsigned int extrasize; // size of extra data
++  FFmpegExtraData extradata; // extra data for codec to use
+   unsigned int codec_tag; // extra identifier hints for decoding
+ 
+   // Crypto initialization Data
+diff --git a/xbmc/cores/VideoPlayer/VideoPlayerVideo.cpp b/xbmc/cores/VideoPlayer/VideoPlayerVideo.cpp
+index c108091505fb4..ccfca71b7951c 100644
+--- a/xbmc/cores/VideoPlayer/VideoPlayerVideo.cpp
++++ b/xbmc/cores/VideoPlayer/VideoPlayerVideo.cpp
+@@ -103,7 +103,7 @@ bool CVideoPlayerVideo::OpenStream(CDVDStreamInfo hint)
+ {
+   if (hint.flags & AV_DISPOSITION_ATTACHED_PIC)
+     return false;
+-  if (hint.extrasize == 0)
++  if (!hint.extradata)
+   {
+     // codecs which require extradata
+     // clang-format off
+diff --git a/xbmc/utils/BitstreamConverter.cpp b/xbmc/utils/BitstreamConverter.cpp
+index f2224a5457939..1bca7d14d8400 100644
+--- a/xbmc/utils/BitstreamConverter.cpp
++++ b/xbmc/utils/BitstreamConverter.cpp
+@@ -317,9 +317,7 @@ CBitstreamConverter::CBitstreamConverter()
+   m_convertSize       = 0;
+   m_inputBuffer       = NULL;
+   m_inputSize         = 0;
+-  m_to_annexb         = false;
+-  m_extradata         = NULL;
+-  m_extrasize         = 0;
++  m_to_annexb = false;
+   m_convert_3byteTo4byteNALSize = false;
+   m_convert_bytestream = false;
+   m_sps_pps_context.sps_pps_data = NULL;
+@@ -350,10 +348,9 @@ bool CBitstreamConverter::Open(enum AVCodecID codec, uint8_t *in_extradata, int
+         if ( in_extradata[0] == 1 )
+         {
+           CLog::Log(LOGINFO, "CBitstreamConverter::Open bitstream to annexb init");
+-          m_extrasize = in_extrasize;
+-          m_extradata = (uint8_t*)av_malloc(in_extrasize);
+-          memcpy(m_extradata, in_extradata, in_extrasize);
+-          m_convert_bitstream = BitstreamConvertInitAVC(m_extradata, m_extrasize);
++          m_extraData = FFmpegExtraData(in_extradata, in_extrasize);
++          m_convert_bitstream =
++              BitstreamConvertInitAVC(m_extraData.GetData(), m_extraData.GetSize());
+           return true;
+         }
+         else
+@@ -381,9 +378,7 @@ bool CBitstreamConverter::Open(enum AVCodecID codec, uint8_t *in_extradata, int
+             // extract the avcC atom data into extradata then write it into avcCData for VDADecoder
+             in_extrasize = avio_close_dyn_buf(pb, &in_extradata);
+             // make a copy of extradata contents
+-            m_extradata = (uint8_t *)av_malloc(in_extrasize);
+-            memcpy(m_extradata, in_extradata, in_extrasize);
+-            m_extrasize = in_extrasize;
++            m_extraData = FFmpegExtraData(in_extradata, in_extrasize);
+             // done with the converted extradata, we MUST free using av_free
+             av_free(in_extradata);
+             return true;
+@@ -404,16 +399,12 @@ bool CBitstreamConverter::Open(enum AVCodecID codec, uint8_t *in_extradata, int
+             in_extradata[4] = 0xFF;
+             m_convert_3byteTo4byteNALSize = true;
+ 
+-            m_extradata = (uint8_t *)av_malloc(in_extrasize);
+-            memcpy(m_extradata, in_extradata, in_extrasize);
+-            m_extrasize = in_extrasize;
++            m_extraData = FFmpegExtraData(in_extradata, in_extrasize);
+             return true;
+           }
+         }
+         // valid avcC atom
+-        m_extradata = (uint8_t*)av_malloc(in_extrasize);
+-        memcpy(m_extradata, in_extradata, in_extrasize);
+-        m_extrasize = in_extrasize;
++        m_extraData = FFmpegExtraData(in_extradata, in_extrasize);
+         return true;
+       }
+       return false;
+@@ -437,10 +428,9 @@ bool CBitstreamConverter::Open(enum AVCodecID codec, uint8_t *in_extradata, int
+         if (in_extradata[0] || in_extradata[1] || in_extradata[2] > 1)
+         {
+           CLog::Log(LOGINFO, "CBitstreamConverter::Open bitstream to annexb init");
+-          m_extrasize = in_extrasize;
+-          m_extradata = (uint8_t*)av_malloc(in_extrasize);
+-          memcpy(m_extradata, in_extradata, in_extrasize);
+-          m_convert_bitstream = BitstreamConvertInitHEVC(m_extradata, m_extrasize);
++          m_extraData = FFmpegExtraData(in_extradata, in_extrasize);
++          m_convert_bitstream =
++              BitstreamConvertInitHEVC(m_extraData.GetData(), m_extraData.GetSize());
+           return true;
+         }
+         else
+@@ -476,9 +466,7 @@ bool CBitstreamConverter::Open(enum AVCodecID codec, uint8_t *in_extradata, int
+           }
+         }
+         // valid hvcC atom
+-        m_extradata = (uint8_t*)av_malloc(in_extrasize);
+-        memcpy(m_extradata, in_extradata, in_extrasize);
+-        m_extrasize = in_extrasize;
++        m_extraData = FFmpegExtraData(in_extradata, in_extrasize);
+         return true;
+       }
+       return false;
+@@ -499,9 +487,7 @@ void CBitstreamConverter::Close(void)
+     av_free(m_convertBuffer), m_convertBuffer = NULL;
+   m_convertSize = 0;
+ 
+-  if (m_extradata)
+-    av_free(m_extradata), m_extradata = NULL;
+-  m_extrasize = 0;
++  m_extraData = {};
+ 
+   m_inputSize = 0;
+   m_inputBuffer = NULL;
+@@ -637,19 +623,26 @@ int CBitstreamConverter::GetConvertSize() const
+     return m_inputSize;
+ }
+ 
+-uint8_t *CBitstreamConverter::GetExtraData() const
++uint8_t* CBitstreamConverter::GetExtraData()
++{
++  if (m_convert_bitstream)
++    return m_sps_pps_context.sps_pps_data;
++  else
++    return m_extraData.GetData();
++}
++const uint8_t* CBitstreamConverter::GetExtraData() const
+ {
+   if(m_convert_bitstream)
+     return m_sps_pps_context.sps_pps_data;
+   else
+-    return m_extradata;
++    return m_extraData.GetData();
+ }
+ int CBitstreamConverter::GetExtraSize() const
+ {
+   if(m_convert_bitstream)
+     return m_sps_pps_context.size;
+   else
+-    return m_extrasize;
++    return m_extraData.GetSize();
+ }
+ 
+ void CBitstreamConverter::ResetStartDecode(void)
+diff --git a/xbmc/utils/BitstreamConverter.h b/xbmc/utils/BitstreamConverter.h
+index 3c57e14057ecd..be63b7590cfad 100644
+--- a/xbmc/utils/BitstreamConverter.h
++++ b/xbmc/utils/BitstreamConverter.h
+@@ -8,6 +8,8 @@
+ 
+ #pragma once
+ 
++#include "cores/FFmpeg.h"
++
+ #include <stdint.h>
+ 
+ extern "C" {
+@@ -92,7 +94,8 @@ class CBitstreamConverter
+   bool              Convert(uint8_t *pData, int iSize);
+   uint8_t*          GetConvertBuffer(void) const;
+   int               GetConvertSize() const;
+-  uint8_t*          GetExtraData(void) const;
++  uint8_t* GetExtraData();
++  const uint8_t* GetExtraData() const;
+   int               GetExtraSize() const;
+   void              ResetStartDecode(void);
+   bool              CanStartDecode() const;
+@@ -135,8 +138,7 @@ class CBitstreamConverter
+   bool              m_convert_bitstream;
+   bool              m_to_annexb;
+ 
+-  uint8_t          *m_extradata;
+-  int               m_extrasize;
++  FFmpegExtraData m_extraData;
+   bool              m_convert_3byteTo4byteNALSize;
+   bool              m_convert_bytestream;
+   AVCodecID         m_codec;

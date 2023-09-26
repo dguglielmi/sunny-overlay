@@ -1,0 +1,55 @@
+From 456d6557ea570f63dc18831242b9189f96c1097d Mon Sep 17 00:00:00 2001
+From: Steve Hartwell <steve.hartwell@gmail.com>
+Date: Sun, 12 Feb 2023 18:10:45 +0000
+Subject: [PATCH] [video] use smart_ptr and custom destructor for
+ AVCodecParameters
+
+Co-authored-by: Miguel Borges de Freitas <92enen@gmail.com>
+---
+ .../cores/VideoPlayer/DVDDemuxers/DVDDemuxClient.cpp | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
+
+diff --git a/xbmc/cores/VideoPlayer/DVDDemuxers/DVDDemuxClient.cpp b/xbmc/cores/VideoPlayer/DVDDemuxers/DVDDemuxClient.cpp
+index 26fa9522eea7a..2a42244b62b68 100644
+--- a/xbmc/cores/VideoPlayer/DVDDemuxers/DVDDemuxClient.cpp
++++ b/xbmc/cores/VideoPlayer/DVDDemuxers/DVDDemuxClient.cpp
+@@ -14,7 +14,9 @@
+ #include "cores/VideoPlayer/Interface/TimingConstants.h"
+ #include "utils/log.h"
+ 
++#include <memory>
+ #include <tuple>
++#include <type_traits>
+ #include <utility>
+ 
+ class CDemuxStreamClientInternal
+@@ -162,16 +164,17 @@ bool CDVDDemuxClient::ParsePacket(DemuxPacket* pkt)
+     avpkt->size = pkt->iSize;
+     avpkt->dts = avpkt->pts = AV_NOPTS_VALUE;
+ 
+-    AVCodecParameters* codecPar = avcodec_parameters_alloc();
+-    int ret = avcodec_parameters_from_context(codecPar, stream->m_context);
++    constexpr auto codecParDeleter = [](AVCodecParameters* p) { avcodec_parameters_free(&p); };
++    auto codecPar = std::unique_ptr<AVCodecParameters, decltype(codecParDeleter)>(
++        avcodec_parameters_alloc(), codecParDeleter);
++    int ret = avcodec_parameters_from_context(codecPar.get(), stream->m_context);
+     if (ret < 0)
+     {
+       CLog::LogF(LOGERROR, "avcodec_parameters_from_context failed");
+-      avcodec_parameters_free(&codecPar);
+       return false;
+     }
+ 
+-    auto [retExtraData, len] = GetPacketExtradata(avpkt, codecPar);
++    auto [retExtraData, len] = GetPacketExtradata(avpkt, codecPar.get());
+     if (len > 0)
+     {
+       st->changes++;
+@@ -189,7 +192,6 @@ bool CDVDDemuxClient::ParsePacket(DemuxPacket* pkt)
+         avcodec_close(stream->m_context);
+       }
+     }
+-    avcodec_parameters_free(&codecPar);
+     av_packet_free(&avpkt);
+   }
+ 
