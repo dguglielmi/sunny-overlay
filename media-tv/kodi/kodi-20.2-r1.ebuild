@@ -7,14 +7,13 @@ PYTHON_REQ_USE="sqlite,ssl"
 LIBDVDCSS_VERSION="1.4.3-Next-Nexus-Alpha2-2"
 LIBDVDREAD_VERSION="6.1.3-Next-Nexus-Alpha2-2"
 LIBDVDNAV_VERSION="6.1.1-Next-Nexus-Alpha2-2"
-FFMPEG_VERSION="4.4.1"
+FFMPEG_VERSION="5.1.2-Nexus-Alpha3"
 CODENAME="Nexus"
-FFMPEG_KODI_VERSION="Alpha1"
 PYTHON_COMPAT=( python3_{10,11} )
 SRC_URI="https://github.com/xbmc/libdvdcss/archive/${LIBDVDCSS_VERSION}.tar.gz -> libdvdcss-${LIBDVDCSS_VERSION}.tar.gz
 	https://github.com/xbmc/libdvdread/archive/${LIBDVDREAD_VERSION}.tar.gz -> libdvdread-${LIBDVDREAD_VERSION}.tar.gz
 	https://github.com/xbmc/libdvdnav/archive/${LIBDVDNAV_VERSION}.tar.gz -> libdvdnav-${LIBDVDNAV_VERSION}.tar.gz
-	!system-ffmpeg? ( https://github.com/xbmc/FFmpeg/archive/${FFMPEG_VERSION}-${CODENAME}-${FFMPEG_KODI_VERSION}.tar.gz -> ffmpeg-${PN}-${FFMPEG_VERSION}-${CODENAME}-${FFMPEG_KODI_VERSION}.tar.gz )"
+	!system-ffmpeg? ( https://github.com/xbmc/FFmpeg/archive/${FFMPEG_VERSION}.tar.gz -> ffmpeg-${PN}-${FFMPEG_VERSION}.tar.gz )"
 if [[ ${PV} == *9999 ]] ; then
 	EGIT_REPO_URI="https://github.com/xbmc/xbmc.git"
 	EGIT_BRANCH="Nexus"
@@ -108,8 +107,7 @@ COMMON_TARGET_DEPEND="${PYTHON_DEPS}
 	!raspberry-pi? ( media-libs/mesa[egl(+)] )
 	>=media-libs/taglib-1.11.1
 	system-ffmpeg? (
-		>=media-video/ffmpeg-${FFMPEG_VERSION}:=[dav1d?,encode,postproc]
-		=media-video/ffmpeg-6*[openssl]
+		>=media-video/ffmpeg-4.4:=[dav1d?,encode,openssl,postproc]
 	)
 	!system-ffmpeg? (
 		app-arch/bzip2
@@ -190,9 +188,10 @@ Please consider enabling IP_MULTICAST under Networking options.
 "
 
 PATCHES=(
-	"${FILESDIR}"/${PN}-20.1-VideoPlayerAudio-invalidate-previous-sync-type-after-Audio.patch
-	"${FILESDIR}"/${PN}-20.1-ffmpeg5.patch
+	"${FILESDIR}"/${P}-VideoPlayerAudio-invalidate-previous-sync-type-after-Audio.patch
+	"${FILESDIR}"/${P}-ffmpeg5.patch
 	"${FILESDIR}"/${P}-ffmpeg6.patch
+	"${FILESDIR}"/${P}-Fix-playback-of-optical-dvds-without-mount-support.patch
 )
 
 pkg_setup() {
@@ -268,7 +267,7 @@ src_configure() {
 		-DENABLE_CEC=$(usex cec)
 		-DENABLE_DBUS=$(usex dbus)
 		-DENABLE_DVDCSS=$(usex css)
-		-DENABLE_EVENTCLIENTS=ON # alway enable to have 'kodi-send' and filter extra staff in 'src_install()'
+		-DENABLE_EVENTCLIENTS=ON # always enable to have 'kodi-send' and filter extra staff in 'src_install()'
 		-DENABLE_INTERNAL_CROSSGUID=OFF
 		-DENABLE_INTERNAL_RapidJSON=OFF
 		-DENABLE_INTERNAL_FMT=OFF
@@ -314,9 +313,9 @@ src_configure() {
 	use X && use !gles && mycmakeargs+=( -DENABLE_GLX=ON )
 
 	if use system-ffmpeg; then
-		mycmakeargs+=( -DWITH_FFMPEG="yes" )
+		mycmakeargs+=( -DWITH_FFMPEG="YES" )
 	else
-		mycmakeargs+=( -DFFMPEG_URL="${DISTDIR}/ffmpeg-${PN}-${FFMPEG_VERSION}-${CODENAME}-${FFMPEG_KODI_VERSION}.tar.gz" )
+		mycmakeargs+=( -DFFMPEG_URL="${DISTDIR}/ffmpeg-${PN}-${FFMPEG_VERSION}.tar.gz" )
 	fi
 
 	if ! echo "${CFLAGS}" | grep -Fwqe '-DNDEBUG' - && ! echo "${CFLAGS}" | grep -Fwqe '-D_DEBUG' - ; then
