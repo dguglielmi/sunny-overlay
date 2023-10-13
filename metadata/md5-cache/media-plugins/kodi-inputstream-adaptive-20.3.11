@@ -12,5 +12,5 @@ RDEPEND=dev-libs/expat =media-tv/kodi-20*
 RESTRICT=!test? ( test )
 SLOT=0
 SRC_URI=https://github.com/xbmc/inputstream.adaptive/archive/20.3.11-Nexus.tar.gz -> kodi-inputstream-adaptive-20.3.11.tar.gz https://github.com/xbmc/Bento4/archive/1.6.0-639-7-Omega.tar.gz -> bento4-1.6.0-639-7-Omega.tar.gz
-_eclasses_=cmake	fc2f89084f590ac95c004ea95b0d2f80	flag-o-matic	be27a904c614cb93ae037762dc69bcc2	kodi-addon	6be6829ba2a8f3a3f057ac4d6fa65bd6	multilib	c19072c3cd7ac5cb21de013f7e9832e0	multiprocessing	b4e253ab22cef7b1085e9b67c7a3b730	ninja-utils	f3010c780f65d1bb5aea15a9af1adc9c	toolchain-funcs	862d337d98edb576796827be2c6b11ca	xdg-utils	baea6080dd821f5562d715887954c9d3
+_eclasses_=cmake	fc2f89084f590ac95c004ea95b0d2f80	flag-o-matic	e5cc383ea8420f92fe3737be790021dc	kodi-addon	6be6829ba2a8f3a3f057ac4d6fa65bd6	multilib	c19072c3cd7ac5cb21de013f7e9832e0	multiprocessing	30ead54fa2e2b5f9cd4e612ffc34d0fe	ninja-utils	39e7a84b06eff4efd9f2e0c3d1668b98	toolchain-funcs	fbbbc99d10168de2926e06da7169b8dc	xdg-utils	baea6080dd821f5562d715887954c9d3
 _md5_=95a4be652369ab0b667aeb8f45d1a7d1
