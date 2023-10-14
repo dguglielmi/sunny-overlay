@@ -1,0 +1,11 @@
+diff -dNur a/src/sys_info_v2/gatherer/src/platform/linux/gpu_info/mod.rs b/src/sys_info_v2/gatherer/src/platform/linux/gpu_info/mod.rs
+--- a/src/sys_info_v2/gatherer/src/platform/linux/gpu_info/mod.rs	2023-10-13 10:35:44.000000000 +0200
++++ b/src/sys_info_v2/gatherer/src/platform/linux/gpu_info/mod.rs	2023-10-13 21:52:45.972806232 +0200
+@@ -28,6 +28,7 @@
+ lazy_static! {
+     static ref INIT_NVTOP: () = unsafe {
+         nvtop::init_extract_gpuinfo_amdgpu();
++        nvtop::init_extract_gpuinfo_intel();
+         nvtop::init_extract_gpuinfo_nvidia();
+     };
+ }
