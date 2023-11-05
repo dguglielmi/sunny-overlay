@@ -33,10 +33,6 @@ RDEPEND="
 	${COMMON_DEPEND}
 	"
 
-PATCHES=( 
-	"${FILESDIR}"/${P}-include-missing-cstdint-to-support-gcc13.patch
-)
-
 src_unpack() {
 	unpack ${P}.tar.gz
 }
