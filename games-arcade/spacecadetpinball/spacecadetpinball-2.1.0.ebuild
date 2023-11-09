@@ -23,7 +23,6 @@ RDEPEND="${DEPEND}"
 BDEPEND=""
 
 S="${WORKDIR}/${MY_PN}-Release_${PV}"
-PATCHES=( "$FILESDIR/${P}-fix-cmake-install-path.patch" )
 
 src_install() {
 	insopts -m 0644
