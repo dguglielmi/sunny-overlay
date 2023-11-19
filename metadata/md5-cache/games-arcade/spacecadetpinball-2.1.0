@@ -10,5 +10,5 @@ LICENSE=MIT
 RDEPEND=media-libs/libsdl2[haptic] media-libs/sdl2-mixer[wav,midi,fluidsynth] media-sound/fluid-soundfont
 SLOT=0
 SRC_URI=https://github.com/k4zmu2a/SpaceCadetPinball/archive/refs/tags/Release_2.1.0.tar.gz -> spacecadetpinball-2.1.0.tar.gz https://davipinheiro.com/wp-content/uploads/2021/02/Full-Tilt-Pinball_Win_EN.zip
-_eclasses_=cmake	0f2e0c197fad0312f3c4765c9cf36271	flag-o-matic	baa4d385108ac87993edac956a916a36	multilib	c19072c3cd7ac5cb21de013f7e9832e0	multiprocessing	30ead54fa2e2b5f9cd4e612ffc34d0fe	ninja-utils	39e7a84b06eff4efd9f2e0c3d1668b98	toolchain-funcs	edeef89edaf21d30225d31702ab117ac	xdg-utils	baea6080dd821f5562d715887954c9d3
+_eclasses_=cmake	0f2e0c197fad0312f3c4765c9cf36271	flag-o-matic	baa4d385108ac87993edac956a916a36	multilib	c19072c3cd7ac5cb21de013f7e9832e0	multiprocessing	30ead54fa2e2b5f9cd4e612ffc34d0fe	ninja-utils	39e7a84b06eff4efd9f2e0c3d1668b98	toolchain-funcs	eed10cf5e5a06916e654d31f5a1925cc	xdg-utils	baea6080dd821f5562d715887954c9d3
 _md5_=515f75d3f173a8df4a210b36d80b43df
