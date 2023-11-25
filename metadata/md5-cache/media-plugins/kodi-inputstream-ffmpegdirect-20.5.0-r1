@@ -10,5 +10,5 @@ LICENSE=GPL-2
 RDEPEND=media-video/ffmpeg:=[encode,libxml2,zlib] virtual/libiconv app-arch/bzip2 =media-tv/kodi-20*
 SLOT=0
 SRC_URI=https://github.com/xbmc/inputstream.ffmpegdirect/archive/20.5.0-Nexus.tar.gz -> kodi-inputstream-ffmpegdirect-20.5.0.tar.gz
-_eclasses_=cmake	0f2e0c197fad0312f3c4765c9cf36271	flag-o-matic	baa4d385108ac87993edac956a916a36	kodi-addon	6be6829ba2a8f3a3f057ac4d6fa65bd6	multilib	c19072c3cd7ac5cb21de013f7e9832e0	multiprocessing	30ead54fa2e2b5f9cd4e612ffc34d0fe	ninja-utils	39e7a84b06eff4efd9f2e0c3d1668b98	toolchain-funcs	eed10cf5e5a06916e654d31f5a1925cc	xdg-utils	baea6080dd821f5562d715887954c9d3
+_eclasses_=cmake	0f2e0c197fad0312f3c4765c9cf36271	flag-o-matic	6b3c606c5de2531072ffd36eca06a5a9	kodi-addon	6be6829ba2a8f3a3f057ac4d6fa65bd6	multilib	c19072c3cd7ac5cb21de013f7e9832e0	multiprocessing	30ead54fa2e2b5f9cd4e612ffc34d0fe	ninja-utils	39e7a84b06eff4efd9f2e0c3d1668b98	toolchain-funcs	eed10cf5e5a06916e654d31f5a1925cc	xdg-utils	baea6080dd821f5562d715887954c9d3
 _md5_=05ff80db9c83a2f4c06a1af33e7a831b
