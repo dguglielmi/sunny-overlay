@@ -63,6 +63,7 @@ RESTRICT="!test? ( test )"
 COMMON_DEPEND="
 	>=dev-libs/lzo-2.04
 	>=dev-libs/flatbuffers-1.12.0:=
+	>=dev-libs/tinyxml2-9.0.0:=
 	>=media-libs/libjpeg-turbo-2.0.4:=
 	>=media-libs/libpng-1.6.26:0=
 "
@@ -108,6 +109,7 @@ COMMON_TARGET_DEPEND="${PYTHON_DEPS}
 	>=media-libs/taglib-1.11.1
 	system-ffmpeg? (
 		>=media-video/ffmpeg-4.4:=[dav1d?,encode,openssl,postproc]
+		media-video/ffmpeg[openssl]
 	)
 	!system-ffmpeg? (
 		app-arch/bzip2
@@ -122,6 +124,7 @@ COMMON_TARGET_DEPEND="${PYTHON_DEPS}
 	raspberry-pi? (
 		|| ( media-libs/raspberrypi-userland media-libs/raspberrypi-userland-bin media-libs/mesa[egl(+),gles2,video_cards_vc4] )
 	)
+	pipewire? ( media-video/pipewire )
 	pulseaudio? ( media-sound/pulseaudio )
 	samba? ( >=net-fs/samba-3.4.6[smbclient(+)] )
 	>=sys-libs/zlib-1.2.11
@@ -292,6 +295,7 @@ src_configure() {
 		-DENABLE_OPENGL=$(usex !gles)
 		-DENABLE_OPTICAL=$(usex optical)
 		-DENABLE_PLIST=$(usex airplay)
+		-DENABLE_PIPEWIRE=$(usex pipewire)
 		-DENABLE_PULSEAUDIO=$(usex pulseaudio)
 		-DENABLE_SMBCLIENT=$(usex samba)
 		-DENABLE_SNDIO=OFF
@@ -305,7 +309,7 @@ src_configure() {
 		-Dlibdvdread_URL="${DISTDIR}/libdvdread-${LIBDVDREAD_VERSION}.tar.gz"
 		-Dlibdvdnav_URL="${DISTDIR}/libdvdnav-${LIBDVDNAV_VERSION}.tar.gz"
 		-Dlibdvdcss_URL="${DISTDIR}/libdvdcss-${LIBDVDCSS_VERSION}.tar.gz"
-		-DPYTHON_PATH="$(python_get_library_path)"
+		-DPYTHON_VER="${EPYTHON#python}"
 		-DAPP_RENDER_SYSTEM="$(usex gles gles gl)"
 		-DCORE_PLATFORM_NAME="${core_platform_name}"
 	)
