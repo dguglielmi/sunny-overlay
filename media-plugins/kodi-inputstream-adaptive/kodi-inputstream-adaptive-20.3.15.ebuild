@@ -42,6 +42,8 @@ src_configure() {
 		-DBUILD_TESTING=$(usex test)
 		-DENABLE_INTERNAL_BENTO4=ON
 		-DBENTO4_URL="${DISTDIR}/bento4-${BENTO4_VERSION}.tar.gz"
+		-DCMAKE_INSTALL_LIBDIR="${EPREFIX}/usr/$(get_libdir)/kodi"
+		-Wno-dev
 	)
 	cmake_src_configure
 }
