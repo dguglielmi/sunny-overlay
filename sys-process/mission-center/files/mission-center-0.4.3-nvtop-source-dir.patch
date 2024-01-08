@@ -1,0 +1,14 @@
+diff -dNur a/src/sys_info_v2/gatherer/build/build.rs b/src/sys_info_v2/gatherer/build/build.rs
+--- a/src/sys_info_v2/gatherer/build/build.rs	2023-12-09 11:15:39.000000000 +0100
++++ b/src/sys_info_v2/gatherer/build/build.rs	2023-12-13 22:52:03.158570234 +0100
+@@ -55,9 +55,7 @@
+ fn prepare_third_party_sources() -> Result<Vec<std::path::PathBuf>, Box<dyn std::error::Error>> {
+     let third_party_path =
+         std::path::PathBuf::from(std::env::var("CARGO_MANIFEST_DIR")? + "/3rdparty");
+-    let mut out_dir = std::env::var("OUT_DIR")?;
+-    out_dir.push_str("/../../native");
+-    std::fs::create_dir_all(&out_dir)?;
++    let out_dir = std::env::var("WORKDIR")?;
+     let out_dir = std::path::PathBuf::from(out_dir).canonicalize()?;
+ 
+     let mut result = vec![];
