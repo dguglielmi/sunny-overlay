@@ -250,8 +250,8 @@ CRATES="
 
 inherit cargo gnome.org gnome2-utils meson xdg
 
-DESCRIPTION="GNOME's default image viewer"
-HOMEPAGE="https://apps.gnome.org/fr/Loupe/"
+DESCRIPTION="An image viewer application written with GTK 4, Libadwaita and Rust"
+HOMEPAGE="https://apps.gnome.org/Loupe"
 
 SRC_URI+=" $(cargo_crate_uris ${CRATES})"
 
@@ -273,7 +273,8 @@ DEPEND="
 	>=dev-libs/libgweather-4.2.0
 	media-libs/lcms:2
 	"
-RDEPEND="${DEPEND}"
+RDEPEND="${DEPEND}
+	>=gui-libs/glycin-loaders-0.1.2"
 BDEPEND=">=virtual/rust-1.70"
 
 src_configure() {
