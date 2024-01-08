@@ -251,7 +251,7 @@ CRATES="
 inherit cargo gnome.org gnome2-utils meson xdg
 
 DESCRIPTION="An image viewer application written with GTK 4, Libadwaita and Rust"
-HOMEPAGE="https://apps.gnome.org/Loupe"
+HOMEPAGE="https://apps.gnome.org/Loupe/"
 
 SRC_URI+=" $(cargo_crate_uris ${CRATES})"
 
