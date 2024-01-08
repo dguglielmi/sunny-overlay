@@ -359,7 +359,7 @@ SRC_URI="https://gitlab.com/${PN}-devs/${PN}/-/archive/v${PV}/${PN}-v${PV}.tar.b
 LICENSE="GPL-3"
 # Dependent crate licenses
 LICENSE+="
-	Apache-2.0 Apache-2.0-with-LLVM-exceptions BSD CC0-1.0 CECILL-2
+	Apache-2.0 Apache-2.0-with-LLVM-exceptions BSD CC0-1.0 CECILL-2.1
 	ISC MIT Unicode-DFS-2016 ZLIB
 "
 SLOT="0"
