@@ -247,6 +247,7 @@ src_configure() {
 	use X && platform+=( x11 )
 	local core_platform_name="${platform[@]}"
 	local mycmakeargs=(
+		-Wno-dev
 		-DENABLE_SSE=$(usex cpu_flags_x86_sse)
 		-DENABLE_SSE2=$(usex cpu_flags_x86_sse2)
 		-DENABLE_SSE3=$(usex cpu_flags_x86_sse3)
