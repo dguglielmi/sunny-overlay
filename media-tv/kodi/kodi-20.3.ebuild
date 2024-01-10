@@ -194,7 +194,6 @@ PATCHES=(
 	"${FILESDIR}"/${P}-VideoPlayerAudio-invalidate-previous-sync-type-after-Audio.patch
 	"${FILESDIR}"/${P}-ffmpeg5.patch
 	"${FILESDIR}"/${P}-ffmpeg6.patch
-	"${FILESDIR}"/${P}-Fix-playback-of-optical-dvds-without-mount-support.patch
 	"${FILESDIR}"/${P}-fix-crash-in-avcodec_parameters_from_context.patch
 	"${FILESDIR}"/${P}-smart_ptr-and-custom-destructor-for-AVCodecParameters.patch
 )
