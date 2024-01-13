@@ -229,6 +229,15 @@ DEPEND="
 RDEPEND="${DEPEND}"
 BDEPEND=">=virtual/rust-1.70"
 
+# Rust.
+QA_FLAGS_IGNORED=(
+	/usr/libexec/resources/resources-kill
+	/usr/libexec/resources/resources-processes
+	/usr/bin/resources
+)
+
+QA_PRESTRIPPED="${QA_FLAGS_IGNORED[*]}"
+
 src_configure() {
 	local emesonargs=(
 		-Dprofile=default
