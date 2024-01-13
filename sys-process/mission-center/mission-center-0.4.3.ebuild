@@ -312,8 +312,6 @@ LICENSE+="
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 
-IUSE=""
-
 DEPEND="
 	>=dev-libs/glib-2.78.0
 	dev-python/pygobject
@@ -328,11 +326,9 @@ DEPEND="
 RDEPEND="${DEPEND}"
 BDEPEND=">=virtual/rust-1.70
 	>=dev-util/blueprint-compiler-0.10.0
-	sys-devel/patch
 "
 
 PATCHES="
-	"${FILESDIR}"/${PN}-0.3.1-cargo_home.patch
 	"${FILESDIR}"/${P}-nvtop-source-dir.patch
 "
 
@@ -340,16 +336,15 @@ S="${WORKDIR}/${PN}-v${PV}"
 
 src_prepare() {
 	for p in "${S}"/src/sys_info_v2/gatherer/3rdparty/nvtop/patches/*.patch; do
-		patch -p1 -d "${WORKDIR}"/nvtop-${NVTOP_SNAPSHOT} < ${p}
+		eapply -d "${WORKDIR}/nvtop-${NVTOP_SNAPSHOT}" -p1 -- "${p}"
 	done
 	default
 }
 
 src_configure() {
-	local emesonargs=(
-		-Dcargo_env=CARGO_HOME=${ECARGO_HOME}
-	)
 	meson_src_configure
+	ln -s "${CARGO_HOME}" "${BUILD_DIR}/cargo-home" || die
+	ln -s "${CARGO_HOME}" "${BUILD_DIR}/src/sys_info_v2/gatherer/cargo-home" || die
 }
 
 pkg_postinst() {
