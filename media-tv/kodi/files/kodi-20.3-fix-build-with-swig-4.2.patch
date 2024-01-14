@@ -1,0 +1,10 @@
+diff -dNur a/xbmc/interfaces/swig/AddonModuleXbmcaddon.i b/xbmc/interfaces/swig/AddonModuleXbmcaddon.i
+--- a/xbmc/interfaces/swig/AddonModuleXbmcaddon.i	2024-01-10 04:24:09.000000000 +0100
++++ b/xbmc/interfaces/swig/AddonModuleXbmcaddon.i	2024-01-14 21:58:20.619762773 +0100
+@@ -33,5 +33,6 @@
+ %include "interfaces/legacy/AddonString.h"
+ 
+ %include "interfaces/legacy/Addon.h"
++%nodefaultctor Settings;
+ %include "interfaces/legacy/Settings.h"
+ 

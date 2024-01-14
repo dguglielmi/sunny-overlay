@@ -1,0 +1,36 @@
+From 033988b975d65b791bc4ff282b9461f2b5b1c704 Mon Sep 17 00:00:00 2001
+From: thexai <58434170+thexai@users.noreply.github.com>
+Date: Wed, 8 Mar 2023 18:19:51 +0100
+Subject: [PATCH] CDVDInputStreamFile: use 64K read chunk size when filesystem
+ not has specific requirement
+
+This is used for media files as MKV, MP4, etc. but not DVD, Blu-Ray that
+may have specific blocksize/sectorsize requirements.
+---
+ .../DVDInputStreams/DVDInputStreamFile.cpp            | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
+
+diff --git a/xbmc/cores/VideoPlayer/DVDInputStreams/DVDInputStreamFile.cpp b/xbmc/cores/VideoPlayer/DVDInputStreams/DVDInputStreamFile.cpp
+index bebc68324af47..4214673f081c7 100644
+--- a/xbmc/cores/VideoPlayer/DVDInputStreams/DVDInputStreamFile.cpp
++++ b/xbmc/cores/VideoPlayer/DVDInputStreams/DVDInputStreamFile.cpp
+@@ -142,12 +142,15 @@ BitstreamStats CDVDInputStreamFile::GetBitstreamStats() const
+     return m_stats;
+ }
+ 
++// Use value returned by filesystem if is > 1
++// otherwise defaults to 64K
+ int CDVDInputStreamFile::GetBlockSize()
+ {
+-  if(m_pFile)
+-    return m_pFile->GetChunkSize();
+-  else
+-    return 0;
++  int chunk = 0;
++  if (m_pFile)
++    chunk = m_pFile->GetChunkSize();
++
++  return ((chunk > 1) ? chunk : 64 * 1024);
+ }
+ 
+ void CDVDInputStreamFile::SetReadRate(uint32_t rate)

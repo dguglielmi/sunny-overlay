@@ -175,7 +175,6 @@ DEPEND="${COMMON_DEPEND} ${COMMON_TARGET_DEPEND}
 "
 BDEPEND="${COMMON_DEPEND}
 	dev-lang/swig
-	dev-util/cmake
 	media-libs/giflib
 	>=dev-libs/flatbuffers-1.11.0
 	>=media-libs/libjpeg-turbo-2.0.4:=
@@ -196,6 +195,8 @@ PATCHES=(
 	"${FILESDIR}"/${P}-ffmpeg6.patch
 	"${FILESDIR}"/${P}-fix-crash-in-avcodec_parameters_from_context.patch
 	"${FILESDIR}"/${P}-smart_ptr-and-custom-destructor-for-AVCodecParameters.patch
+	"${FILESDIR}"/${P}-CDVDInputStreamFile-use-64K-read-chunk-size-when-filesystem.patch
+	"${FILESDIR}"/${P}-fix-build-with-swig-4.2.patch
 )
 
 pkg_setup() {
