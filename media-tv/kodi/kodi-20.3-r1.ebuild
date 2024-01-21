@@ -269,10 +269,6 @@ Please consider enabling IP_MULTICAST under Networking options.
 
 PATCHES=(
 	"${FILESDIR}"/${P}-VideoPlayerAudio-invalidate-previous-sync-type-after-Audio.patch
-	"${FILESDIR}"/${P}-ffmpeg5.patch
-	"${FILESDIR}"/${P}-ffmpeg6.patch
-	"${FILESDIR}"/${P}-fix-crash-in-avcodec_parameters_from_context.patch
-	"${FILESDIR}"/${P}-smart_ptr-and-custom-destructor-for-AVCodecParameters.patch
 	"${FILESDIR}"/${P}-CDVDInputStreamFile-use-64K-read-chunk-size-when-filesystem.patch
 	"${FILESDIR}"/${P}-swig-4.2.patch
 	"${FILESDIR}"/${P}-binutils-2.41.patch
@@ -306,6 +302,13 @@ src_prepare() {
 			-e "s/\(find_library(KISSFFT_LIBRARY NAMES .*\)/\1 kissfft-${datatype} kissfft-${datatype}-openmp/" \
 			cmake/modules/FindKissFFT.cmake || die
 	done
+
+	if use system-ffmpeg; then
+		eapply "${FILESDIR}"/${P}-ffmpeg5.patch
+		eapply "${FILESDIR}"/${P}-ffmpeg6.patch
+		eapply "${FILESDIR}"/${P}-fix-crash-in-avcodec_parameters_from_context.patch
+		eapply "${FILESDIR}"/${P}-smart_ptr-and-custom-destructor-for-AVCodecParameters.patch
+	fi
 }
 
 src_configure() {
