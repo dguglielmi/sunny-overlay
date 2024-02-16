@@ -10,5 +10,5 @@ LICENSE=LGPL-3
 RDEPEND=>=dev-libs/glib-2.32:2 dev-libs/libgee:0.8 x11-libs/gtk+:3 x11-libs/bamf x11-libs/libX11 dev-libs/libdbusmenu x11-libs/libwnck:3
 SLOT=0
 SRC_URI=http://launchpad.net/plank/1.0/0.11.89/+download/plank-0.11.89.tar.xz
-_eclasses_=flag-o-matic	78cf3cc2d5572fddf5e5e10c70f7c81a	gnome2-utils	b0183db3b2e07b18f3b77bffec72e116	multilib	c19072c3cd7ac5cb21de013f7e9832e0	toolchain-funcs	e56c7649b804f051623c8bc1a1c44084	vala	e477903dbe0105930c51f170a592dc16	xdg-utils	baea6080dd821f5562d715887954c9d3
+_eclasses_=flag-o-matic	24c947ff5f858625cf0b33c15eed4425	gnome2-utils	30dbce54b89e77b86f366548f94419ad	multilib	c19072c3cd7ac5cb21de013f7e9832e0	toolchain-funcs	e56c7649b804f051623c8bc1a1c44084	vala	e477903dbe0105930c51f170a592dc16	xdg-utils	baea6080dd821f5562d715887954c9d3
 _md5_=f5c4faa8cd98ec66dcee8fc7d7b8c357
