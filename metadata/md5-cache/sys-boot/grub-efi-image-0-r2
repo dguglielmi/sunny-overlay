@@ -11,4 +11,4 @@ LICENSE=GPL-3
 RDEPEND=sys-boot/grub:2=[fonts]
 SLOT=0
 _eclasses_=mount-boot	3945d351ee3192381911f938f4ee527a
-_md5_=fbb7081e5b36e9daf51d0c89ebc50d9a
+_md5_=46482e0cb69c4378454afbd33c09fa9d
