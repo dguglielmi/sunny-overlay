@@ -10,13 +10,21 @@ You can use this overlay with portage plug-in sync system (see: https://wiki.gen
 ```
 # cat << EOF > /etc/portage/repos.conf/sunny-overlay.conf
 [sunny-overlay]
-location = /usr/local/portage/overlay/sunny-overlay
+location = /var/db/repos/sunny-overlay
 sync-type = git
-sync-uri = git://github.com/dguglielmi/sunny-overlay.git
+sync-uri = https://github.com/dguglielmi/sunny-overlay.git
 auto-sync = yes
 masters = gentoo
 EOF
 ```
+
+OR via eselect-repository
+
+```
+# emerge app-eselect/eselect-repository
+# eselect repository add sunny-overlay git https://github.com/dguglielmi/sunny-overlay.git
+```
+
 - Retrieve sunny overlay
 
 ```
