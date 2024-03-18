@@ -2,7 +2,7 @@
 Sunny-overlay is my personal Gentoo Portage overlay.
 
 ## How to use this overlay ?
-You can use this overlay with portage plug-in sync system (see: https://wiki.gentoo.org/wiki/Project:Portage/Sync) or alternatively by using app-portage/layman.
+You can use this overlay with portage plug-in sync system (see: https://wiki.gentoo.org/wiki/Project:Portage/Sync)
 
 ### New portage plug-in sync system (>=sys-apps/portage-2.2.16)
 
