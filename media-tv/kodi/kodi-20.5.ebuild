@@ -268,10 +268,10 @@ Please consider enabling IP_MULTICAST under Networking options.
 "
 
 PATCHES=(
-	"${FILESDIR}"/${PN}-20.3-VideoPlayerAudio-invalidate-previous-sync-type-after-Audio.patch
-	"${FILESDIR}"/${PN}-20.3-CDVDInputStreamFile-use-64K-read-chunk-size-when-filesystem.patch
-	"${FILESDIR}"/${PN}-20.3-swig-4.2.patch
-	"${FILESDIR}"/${PN}-20.3-binutils-2.41.patch
+	"${FILESDIR}"/${P}-VideoPlayerAudio-invalidate-previous-sync-type-after-Audio.patch
+	"${FILESDIR}"/${P}-CDVDInputStreamFile-use-64K-read-chunk-size-when-filesystem.patch
+	"${FILESDIR}"/${P}-swig-4.2.patch
+	"${FILESDIR}"/${P}-binutils-2.41.patch
 )
 
 pkg_setup() {
@@ -304,10 +304,10 @@ src_prepare() {
 	done
 
 	if use system-ffmpeg; then
-		eapply "${FILESDIR}"/${PN}-20.3-ffmpeg5.patch
-		eapply "${FILESDIR}"/${PN}-20.3-ffmpeg6.patch
-		eapply "${FILESDIR}"/${PN}-20.3-fix-crash-in-avcodec_parameters_from_context.patch
-		eapply "${FILESDIR}"/${PN}-20.3-smart_ptr-and-custom-destructor-for-AVCodecParameters.patch
+		eapply "${FILESDIR}"/${P}-ffmpeg5.patch
+		eapply "${FILESDIR}"/${P}-ffmpeg6.patch
+		eapply "${FILESDIR}"/${P}-fix-crash-in-avcodec_parameters_from_context.patch
+		eapply "${FILESDIR}"/${P}-smart_ptr-and-custom-destructor-for-AVCodecParameters.patch
 	fi
 }
 

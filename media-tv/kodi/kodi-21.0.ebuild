@@ -8,12 +8,15 @@ EAPI=8
 
 # Versions for the forked projects that are bundled
 # See tools/depends/target/<project>/<project>-VERSION
+APACHE_COMMONS_LANG_VERSION="3.14.0"
+APACHE_COMMONS_TEXT_VERSION="1.11.0"
+FFMPEG_VERSION="6.0.1"
+GROOVY_VERSION="4.0.16"
 LIBDVDCSS_VERSION="1.4.3-Next-Nexus-Alpha2-2"
 LIBDVDREAD_VERSION="6.1.3-Next-Nexus-Alpha2-2"
 LIBDVDNAV_VERSION="6.1.1-Next-Nexus-Alpha2-2"
-FFMPEG_VERSION="4.4.1"
-CODENAME="Nexus"
-FFMPEG_KODI_VERSION="Alpha1"
+
+CODENAME="Omega"
 
 # Doesn't build with jdk-21
 _JAVA_PKG_WANT_BUILD_VM=( {openjdk{,-jre},icedtea}{,-bin}-{8,11,17} )
@@ -23,7 +26,7 @@ JAVA_PKG_WANT_SOURCE="17"
 JAVA_PKG_WANT_TARGET="17"
 
 PYTHON_REQ_USE="sqlite,ssl"
-PYTHON_COMPAT=( python3_{10..11} ) # python3.12 support added in 21
+PYTHON_COMPAT=( python3_{10..12} )
 
 CPU_FLAGS="cpu_flags_x86_sse cpu_flags_x86_sse2 cpu_flags_x86_sse3 cpu_flags_x86_sse4_1 cpu_flags_x86_sse4_2 cpu_flags_x86_avx cpu_flags_x86_avx2 cpu_flags_arm_neon"
 
@@ -33,6 +36,12 @@ DESCRIPTION="A free and open source media-player and entertainment hub"
 HOMEPAGE="https://kodi.tv/"
 
 SRC_URI="
+	http://mirrors.kodi.tv/build-deps/sources/apache-groovy-binary-${GROOVY_VERSION}.zip
+		-> apache-groovy-binary-${GROOVY_VERSION}.zip
+	http://mirrors.kodi.tv/build-deps/sources/commons-lang3-${APACHE_COMMONS_LANG_VERSION}-bin.tar.gz
+		-> commons-lang3-${APACHE_COMMONS_LANG_VERSION}-bin.tar.gz
+	http://mirrors.kodi.tv/build-deps/sources/commons-text-${APACHE_COMMONS_TEXT_VERSION}-bin.tar.gz
+		-> commons-text-${APACHE_COMMONS_TEXT_VERSION}-bin.tar.gz
 	https://github.com/xbmc/libdvdnav/archive/${LIBDVDNAV_VERSION}.tar.gz
 		-> libdvdnav-${LIBDVDNAV_VERSION}.tar.gz
 	https://github.com/xbmc/libdvdread/archive/${LIBDVDREAD_VERSION}.tar.gz
@@ -42,8 +51,8 @@ SRC_URI="
 			-> libdvdcss-${LIBDVDCSS_VERSION}.tar.gz
 	)
 	!system-ffmpeg? (
-		https://github.com/xbmc/FFmpeg/archive/${FFMPEG_VERSION}-${CODENAME}-${FFMPEG_KODI_VERSION}.tar.gz
-			-> ffmpeg-${PN}-${FFMPEG_VERSION}-${CODENAME}-${FFMPEG_KODI_VERSION}.tar.gz
+		https://ffmpeg.org/releases/ffmpeg-${FFMPEG_VERSION}.tar.gz
+			-> ffmpeg-${PN}-${FFMPEG_VERSION}-${CODENAME}.tar.gz
 	)
 "
 if [[ ${PV} == *9999 ]] ; then
@@ -106,6 +115,7 @@ COMMON_TARGET_DEPEND="${PYTHON_DEPS}
 	>=dev-libs/openssl-1.1.1k:0=
 	>=dev-libs/spdlog-1.5.0:=
 	dev-libs/tinyxml[stl]
+	>=dev-libs/tinyxml2-9.0.0:=
 	media-fonts/roboto
 	media-libs/libglvnd[X?]
 	>=media-libs/freetype-2.10.1
@@ -267,13 +277,6 @@ In some cases Kodi needs to access multicast addresses.
 Please consider enabling IP_MULTICAST under Networking options.
 "
 
-PATCHES=(
-	"${FILESDIR}"/${P}-VideoPlayerAudio-invalidate-previous-sync-type-after-Audio.patch
-	"${FILESDIR}"/${P}-CDVDInputStreamFile-use-64K-read-chunk-size-when-filesystem.patch
-	"${FILESDIR}"/${P}-swig-4.2.patch
-	"${FILESDIR}"/${P}-binutils-2.41.patch
-)
-
 pkg_setup() {
 	check_extra_config
 	java-pkg-2_pkg_setup
@@ -286,6 +289,12 @@ src_unpack() {
 	else
 		unpack ${MY_P}.tar.gz
 	fi
+
+	for dep in apache-groovy-binary-${GROOVY_VERSION}.zip \
+		commons-lang3-${APACHE_COMMONS_LANG_VERSION}-bin.tar.gz \
+		commons-text-${APACHE_COMMONS_TEXT_VERSION}-bin.tar.gz; do
+		unpack ${dep}
+	done
 }
 
 src_prepare() {
@@ -302,13 +311,6 @@ src_prepare() {
 			-e "s/\(find_library(KISSFFT_LIBRARY NAMES .*\)/\1 kissfft-${datatype} kissfft-${datatype}-openmp/" \
 			cmake/modules/FindKissFFT.cmake || die
 	done
-
-	if use system-ffmpeg; then
-		eapply "${FILESDIR}"/${P}-ffmpeg5.patch
-		eapply "${FILESDIR}"/${P}-ffmpeg6.patch
-		eapply "${FILESDIR}"/${P}-fix-crash-in-avcodec_parameters_from_context.patch
-		eapply "${FILESDIR}"/${P}-smart_ptr-and-custom-destructor-for-AVCodecParameters.patch
-	fi
 }
 
 src_configure() {
@@ -390,12 +392,16 @@ src_configure() {
 
 		-Dlibdvdnav_URL="${DISTDIR}/libdvdnav-${LIBDVDNAV_VERSION}.tar.gz"
 		-Dlibdvdread_URL="${DISTDIR}/libdvdread-${LIBDVDREAD_VERSION}.tar.gz"
+
+		-Dgroovy_SOURCE_DIR="${WORKDIR}/groovy-${GROOVY_VERSION}"
+		-Dapache-commons-lang_SOURCE_DIR="${WORKDIR}/commons-lang3-${APACHE_COMMONS_LANG_VERSION}"
+		-Dapache-commons-text_SOURCE_DIR="${WORKDIR}/commons-text-${APACHE_COMMONS_TEXT_VERSION}"
 	)
 
 	# Separated to avoid "Manually-specified variables were not used by the project:"
 	use css && mycmakeargs+=( -Dlibdvdcss_URL="${DISTDIR}/libdvdcss-${LIBDVDCSS_VERSION}.tar.gz" )
 	use !system-ffmpeg && mycmakeargs+=(
-		-DFFMPEG_URL="${DISTDIR}/ffmpeg-${PN}-${FFMPEG_VERSION}-${CODENAME}-${FFMPEG_KODI_VERSION}.tar.gz"
+		-DFFMPEG_URL="${DISTDIR}/ffmpeg-${PN}-${FFMPEG_VERSION}-${CODENAME}.tar.gz"
 	)
 	use nfs && mycmakeargs+=( -DENABLE_INTERNAL_NFS=OFF )
 	use !udev && mycmakeargs+=( -DENABLE_LIBUSB=$(usex libusb) )
