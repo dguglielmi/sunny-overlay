@@ -8,8 +8,8 @@ inherit kodi-addon
 DESCRIPTION="Kodi's Adaptive inputstream addon"
 HOMEPAGE="https://github.com/xbmc/inputstream.adaptive.git"
 
-CODENAME="Nexus"
-BENTO4_VERSION="1.6.0-639-7-Omega"
+CODENAME="Omega"
+BENTO4_VERSION="1.6.0-641-Omega"
 
 KEYWORDS="~amd64 ~x86"
 SRC_URI="https://github.com/xbmc/inputstream.adaptive/archive/${PV}-${CODENAME}.tar.gz -> ${P}.tar.gz
@@ -23,7 +23,7 @@ IUSE="test"
 
 COMMON_DEPEND="
 	dev-libs/expat
-	=media-tv/kodi-20*
+	=media-tv/kodi-21*
 	"
 DEPEND="
 	${COMMON_DEPEND}
