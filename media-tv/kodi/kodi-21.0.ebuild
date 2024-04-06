@@ -277,6 +277,10 @@ In some cases Kodi needs to access multicast addresses.
 Please consider enabling IP_MULTICAST under Networking options.
 "
 
+PATCHES=(
+	"${FILESDIR}/${P}-fix-head-use-after-free.patch"
+)
+
 pkg_setup() {
 	check_extra_config
 	java-pkg-2_pkg_setup
@@ -290,11 +294,9 @@ src_unpack() {
 		unpack ${MY_P}.tar.gz
 	fi
 
-	for dep in apache-groovy-binary-${GROOVY_VERSION}.zip \
-		commons-lang3-${APACHE_COMMONS_LANG_VERSION}-bin.tar.gz \
-		commons-text-${APACHE_COMMONS_TEXT_VERSION}-bin.tar.gz; do
-		unpack ${dep}
-	done
+	unpack apache-groovy-binary-${GROOVY_VERSION}.zip
+	unpack commons-lang3-${APACHE_COMMONS_LANG_VERSION}-bin.tar.gz
+	unpack commons-text-${APACHE_COMMONS_TEXT_VERSION}-bin.tar.gz
 }
 
 src_prepare() {
