@@ -9,7 +9,7 @@ DESCRIPTION="Tvheadend Live TV and Radio PVR client addon for Kodi"
 HOMEPAGE="https://github.com/kodi-pvr/pvr.hts"
 SRC_URI=""
 
-CODENAME="Nexus"
+CODENAME="Omega"
 KEYWORDS="~amd64 ~x86"
 SRC_URI="https://github.com/kodi-pvr/pvr.hts/archive/${PV}-${CODENAME}.tar.gz -> ${P}.tar.gz"
 S="${WORKDIR}/pvr.hts-${PV}-${CODENAME}"
@@ -19,7 +19,7 @@ SLOT="0"
 IUSE=""
 
 DEPEND="
-	=media-tv/kodi-20*
+	=media-tv/kodi-21*
 	"
 
 RDEPEND="
