@@ -9,10 +9,11 @@ MY_PV=$(ver_cut 1-2)
 DESCRIPTION="Advanced Digital DJ tool based on Qt"
 HOMEPAGE="https://mixxx.org/"
 SRC_URI="https://github.com/mixxxdj/${PN}/archive/refs/tags/${PV}.tar.gz -> ${P}.tar.gz"
-#S="${WORKDIR}/${PN}-release-${PV}"
-KEYWORDS="~amd64 ~arm64 ~x86"
+
 LICENSE="GPL-2"
 SLOT="0"
+KEYWORDS="~amd64 ~arm64 ~x86"
+
 IUSE="aac ffmpeg hid keyfinder lv2 modplug mp3 mp4 opus qtkeychain shout wavpack"
 
 RDEPEND="
@@ -34,7 +35,7 @@ RDEPEND="
 	dev-qt/qtx11extras:5
 	dev-qt/qtxml:5
 	media-libs/chromaprint
-	=media-libs/libdjinterop-0.20.1
+	=media-libs/libdjinterop-0.20.1-r0
 	media-libs/flac:=
 	media-libs/libebur128
 	media-libs/libid3tag:=
