@@ -3,7 +3,7 @@
 
 EAPI=8
 
-PYTHON_COMPAT=( python3_{9..11} )
+PYTHON_COMPAT=( python3_{9..12} )
 
 inherit meson pam python-any-r1 systemd
 
@@ -13,10 +13,13 @@ DESCRIPTION="D-Bus service to access fingerprint readers"
 HOMEPAGE="https://gitlab.freedesktop.org/libfprint/fprintd"
 SRC_URI="https://gitlab.freedesktop.org/libfprint/${PN}/-/archive/v${PV}/${MY_P}.tar.bz2"
 
+S="${WORKDIR}/${MY_P}"
+
 LICENSE="GPL-2+"
 SLOT="0"
 KEYWORDS="~alpha amd64 arm arm64 ~ia64 ppc ppc64 ~riscv sparc x86"
 IUSE="doc pam systemd test"
+
 RESTRICT="!test? ( test )"
 
 RDEPEND="
@@ -59,16 +62,14 @@ PATCHES=(
 	"${FILESDIR}/${PN}-1.90.8_0002-add-configure-option-for-libsystemd-provider.patch"
 )
 
-S="${WORKDIR}/${MY_P}"
-
 python_check_deps() {
 	if use test; then
-		has_version -d "sys-libs/pam_wrapper[${PYTHON_USEDEP}]"
+		python_has_version -d "sys-libs/pam_wrapper[${PYTHON_USEDEP}]"
 	fi
 
-	has_version -d "dev-python/python-dbusmock[${PYTHON_USEDEP}]" &&
-	has_version -d "dev-python/dbus-python[${PYTHON_USEDEP}]" &&
-	has_version -d "dev-python/pycairo[${PYTHON_USEDEP}]"
+	python_has_version -d "dev-python/python-dbusmock[${PYTHON_USEDEP}]" &&
+	python_has_version -d "dev-python/dbus-python[${PYTHON_USEDEP}]" &&
+	python_has_version -d "dev-python/pycairo[${PYTHON_USEDEP}]"
 }
 
 pkg_setup() {
