@@ -253,7 +253,7 @@ inherit cargo gnome.org gnome2-utils meson xdg
 DESCRIPTION="An image viewer application written with GTK 4, Libadwaita and Rust"
 HOMEPAGE="https://apps.gnome.org/Loupe/"
 
-SRC_URI+=" $(cargo_crate_uris ${CRATES})"
+SRC_URI+=" ${CARGO_CRATE_URIS}"
 
 LICENSE="GPL-3+"
 # Dependent crate licenses
@@ -265,17 +265,20 @@ LICENSE+="
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 
-IUSE=""
-
 DEPEND="
 	>=gui-libs/gtk-4.12.0:4
 	>=gui-libs/libadwaita-1.4.0
 	>=dev-libs/libgweather-4.2.0
 	media-libs/lcms:2
-	"
-RDEPEND="${DEPEND}
-	>=gui-libs/glycin-loaders-0.1.2"
-BDEPEND=">=virtual/rust-1.70"
+"
+RDEPEND="
+	${DEPEND}
+	>=gui-libs/glycin-loaders-0.1.2
+"
+BDEPEND="
+	${DEPEND}
+	>=virtual/rust-1.70
+"
 
 src_configure() {
 	meson_src_configure
