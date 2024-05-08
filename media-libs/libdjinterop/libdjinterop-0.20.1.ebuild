@@ -11,12 +11,18 @@ SRC_URI="https://github.com/xsco/${PN}/archive/refs/tags/${PV}.tar.gz -> ${P}.ta
 
 LICENSE="LGPL-3"
 SLOT="0"
-KEYWORDS="~amd64"
+KEYWORDS="~amd64 ~arm64 ~x86"
 
 IUSE="test"
 
-DEPEND="dev-db/sqlite
+DEPEND="
+	dev-db/sqlite
 	sys-libs/zlib
-	test? ( dev-libs/boost )"
+"
 RDEPEND="${DEPEND}"
-BDEPEND=""
+BDEPEND="
+	${DEPEND}
+	test? ( dev-libs/boost )
+"
+
+RESTRICT="!test? ( test )"
