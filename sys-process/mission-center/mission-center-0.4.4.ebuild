@@ -1,4 +1,4 @@
-# Copyright 2023 Gentoo Authors
+# Copyright 2024 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
@@ -305,6 +305,8 @@ SRC_URI="https://gitlab.com/${PN}-devs/${PN}/-/archive/v${PV}/${PN}-v${PV}.tar.b
 	${CARGO_CRATE_URIS}
 "
 
+S="${WORKDIR}/${PN}-v${PV}"
+
 LICENSE="GPL-3"
 # Dependent crate licenses
 LICENSE+="
@@ -324,17 +326,17 @@ DEPEND="
 	virtual/libudev
 	x11-libs/libdrm
 	>=x11-libs/pango-1.51.0
-	"
+"
 RDEPEND="${DEPEND}"
-BDEPEND=">=virtual/rust-1.70
+BDEPEND="
+	${DEPEND}
+	>=virtual/rust-1.70
 	>=dev-util/blueprint-compiler-0.10.0
 "
 
 PATCHES="
-	"${FILESDIR}"/${PN}-0.4.3-nvtop-source-dir.patch
+	"${FILESDIR}"/${P}-nvtop-source-dir.patch
 "
-
-S="${WORKDIR}/${PN}-v${PV}"
 
 src_prepare() {
 	for p in "${S}"/src/sys_info_v2/gatherer/3rdparty/nvtop/patches/*.patch; do
