@@ -11,12 +11,16 @@ DESCRIPTION="Twitter Emoji for everyone"
 HOMEPAGE="https://twemoji.twitter.com/"
 SRC_URI="https://kojipkgs.fedoraproject.org/packages/twitter-${MY_PN}-fonts/${PV}/2.fc37/noarch/twitter-${MY_PN}-fonts-${PV}-2.fc37.noarch.rpm"
 
+S="${WORKDIR}/usr/share/fonts/${MY_PN}"
+
 LICENSE="MIT CC-BY-4.0"
 SLOT="0"
 KEYWORDS="~amd64 ~arm ~arm64 ~x86"
-BDEPEND="app-arch/libarchive[zstd]"
 
-S="${WORKDIR}/usr/share/fonts/${MY_PN}"
+BDEPEND="
+	app-arch/libarchive[zstd]
+"
+
 FONT_S="${S}"
 FONT_CONF=( "${FILESDIR}/75-${MY_PN}.conf" )
 FONT_SUFFIX="ttf"
