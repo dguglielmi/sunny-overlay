@@ -10,27 +10,33 @@ inherit vala autotools
 
 DESCRIPTION="BAMF Application Matching Framework"
 HOMEPAGE="https://launchpad.net/bamf"
-SRC_URI="http://launchpad.net/${PN}/0.5/${PV}/+download/${P}.tar.gz"
+SRC_URI="http://launchpad.net/${PN}/$(ver_cut 1-2)/${PV}/+download/${P}.tar.gz"
 
 LICENSE="LGPL-3"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="~amd64 ~x86"
 IUSE="+introspection doc static-libs"
 
-RDEPEND="dev-libs/dbus-glib
+RDEPEND="
+	dev-libs/dbus-glib
 	dev-util/gdbus-codegen
 	>=dev-libs/glib-2.38.0:2
 	gnome-base/libgtop:2
 	x11-libs/gtk+:3
 	x11-libs/libX11
-	>=x11-libs/libwnck-3.4.7:3"
-DEPEND="${RDEPEND}
+	>=x11-libs/libwnck-3.4.7:3
+"
+DEPEND="
+	${RDEPEND}
 	$(vala_depend)
 	dev-libs/libxml2
 	dev-libs/libxslt
 	introspection? ( dev-libs/gobject-introspection )"
-BDEPEND="virtual/pkgconfig
-	dev-util/gtk-doc"
+BDEPEND="
+	${DEPEND}
+	virtual/pkgconfig
+	dev-util/gtk-doc
+"
 
 DOCS=(AUTHORS COPYING COPYING.LGPL ChangeLog NEWS README TODO)
 
