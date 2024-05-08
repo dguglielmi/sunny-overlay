@@ -1,26 +1,30 @@
-# Copyright 2020 Gentoo Authors
+# Copyright 2024 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=7
+EAPI=8
 
 DESCRIPTION="Dracut OpenSSH module"
 HOMEPAGE="https://github.com/dguglielmi/dracut-openssh"
-SRC_URI="https://github.com/dguglielmi/dracut-openssh/archive/v0.3.tar.gz -> ${P}.tar.gz"
+SRC_URI="https://github.com/dguglielmi/dracut-openssh/archive/v${PV}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="GPL-3+"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 
-IUSE="systemd-networkd"
+IUSE="systemd systemd-networkd"
 
-DEPEND="!systemd-networkd? ( net-misc/dhcp )
+DEPEND="
 	net-misc/openssh
-	sys-apps/systemd
-	sys-kernel/dracut"
-RDEPEND="${DEPEND}"
+	sys-kernel/dracut
+"
+RDEPEND="
+	${DEPEND}
+	!systemd-networkd? ( net-misc/dhcp )
+	systemd? ( sys-apps/systemd )
+"
 
 src_install() {
-	emake PREFIX=${D} install
+	emake PREFIX="${D}" install
 
 	if use systemd-networkd; then
 	sed -i \

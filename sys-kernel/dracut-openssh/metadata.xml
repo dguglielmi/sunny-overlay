@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "https://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+	<maintainer type="person">
+		<email>david.guglielmi@gmail.com</email>
+	<name>David GUGLIELMI</name>
+	</maintainer>
+	<use>
+		<flag name="systemd-networkd">Enable systemd-networkd support</flag>
+	</use>
+	<upstream>
+		<remote-id type="github">dguglielmi/dracut-openssh</remote-id>
+	</upstream>
+</pkgmetadata>
