@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "https://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+	<maintainer type="person">
+		<email>david.guglielmi@gmail.com</email>
+		<name>David GUGLIELMI</name>
+	</maintainer>
+	<use>
+		<flag name="fontsize-24">GRUB default font size 24px</flag>
+		<flag name="fontsize-32">GRUB default font size 32px</flag>
+	</use>
+</pkgmetadata>

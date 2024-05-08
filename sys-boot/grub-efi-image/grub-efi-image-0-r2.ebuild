@@ -7,13 +7,14 @@ inherit mount-boot
 
 DESCRIPTION="Make GRUB EFI boot image"
 HOMEPAGE="https://www.gentoo.org/"
-SRC_URI=""
+
+S="${WORKDIR}"
 
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="-* ~amd64 ~x86"
 
-IUSE="+grub_platforms_efi-64 grub_platforms_efi-32 grub_font_size_24 grub_font_size_32"
+IUSE="+grub_platforms_efi-64 grub_platforms_efi-32 fontsize-24 fontsize-32"
 
 DEPEND="
 	sys-boot/grub:2=[fonts]
@@ -24,26 +25,24 @@ BDEPEND="
 	media-fonts/dejavu
 "
 
-GRUB_VERSION="2.12-r3"
+GRUB_VERSION="2.12-r4"
 EFI_VENDOR="gentoo"
 GRUB_FONT_SIZE="16"
 
-S="${WORKDIR}"
-
 src_prepare() {
 	# grub-probe --target=fs_uuid doesn't work here
-	BOOT_DEV="$(grub-probe --target=device ${ROOT}/boot)"
+	BOOT_DEV="$(grub-probe --target=device /boot)"
 	BOOT_PART_UUID="$(lsblk -o UUID -n ${BOOT_DEV})"
 
 	[[ -z $BOOT_PART_UUID ]] && die "Can't find /boot partition UUID"
 	sed -e 's#@GENTOO_GRUB_VERSION@#'${GRUB_VERSION}'#g' \
-		"${FILESDIR}/sbat.csv.in" > sbat.csv || die
+		"${FILESDIR}"/sbat.csv.in > sbat.csv || die
 
 	mkdir -p "${WORKDIR}/memdisk/fonts" || die
 	sed -e 's#@BOOT_PART_UUID@#'${BOOT_PART_UUID}'#g' \
 		"${FILESDIR}/grub-memdisk.cfg.in" > memdisk/grub.cfg || die
 
-	cp "${FILESDIR}/grub-bootstrap.cfg" "${WORKDIR}/"
+	cp "${FILESDIR}"/grub-bootstrap.cfg "${WORKDIR}"/
 
 	eapply_user
 }
@@ -62,32 +61,31 @@ src_compile() {
 		die "Unsupported platform"
 	fi
 
-	if use grub_font_size_24; then
+	if use fontsize-24; then
 		GRUB_FONT_SIZE="24"
-	elif use grub_font_size_32; then
+	elif use fontsize-32; then
 		GRUB_FONT_SIZE="32"
 	fi
 
 	grub-mkfont \
 		-s "${GRUB_FONT_SIZE}" \
-		-o "${WORKDIR}/memdisk/fonts/unicode.pf2" \
+		-o "${WORKDIR}"/memdisk/fonts/unicode.pf2 \
 		/usr/share/fonts/dejavu/DejaVuSansMono.ttf
 
-	tar -cf "${WORKDIR}/memdisk.tar" -C "${WORKDIR}/memdisk" .
-
+	tar -cf "${WORKDIR}"/memdisk.tar -C "${WORKDIR}"/memdisk .
 
 	grub-mkimage \
 		-O "${platform}" \
-		-o "${WORKDIR}/grub${efi_name}.efi" \
-		-c "${WORKDIR}/grub-bootstrap.cfg" \
+		-o "${WORKDIR}"/grub${efi_name}.efi \
+		-c "${WORKDIR}"/grub-bootstrap.cfg \
 		-d "/usr/lib/grub/${platform}" \
-		-m "${WORKDIR}/memdisk.tar" \
+		-m "${WORKDIR}"/memdisk.tar \
 		-p "/EFI/gentoo" \
-		--sbat "${WORKDIR}/sbat.csv" \
-		$(cat "${FILESDIR}/grub-efi-modules")
+		--sbat "${WORKDIR}"/sbat.csv \
+		$(cat "${FILESDIR}"/grub-efi-modules)
 }
 
 src_install() {
-	insinto /usr/lib/${PN}
+	insinto /usr/lib/"${PN}"
 	doins grub*.efi
 }
