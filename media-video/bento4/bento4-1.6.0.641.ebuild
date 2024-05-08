@@ -3,6 +3,8 @@
 
 EAPI=8
 
+MY_PV="$(ver_cut 1-3)-$(ver_cut 4)"
+
 inherit cmake
 
 DESCRIPTION="Bento4 tools designed to read and write ISO-MP4 files"
@@ -11,21 +13,22 @@ HOMEPAGE="
 	https://github.com/axiomatic-systems/Bento4
 "
 
-IUSE="+apps"
-
-MY_PV="$(ver_cut 1-3)-$(ver_cut 4)"
-
-SRC_URI="https://github.com/axiomatic-systems/Bento4/archive/refs/tags/v${MY_PV}.tar.gz -> ${P}.tar.gz"
+SRC_URI="
+	https://github.com/axiomatic-systems/Bento4/archive/refs/tags/v${MY_PV}.tar.gz
+		-> ${P}.tar.gz
+"
+S="${WORKDIR}/${PN^}-${MY_PV}"
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="~x86 ~amd64"
+KEYWORDS="~amd64 ~x86"
 
-S="${WORKDIR}/${PN^}-${MY_PV}"
+IUSE="+apps"
 
 src_prepare() {
-	sed -i 's#ap4 STATIC#ap4 SHARED#g' CMakeLists.txt
-	sed -e 's#@BENTO4_VERSION@#'${MY_PV}'#g' "${FILESDIR}"/bento4.pc.in > bento4.pc
+	sed -i 's#ap4 STATIC#ap4 SHARED#g' CMakeLists.txt || die
+	sed -e 's#@BENTO4_VERSION@#'${MY_PV}'#g' "${FILESDIR}"/bento4.pc.in > bento4.pc || die
+
 	cmake_src_prepare
 }
 
@@ -54,11 +57,11 @@ src_install() {
 
 	dolib.so libap4.so
 
-	insinto "${EPREFIX}"/usr/include/bento4
-	doins ${S}/Source/C++/*/*.h
+	insinto /usr/include/bento4
+	doins "${S}"/Source/C++/*/*.h
 
-	insinto "${EPREFIX}"/usr/$(get_libdir)/pkgconfig
-	doins ${S}/bento4.pc
+	insinto /usr/$(get_libdir)/pkgconfig
+	doins "${S}"/bento4.pc
 
-	dodoc ${S}/Documents/LICENSE.txt
+	dodoc "${S}"/Documents/LICENSE.txt
 }

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "https://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+	<maintainer type="person">
+		<email>david.guglielmi@gmail.com</email>
+	<name>David GUGLIELMI</name>
+	</maintainer>
+	<use>
+		<flag name="apps">Bento4 cli utils</flag>
+	</use>
+	<upstream>
+		<remote-id type="github">axiomatic-systems/Bento4</remote-id>
+	</upstream>
+</pkgmetadata>
