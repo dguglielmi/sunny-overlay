@@ -1,4 +1,4 @@
-# Copyright 2023 Gentoo Authors
+# Copyright 2024 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
@@ -217,17 +217,17 @@ LICENSE+="
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 
-IUSE=""
-
 DEPEND="
 	dev-libs/glib
 	gui-libs/gtk:4
 	>=gui-libs/libadwaita-1.4.0
-	sys-apps/systemd
 	sys-auth/polkit
-	"
+"
 RDEPEND="${DEPEND}"
-BDEPEND=">=virtual/rust-1.70"
+BDEPEND="
+	${DEPEND}
+	>=virtual/rust-1.70
+"
 
 # Rust.
 QA_FLAGS_IGNORED=(
