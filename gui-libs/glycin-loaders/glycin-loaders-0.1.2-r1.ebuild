@@ -318,7 +318,7 @@ inherit cargo gnome.org meson xdg
 DESCRIPTION="Sandboxed and extendable image decoding"
 HOMEPAGE="https://gitlab.gnome.org/sophie-h/glycin"
 
-SRC_URI+=" $(cargo_crate_uris ${CRATES})"
+SRC_URI+=" ${CARGO_CRATE_URIS}"
 
 LICENSE="GPL-3+"
 # Dependent crate licenses
@@ -335,9 +335,12 @@ DEPEND="
 	>=gui-libs/gtk-4.12.0:4
 	>=x11-libs/cairo-1.17.0
 	heif? ( >=media-libs/libheif-1.14.2 )
-	"
+"
 RDEPEND="${DEPEND}"
-BDEPEND=">=virtual/rust-1.70"
+BDEPEND="
+	${DEPEND}
+	>=virtual/rust-1.70
+"
 
 src_configure() {
 	local GLYCIN_LOADERS="glycin-image-rs,glycin-jxl,glycin-svg"
