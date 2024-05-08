@@ -1,4 +1,4 @@
-# Copyright 2023 Gentoo Authors
+# Copyright 2024 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
@@ -11,27 +11,38 @@ DESCRIPTION="The fast and accurate Genesis emulator"
 HOMEPAGE="https://www.retrodev.com/blastem/"
 SRC_URI="https://www.retrodev.com/repos/blastem/archive/${COMMIT_ID}.tar.bz2 -> ${P}.tar.bz2"
 
+S="${WORKDIR}/${PN}-${COMMIT_ID}"
+
 LICENSE="GPL-3+"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 
+IUSE="+opengl +system-zlib"
+
 DEPEND="
-	media-libs/glew
+	opengl? ( media-libs/glew )
 	media-libs/libsdl2
 	sys-libs/zlib
 "
 RDEPEND="${DEPEND}"
-BDEPEND=""
-
-S="${WORKDIR}/${PN}-${COMMIT_ID}"
 
 src_compile() {
-	emake \
-		CC="$(tc-getCC)" \
-		OPT="${CFLAGS} ${LDFLAGS}" \
-		HOST_ZLIB=1 \
-		CONFIG_PATH="/usr/share/games/${PN}" \
+	local myemakeargs=(
+		CC="$(tc-getCC)"
+		OPT="${CFLAGS} ${LDFLAGS}"
+		CONFIG_PATH="/usr/share/games/${PN}"
 		DATA_PATH="/usr/share/games/${PN}"
+	)
+
+	if ! use opengl; then
+		myemakeargs+=("NOGL=1")
+	fi
+
+	if use system-zlib; then
+		myemakeargs+=("HOST_ZLIB=1")
+	fi
+
+	emake "${myemakeargs[@]}"
 }
 
 src_install() {
