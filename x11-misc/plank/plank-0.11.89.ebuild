@@ -1,34 +1,38 @@
-# Copyright 2020 Gentoo Authors
+# Copyright 2024 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=7
+EAPI=8
 
-VALA_MIN_API_VERSION=0.26
+VALA_MIN_API_VERSION=0.56
 VALA_USE_DEPEND=vapigen
 
-inherit vala gnome2-utils xdg-utils
+inherit vala gnome2-utils
 
 DESCRIPTION="Dock panel famious docky"
 HOMEPAGE="https://launchpad.net/plank"
-SRC_URI="http://launchpad.net/${PN}/1.0/${PV}/+download/${P}.tar.xz"
+SRC_URI="http://launchpad.net/${PN}/$(ver_cut 1-2)/${PV}/+download/${P}.tar.xz"
 
 LICENSE="LGPL-3"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE="+introspection doc static-libs"
 
-RDEPEND=">=dev-libs/glib-2.32:2
+DEPEND="
+	gnome-base/gnome-common
+	>=sys-devel/gettext-0.19.6
+	>=dev-libs/glib-2.32:2
 	dev-libs/libgee:0.8
 	x11-libs/gtk+:3
 	x11-libs/bamf
 	x11-libs/libX11
 	dev-libs/libdbusmenu
-	x11-libs/libwnck:3"
-DEPEND="${RDEPEND}
+	x11-libs/libwnck:3
+"
+BDEPEND="
+	${DEPEND}
 	$(vala_depend)
-	gnome-base/gnome-common
-	>=sys-devel/gettext-0.19.6
-	virtual/pkgconfig"
+	virtual/pkgconfig
+"
 
 DOCS=( AUTHORS COPYRIGHT )
 
@@ -37,9 +41,9 @@ PATCHES=(
 )
 
 src_prepare() {
-	default
+	vala_setup
 	NOCONFIGURE=1 REQUIRED_PKG_CONFIG_VERSION=0.1 ./autogen.sh
-	vala_src_prepare
+	default
 }
 
 src_install() {
