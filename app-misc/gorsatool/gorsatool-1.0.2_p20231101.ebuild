@@ -1,4 +1,4 @@
-# Copyright 2021 Gentoo Authors
+# Copyright 2024 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=7
@@ -12,10 +12,9 @@ EGO_VENDOR=(
 	"github.com/sourcekris/gogmpecm 8a5f196d84bc"
 	"github.com/sourcekris/mathparse 232758c46ee7"
 	"github.com/sourcekris/x509big e8ea46e23d32"
-	"github.com/sourcekris/goflint v1.0.0"
 )
 
-EGIT_COMMIT="b73bceaed5922053d5c8760b1a16d60b1fae0869"
+EGIT_COMMIT="eb50c9aa5b68419b0cb2f319dfe321ce6a0963cb"
 
 inherit golang-build golang-vcs-snapshot
 
@@ -25,15 +24,15 @@ HOMEPAGE="https://github.com/sourcekris/goRsaTool"
 SRC_URI="https://github.com/sourcekris/goRsaTool/archive/${EGIT_COMMIT}.tar.gz -> ${P}.tar.gz
 	${EGO_VENDOR_URI}"
 
-KEYWORDS="amd64 x86"
-
 LICENSE="Apache-2.0"
 SLOT="0"
+KEYWORDS="~amd64 ~x86"
 
-DEPEND=""
-RDEPEND="${DEPEND}"
-BDEPEND="sci-mathematics/gmp-ecm
-	sci-mathematics/flint"
+BDEPEND="
+	sci-mathematics/flint
+	sci-mathematics/gmp-ecm
+"
+RDEPEND="${BDEPEND}"
 
 src_install() {
 	newbin goRsaTool gorsatool
