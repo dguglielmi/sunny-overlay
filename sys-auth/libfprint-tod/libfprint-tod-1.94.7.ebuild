@@ -1,7 +1,7 @@
-# Copyright 1999-2021 Gentoo Authors
+# Copyright 2024 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=7
+EAPI=8
 
 inherit meson udev
 
@@ -9,9 +9,12 @@ DESCRIPTION="light fork of libfprint to expose internal Drivers API"
 HOMEPAGE="https://gitlab.freedesktop.org/3v1n0/libfprint/-/tree/tod/"
 SRC_URI="https://gitlab.freedesktop.org/3v1n0/libfprint/-/archive/v${PV}+tod1/libfprint-v${PV}+tod1.tar.bz2 -> ${P}.tar.bz2"
 
+S="${WORKDIR}/${PN/-tod/}-v${PV}+tod1"
+
 LICENSE="LGPL-2.1+"
 SLOT="2"
 KEYWORDS="~alpha ~amd64 ~arm ~arm64 ~ia64 ~ppc ~ppc64 ~sparc ~x86"
+
 IUSE="examples gtk-doc +introspection"
 
 RDEPEND="
@@ -35,9 +38,7 @@ BDEPEND="
 	introspection? ( dev-libs/gobject-introspection )
 "
 
-PATCHES=( ${FILESDIR}/${PN/-tod/}-0.8.2-fix-implicit-declaration.patch )
-
-S="${WORKDIR}/${PN/-tod/}-v${PV}+tod1"
+PATCHES=( "${FILESDIR}"/${PN/-tod/}-0.8.2-fix-implicit-declaration.patch )
 
 src_configure() {
 	local emesonargs=(
