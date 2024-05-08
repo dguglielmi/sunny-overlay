@@ -5,10 +5,10 @@ DESCRIPTION=Make GRUB EFI boot image
 EAPI=8
 HOMEPAGE=https://www.gentoo.org/
 INHERIT=mount-boot
-IUSE=+grub_platforms_efi-64 grub_platforms_efi-32 grub_font_size_24 grub_font_size_32
+IUSE=+grub_platforms_efi-64 grub_platforms_efi-32 fontsize-24 fontsize-32
 KEYWORDS=-* ~amd64 ~x86
 LICENSE=GPL-3
 RDEPEND=sys-boot/grub:2=[fonts]
 SLOT=0
 _eclasses_=mount-boot	3945d351ee3192381911f938f4ee527a
-_md5_=6a41b78503513e4981183f7bf515d32f
+_md5_=13e6d08e413023b54182a94ccccd8c2d

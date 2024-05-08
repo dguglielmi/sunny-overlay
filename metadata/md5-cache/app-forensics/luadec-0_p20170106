@@ -1,9 +1,9 @@
 BDEPEND=lua_single_target_lua5-1? ( dev-lang/lua:5.1 )
 DEFINED_PHASES=compile install prepare setup
 DESCRIPTION=LuaDec is a Lua decompiler for lua 5.1
-EAPI=7
+EAPI=8
 HOMEPAGE=https://github.com/viruscamp/luadec
-INHERIT=lua-single
+INHERIT=lua-single toolchain-funcs
 IUSE=+lua_single_target_lua5-1
 KEYWORDS=~amd64 ~x86
 LICENSE=MIT
@@ -11,4 +11,4 @@ REQUIRED_USE=^^ ( lua_single_target_lua5-1 )
 SLOT=5.1
 SRC_URI=https://github.com/viruscamp/luadec/archive/895d92313fabaee260121c758c8320d1b21dd741.tar.gz -> luadec-0_p20170106.tar.gz https://www.lua.org/ftp/lua-5.1.5.tar.gz
 _eclasses_=lua-single	86d497a20c93c7ce83af442f627515c1	lua-utils	d37a16dbcc1f07f71bc48da75ed7a0cb	multilib	c19072c3cd7ac5cb21de013f7e9832e0	toolchain-funcs	e56c7649b804f051623c8bc1a1c44084
-_md5_=4f6b11cfa1cae72ef107b523e6259c08
+_md5_=602c347d6e0af5e18a0144e2179aba6e

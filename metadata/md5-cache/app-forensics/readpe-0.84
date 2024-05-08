@@ -1,0 +1,13 @@
+DEFINED_PHASES=compile prepare
+DEPEND=dev-libs/openssl
+DESCRIPTION=Multiplatform command line toolkit to work with PE binaries
+EAPI=8
+HOMEPAGE=https://github.com/mentebinaria/readpe
+INHERIT=toolchain-funcs
+KEYWORDS=~amd64
+LICENSE=GPL-2
+RDEPEND=dev-libs/openssl
+SLOT=0
+SRC_URI=https://github.com/mentebinaria/readpe/archive/v0.84.tar.gz -> readpe-0.84.tar.gz
+_eclasses_=multilib	c19072c3cd7ac5cb21de013f7e9832e0	toolchain-funcs	e56c7649b804f051623c8bc1a1c44084
+_md5_=3c2736af397f3c998949ae757d2e33e7
