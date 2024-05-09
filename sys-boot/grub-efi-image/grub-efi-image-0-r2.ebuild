@@ -6,7 +6,7 @@ EAPI=8
 inherit mount-boot
 
 DESCRIPTION="Make GRUB EFI boot image"
-HOMEPAGE="https://www.gentoo.org/"
+HOMEPAGE="https://wiki.gentoo.org/wiki/No_homepage"
 
 S="${WORKDIR}"
 
