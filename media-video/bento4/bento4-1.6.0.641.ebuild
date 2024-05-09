@@ -1,4 +1,4 @@
-# Copyright 2023 Gentoo Authors
+# Copyright 2024 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
@@ -27,7 +27,17 @@ IUSE="+apps"
 
 src_prepare() {
 	sed -i 's#ap4 STATIC#ap4 SHARED#g' CMakeLists.txt || die
-	sed -e 's#@BENTO4_VERSION@#'${MY_PV}'#g' "${FILESDIR}"/bento4.pc.in > bento4.pc || die
+
+	sed -e 's#@BENTO4_VERSION@#'${MY_PV}'#g' \
+		-e 's#@LIBDIR@#'$(get_libdir)'#g' \
+		-e 's#@EPREFIX@#'"${EPREFIX}"/usr'#g' \
+		"${FILESDIR}"/bento4.pc.in > bento4.pc || die
+
+	# Avoid conflicts with media-libs/libmp4v2[utils]
+	for app in Mp4Info Mp4Extract; do
+		mv Source/C++/Apps/${app}/${app}.cpp Source/C++/Apps/${app}/${app}-${PN}.cpp || die
+		mv Source/C++/Apps/${app} Source/C++/Apps/${app}-${PN} || die
+	done
 
 	cmake_src_prepare
 }
@@ -41,27 +51,8 @@ src_configure() {
 }
 
 src_install() {
-	cd "${BUILD_DIR}" || die
-
-	# Avoid conflicts with media-libs/libmp4v2[utils]
-	mv mp4extract mp4extract-bento4 || die
-	mv mp4info mp4info-bento4 || die
-
-	if use apps; then
-		dobin aac2mp4 avcinfo fixaacsampledescription hevcinfo mp42aac mp42avc \
-			mp42hevc mp42hls mp42ts mp4audioclip mp4compact mp4dcfpackager \
-			mp4decrypt mp4diff mp4dump mp4edit mp4encrypt mp4extract-bento4 \
-			mp4fragment mp4iframeindex mp4info-bento4 mp4mux mp4pssh mp4rtphintinfo \
-			mp4split mp4tag
-	fi
-
-	dolib.so libap4.so
-
-	insinto /usr/include/bento4
-	doins "${S}"/Source/C++/*/*.h
-
 	insinto /usr/$(get_libdir)/pkgconfig
 	doins "${S}"/bento4.pc
 
-	dodoc "${S}"/Documents/LICENSE.txt
+	cmake_src_install
 }

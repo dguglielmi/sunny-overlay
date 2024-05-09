@@ -1,9 +1,9 @@
-prefix=/usr
+prefix=@EPREFIX@
 includedir=${prefix}/include
-libdir=${prefix}/lib64
+libdir=${prefix}/@LIBDIR@
 
 Name: Bento4
-Description: Bento4 MP4, DASH, HLS, CMAF SDK and Tools
+Description: Full-featured MP4 format, MPEG DASH, HLS, CMAF SDK and tools
 Version: @BENTO4_VERSION@
 Libs: -L${libdir} -lap4
 Cflags: -I${includedir}/bento4
