@@ -1,3 +1,5 @@
+![pkgcheck](https://github.com/dguglielmi/sunny-overlay/actions/workflows/pkgcheck.yaml/badge.svg)
+
 # sunny-overlay
 Sunny-overlay is my personal Gentoo Portage overlay.
 

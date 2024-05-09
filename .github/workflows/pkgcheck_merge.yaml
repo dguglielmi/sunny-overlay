@@ -1,0 +1,18 @@
+name: pkgcheck_merge
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Run pkgcheck
+        uses: pkgcore/pkgcheck-action@v1
+        with:
+          # RequiredUseDefaults https://github.com/pkgcore/pkgcheck/issues/640
+          args: --exit warning -k ,-RequiredUseDefaults --commits HEAD^..${{ github.sha }}
