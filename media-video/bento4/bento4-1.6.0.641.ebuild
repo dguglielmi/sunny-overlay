@@ -7,7 +7,7 @@ MY_PV="$(ver_cut 1-3)-$(ver_cut 4)"
 
 inherit cmake
 
-DESCRIPTION="Bento4 tools designed to read and write ISO-MP4 files"
+DESCRIPTION="Full-featured MP4 format, MPEG DASH, HLS, CMAF SDK and tools"
 HOMEPAGE="
 	https://www.bento4.com/
 	https://github.com/axiomatic-systems/Bento4
