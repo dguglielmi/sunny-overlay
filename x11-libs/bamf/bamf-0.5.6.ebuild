@@ -46,10 +46,18 @@ src_prepare() {
 		export VALA_API_GEN="${VAPIGEN}"
 	fi
 
-	default
+	sed -i '/GNOME_COMMON_INIT/d' configure.ac || die
 	eautoreconf
+
+	default
 }
 
 src_configure() {
 	econf $(use_enable introspection )
+}
+
+src_install() {
+	default
+
+	find "${ED}" -name '*.la' -type f -delete || die
 }
