@@ -26,3 +26,10 @@ BDEPEND="
 "
 
 RESTRICT="!test? ( test )"
+
+src_configure() {
+	local mycmakeargs=(
+		-DCMAKE_SKIP_BUILD_RPATH=ON
+	)
+	cmake_src_configure
+}
