@@ -35,7 +35,7 @@ RDEPEND="
 	dev-qt/qtx11extras:5
 	dev-qt/qtxml:5
 	media-libs/chromaprint
-	=media-libs/libdjinterop-0.20.1-r0
+	=media-libs/libdjinterop-0.20.2-r0
 	media-libs/flac:=
 	media-libs/libebur128
 	media-libs/libid3tag:=
@@ -84,9 +84,6 @@ BDEPEND="
 	dev-qt/qtxmlpatterns:5
 	virtual/pkgconfig
 "
-PATCHES=(
-	"${FILESDIR}"/${P}-fix-incomplete-type-in-nested-name-specifier.patch
-)
 
 PLOCALES="
 	ca cs de en es fi fr gl id it ja kn nl pl pt ro ru sl sq sr tr zh-CN zh-TW
