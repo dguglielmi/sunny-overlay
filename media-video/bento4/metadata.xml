@@ -3,10 +3,10 @@
 <pkgmetadata>
 	<maintainer type="person">
 		<email>david.guglielmi@gmail.com</email>
-	<name>David GUGLIELMI</name>
+		<name>David GUGLIELMI</name>
 	</maintainer>
 	<use>
-		<flag name="apps">Bento4 cli utils</flag>
+		<flag name="apps">Install Bento4 cli utilities</flag>
 	</use>
 	<upstream>
 		<remote-id type="github">axiomatic-systems/Bento4</remote-id>
