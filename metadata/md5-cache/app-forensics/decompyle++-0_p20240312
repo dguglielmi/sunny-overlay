@@ -1,15 +1,15 @@
-BDEPEND=python_single_target_python3_10? ( dev-lang/python:3.10 ) python_single_target_python3_11? ( dev-lang/python:3.11 ) python_single_target_python3_12? ( dev-lang/python:3.12 ) app-alternatives/ninja >=dev-build/cmake-3.20.5
+BDEPEND=python_single_target_python3_10? ( dev-lang/python:3.10 ) python_single_target_python3_11? ( dev-lang/python:3.11 ) python_single_target_python3_12? ( dev-lang/python:3.12 ) python_single_target_python3_13? ( dev-lang/python:3.13 ) app-alternatives/ninja >=dev-build/cmake-3.20.5
 DEFINED_PHASES=compile configure install prepare setup test
 DESCRIPTION=A Python Byte-code Disassembler/Decompiler
 EAPI=8
 HOMEPAGE=https://github.com/zrax/pycdc
 INHERIT=cmake python-single-r1
-IUSE=python_single_target_python3_10 python_single_target_python3_11 python_single_target_python3_12
+IUSE=python_single_target_python3_10 python_single_target_python3_11 python_single_target_python3_12 python_single_target_python3_13
 KEYWORDS=~amd64 ~x86
 LICENSE=GPL-3
-RDEPEND=python_single_target_python3_10? ( dev-lang/python:3.10 ) python_single_target_python3_11? ( dev-lang/python:3.11 ) python_single_target_python3_12? ( dev-lang/python:3.12 )
-REQUIRED_USE=^^ ( python_single_target_python3_10 python_single_target_python3_11 python_single_target_python3_12 )
+RDEPEND=python_single_target_python3_10? ( dev-lang/python:3.10 ) python_single_target_python3_11? ( dev-lang/python:3.11 ) python_single_target_python3_12? ( dev-lang/python:3.12 ) python_single_target_python3_13? ( dev-lang/python:3.13 )
+REQUIRED_USE=^^ ( python_single_target_python3_10 python_single_target_python3_11 python_single_target_python3_12 python_single_target_python3_13 )
 SLOT=0
 SRC_URI=https://github.com/zrax/pycdc/archive/6467c2cc52aa714876e131a1b6c6cf25f129460f.tar.gz -> decompyle++-0_p20240312.tar.gz
 _eclasses_=cmake	c7c9a62d6232cac66d4ea32d575c3e7c	flag-o-matic	d309b9713dfc18e754cba88d3ba69653	multilib	c19072c3cd7ac5cb21de013f7e9832e0	multiprocessing	30ead54fa2e2b5f9cd4e612ffc34d0fe	ninja-utils	2df4e452cea39a9ec8fb543ce059f8d6	python-single-r1	75118e916668a74c660a13b0ecb22562	python-utils-r1	e527bb25fc6ab8bb127b889b8f62500a	toolchain-funcs	e56c7649b804f051623c8bc1a1c44084	xdg-utils	baea6080dd821f5562d715887954c9d3
-_md5_=eb60ac8c946edf1144d8e68bf91dce66
+_md5_=5028e7c7c87903066d22eef668361c68
