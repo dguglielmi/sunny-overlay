@@ -6,8 +6,11 @@ EAPI=8
 inherit udev
 
 DESCRIPTION="Goodix driver module for libfprint-2 Touch OEM Driver"
-HOMEPAGE="https://git.launchpad.net/~oem-solutions-engineers/libfprint-2-tod1-goodix/+git/libfprint-2-tod1-goodix"
-SRC_URI="${HOMEPAGE}/plain/usr/lib/x86_64-linux-gnu/libfprint-2/tod-1/libfprint-tod-goodix-53xc-0.0.4.so"
+HOMEPAGE="https://git.launchpad.net/~oem-solutions-engineers/libfprint-2-tod1-goodix"
+SRC_URI="
+	https://git.launchpad.net/~oem-solutions-engineers/libfprint-2-tod1-goodix/plain/usr/lib/x86_64-linux-gnu/libfprint-2/tod-1/${PN/-drivers/}-53xc-${PV}.so?id=8ec36981e28288f3e895946528eded0e09831de6
+		-> ${PN/-drivers/}-53xc-${PV}.so
+"
 
 S="${WORKDIR}"
 
@@ -17,7 +20,7 @@ KEYWORDS="~amd64"
 
 DEPEND="
 	sys-auth/libfprint-tod:2
-	"
+"
 RDEPEND="
 	${DEPEND}
 	acct-group/plugdev
