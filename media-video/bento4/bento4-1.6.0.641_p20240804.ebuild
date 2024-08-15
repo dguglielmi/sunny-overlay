@@ -4,6 +4,7 @@
 EAPI=8
 
 MY_PV="$(ver_rs 3 '-')"
+BENTO4_COMMIT_ID="3b809bd6622c2afdb391bcce1d982ecc4e3176e2"
 
 inherit cmake
 
@@ -14,10 +15,10 @@ HOMEPAGE="
 "
 
 SRC_URI="
-	https://github.com/axiomatic-systems/Bento4/archive/refs/tags/v${MY_PV}.tar.gz
+	https://github.com/axiomatic-systems/Bento4/archive/${BENTO4_COMMIT_ID}.tar.gz
 		-> ${P}.tar.gz
 "
-S="${WORKDIR}/${PN^}-${MY_PV}"
+S="${WORKDIR}/${PN^}-${BENTO4_COMMIT_ID}"
 
 LICENSE="GPL-2"
 SLOT="0"
