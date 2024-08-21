@@ -224,9 +224,7 @@ DEPEND="
 	sys-auth/polkit
 "
 RDEPEND="${DEPEND}"
-BDEPEND="
-	${DEPEND}
-	>=virtual/rust-1.70
+BDEPEND="${DEPEND}"
 "
 
 # Rust.
