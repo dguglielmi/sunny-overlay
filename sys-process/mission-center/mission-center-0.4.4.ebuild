@@ -330,7 +330,6 @@ DEPEND="
 RDEPEND="${DEPEND}"
 BDEPEND="
 	${DEPEND}
-	>=virtual/rust-1.70
 	>=dev-util/blueprint-compiler-0.10.0
 "
 
