@@ -1,6 +1,6 @@
 BDEPEND=>=dev-build/meson-1.2.3 app-alternatives/ninja dev-build/meson-format-array
 DEFINED_PHASES=compile configure install postinst postrm preinst prepare test
-DEPEND=>=dev-libs/glib-2.76:2 >=gui-libs/gtk-4.12.2:4 >=gui-libs/libadwaita-1.4:1 >=gui-libs/pqmarble-2 >=gui-libs/vte-0.75.1:2.91-gtk4[vala] dev-libs/json-glib >=dev-libs/libpcre2-10.43:0= >=dev-libs/libxml2-2.9.12 >=gnome-base/librsvg-2.54.0 dev-libs/libgee media-libs/graphene[introspection]
+DEPEND=>=dev-libs/glib-2.76:2 >=gui-libs/gtk-4.12.2:4 >=gui-libs/libadwaita-1.4:1 >=gui-libs/pqmarble-2 >=gui-libs/vte-0.74.2:2.91-gtk4[vala] dev-libs/json-glib >=dev-libs/libpcre2-10.43:0= >=dev-libs/libxml2-2.9.12 >=gnome-base/librsvg-2.54.0 dev-libs/libgee media-libs/graphene[introspection]
 DESCRIPTION=An elegant and customizable terminal for GNOME
 EAPI=8
 HOMEPAGE=https://gitlab.gnome.org/raggesilver/blackbox
@@ -8,8 +8,8 @@ IDEPEND=dev-util/desktop-file-utils x11-misc/shared-mime-info
 INHERIT=gnome2-utils meson vala xdg
 KEYWORDS=~amd64
 LICENSE=GPL-3
-RDEPEND=>=dev-libs/glib-2.76:2 >=gui-libs/gtk-4.12.2:4 >=gui-libs/libadwaita-1.4:1 >=gui-libs/pqmarble-2 >=gui-libs/vte-0.75.1:2.91-gtk4[vala] dev-libs/json-glib >=dev-libs/libpcre2-10.43:0= >=dev-libs/libxml2-2.9.12 >=gnome-base/librsvg-2.54.0 dev-libs/libgee media-libs/graphene[introspection]
+RDEPEND=>=dev-libs/glib-2.76:2 >=gui-libs/gtk-4.12.2:4 >=gui-libs/libadwaita-1.4:1 >=gui-libs/pqmarble-2 >=gui-libs/vte-0.74.2:2.91-gtk4[vala] dev-libs/json-glib >=dev-libs/libpcre2-10.43:0= >=dev-libs/libxml2-2.9.12 >=gnome-base/librsvg-2.54.0 dev-libs/libgee media-libs/graphene[introspection]
 SLOT=0
 SRC_URI=https://gitlab.gnome.org/raggesilver/blackbox/-/archive/53be9986dea776eb4c2804d4e342cbd3a3cf06fc/blackbox-53be9986de.tar.bz2 -> blackbox-0.14.1_pre20240716.tar.bz2
 _eclasses_=flag-o-matic	e503ea5acc20410237ba33ec3f7c857d	gnome2-utils	a8cf148ec7f5ae0b1f1d33ae5f7f9e88	meson	99466844dd8d4fcfb07578a76f5a9922	multilib	c19072c3cd7ac5cb21de013f7e9832e0	multiprocessing	30ead54fa2e2b5f9cd4e612ffc34d0fe	ninja-utils	2df4e452cea39a9ec8fb543ce059f8d6	python-utils-r1	6881b056477c23167d9a6b33e146374e	toolchain-funcs	333970c740aa7b1a92e4fcdc52f612bd	vala	e477903dbe0105930c51f170a592dc16	xdg	4a14c5c24f121e7da66e5aab4a168c6e	xdg-utils	baea6080dd821f5562d715887954c9d3
-_md5_=21ca3001d760f99e0680547ab0c0a650
+_md5_=d137e558436315b664e1183764fdb49e
