@@ -273,12 +273,9 @@ DEPEND="
 "
 RDEPEND="
 	${DEPEND}
-	>=gui-libs/glycin-loaders-0.1.2
+	>=media-libs/glycin-loaders-0.1.2
 "
-BDEPEND="
-	${DEPEND}
-	>=virtual/rust-1.70
-"
+BDEPEND="${DEPEND}"
 
 src_configure() {
 	meson_src_configure
