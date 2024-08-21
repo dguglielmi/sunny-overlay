@@ -25,7 +25,7 @@ RDEPEND="
 	>=gui-libs/gtk-4.12.2:4
 	>=gui-libs/libadwaita-1.4:1
 	>=gui-libs/pqmarble-2
-	>=gui-libs/vte-0.75.1:2.91-gtk4[vala]
+	>=gui-libs/vte-0.74.2:2.91-gtk4[vala]
 	dev-libs/json-glib
 	>=dev-libs/libpcre2-10.43:0=
 	>=dev-libs/libxml2-2.9.12
