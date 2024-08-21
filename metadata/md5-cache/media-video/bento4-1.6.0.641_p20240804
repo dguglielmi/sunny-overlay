@@ -9,5 +9,5 @@ KEYWORDS=~amd64 ~x86
 LICENSE=GPL-2
 SLOT=0
 SRC_URI=https://github.com/axiomatic-systems/Bento4/archive/3b809bd6622c2afdb391bcce1d982ecc4e3176e2.tar.gz -> bento4-1.6.0.641_p20240804.tar.gz
-_eclasses_=cmake	258a4691fd43b8cd5814cb1acbb3c7df	flag-o-matic	e503ea5acc20410237ba33ec3f7c857d	multilib	c19072c3cd7ac5cb21de013f7e9832e0	multiprocessing	30ead54fa2e2b5f9cd4e612ffc34d0fe	ninja-utils	2df4e452cea39a9ec8fb543ce059f8d6	toolchain-funcs	0c713337f7872f1a002cecaaea9bef73	xdg-utils	baea6080dd821f5562d715887954c9d3
+_eclasses_=cmake	10a50dfaf728b802fcfd37f8d0da9056	flag-o-matic	e503ea5acc20410237ba33ec3f7c857d	multilib	c19072c3cd7ac5cb21de013f7e9832e0	multiprocessing	30ead54fa2e2b5f9cd4e612ffc34d0fe	ninja-utils	2df4e452cea39a9ec8fb543ce059f8d6	toolchain-funcs	333970c740aa7b1a92e4fcdc52f612bd	xdg-utils	baea6080dd821f5562d715887954c9d3
 _md5_=29f5c7cfa2ba1e2545ef82857f14bdd7
