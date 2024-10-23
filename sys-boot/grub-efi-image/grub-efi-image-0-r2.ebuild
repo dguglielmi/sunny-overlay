@@ -25,7 +25,7 @@ BDEPEND="
 	media-fonts/dejavu
 "
 
-GRUB_VERSION="2.12-r4"
+GRUB_VERSION="2.12-r5"
 EFI_VENDOR="gentoo"
 GRUB_FONT_SIZE="16"
 
