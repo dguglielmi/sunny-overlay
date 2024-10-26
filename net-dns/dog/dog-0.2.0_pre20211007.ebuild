@@ -141,14 +141,17 @@ SLOT="0"
 KEYWORDS="~amd64"
 
 BDEPEND="app-text/ronn-ng"
+DEPEND="dev-libs/openssl"
 
 PATCHES=(
 	"${FILESDIR}"/${P}-update-crates.patch
+	"${FILESDIR}"/${P}-manpage-fix.patch
 )
 
 src_prepare() {
-	ronn -r man/dog.1.md || die
 	default
+
+	ronn -r man/dog.1.md || die
 }
 
 src_install() {
