@@ -24,10 +24,12 @@ RDEPEND="
 	dev-libs/glib:2
 	dev-libs/protobuf:=
 	dev-qt/qtcore:5
+	dev-qt/qtdeclarative:5
 	dev-qt/qtdbus:5
 	dev-qt/qtgui:5
 	dev-qt/qtnetwork:5
 	dev-qt/qtopengl:5
+	dev-qt/qtprintsupport
 	dev-qt/qtscript:5[scripttools]
 	dev-qt/qtsql:5
 	dev-qt/qtsvg:5
