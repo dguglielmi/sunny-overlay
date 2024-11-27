@@ -10,7 +10,7 @@ inherit vala gnome2-utils
 
 DESCRIPTION="Dock panel famious docky"
 HOMEPAGE="https://launchpad.net/plank"
-SRC_URI="http://launchpad.net/${PN}/$(ver_cut 1-2)/${PV}/+download/${P}.tar.xz"
+SRC_URI="http://launchpad.net/${PN}/1.0/${PV}/+download/${P}.tar.xz"
 
 LICENSE="LGPL-3"
 SLOT="0"
