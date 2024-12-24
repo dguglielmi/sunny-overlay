@@ -16,7 +16,7 @@ LICENSE="LGPL-2.1+"
 SLOT="0"
 KEYWORDS="~amd64"
 
-IUSE="+app debug gstreamer python qt6 trace udev unwind v4l2"
+IUSE="+app debug gstreamer python qt6 trace udev unwind +v4l2"
 #IUSE=+" doc test"
 
 DEPEND="
