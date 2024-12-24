@@ -5,7 +5,7 @@ EAPI=8
 
 inherit desktop toolchain-funcs xdg-utils
 
-COMMIT_ID="187bc857a76a"
+COMMIT_ID="99e59fdddbc3"
 
 DESCRIPTION="The fast and accurate Genesis emulator"
 HOMEPAGE="https://www.retrodev.com/blastem/"
