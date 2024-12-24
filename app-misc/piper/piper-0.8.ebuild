@@ -27,10 +27,14 @@ RESTRICT="!test? ( test )"
 BDEPEND="
 	${PYTHON_DEPS}
 	$(python_gen_cond_dep '
-		dev-python/flake8[${PYTHON_USEDEP}]
 		dev-python/lxml[${PYTHON_USEDEP}]
 	')
-	dev-libs/appstream
+	test? (
+		dev-libs/appstream
+		$(python_gen_cond_dep '
+			dev-python/flake8[${PYTHON_USEDEP}]
+		')
+	)
 	virtual/pkgconfig
 "
 RDEPEND="
