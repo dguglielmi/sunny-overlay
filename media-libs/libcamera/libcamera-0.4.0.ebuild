@@ -60,7 +60,7 @@ DEPEND="
 #"
 RDEPEND="
 	${DEPEND}
-	${PYTHON_DEPS}
+	python? ( ${PYTHON_DEPS} )
 	trace? ( dev-util/lttng-tools )
 "
 
