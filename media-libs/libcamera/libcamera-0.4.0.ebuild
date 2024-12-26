@@ -16,7 +16,7 @@ LICENSE="LGPL-2.1+"
 SLOT="0"
 KEYWORDS="~amd64"
 
-IUSE="+app debug gstreamer python qt6 trace udev unwind +v4l2"
+IUSE="+app debug gstreamer python qt6 trace udev unwind v4l"
 #IUSE=+" doc test"
 
 DEPEND="
@@ -88,11 +88,11 @@ src_configure() {
 		$(meson_feature qt6 qcam)
 		$(meson_feature udev)
 		# Depend on libyuv
-		#$(meson_use test)
+		# $(meson_use test)
 		-Dtest=false
 		-Dpipelines=imx8-isi,ipu3,mali-c55,rkisp1,rpi/vc4,simple,uvcvideo,vimc
 		-Dbuildtype=$(usex debug debug plain)
-		$(meson_use v4l2)
+		$(meson_use v4l v4l2)
 	)
 	meson_src_configure
 }
