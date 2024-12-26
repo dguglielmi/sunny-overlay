@@ -80,13 +80,14 @@ src_configure() {
 	local emesonargs=(
 		-Dandroid=disabled
 		$(meson_feature app cam)
-		#$(meson_feature doc documentation)
+		# Building documentation is broken
+		# $(meson_feature doc documentation)
 		-Ddocumentation=disabled
 		$(meson_feature gstreamer)
 		$(meson_feature python pycamera)
 		$(meson_feature qt6 qcam)
 		$(meson_feature udev)
-		# depend on libyuv
+		# Depend on libyuv
 		#$(meson_use test)
 		-Dtest=false
 		-Dpipelines=imx8-isi,ipu3,mali-c55,rkisp1,rpi/vc4,simple,uvcvideo,vimc
@@ -98,5 +99,7 @@ src_configure() {
 
 src_install() {
 	meson_src_install
-	python_optimize "${D}/$(python_get_sitedir)/libcamera"
+	if use python; then
+		python_optimize "${D}/$(python_get_sitedir)/libcamera"
+	fi
 }
