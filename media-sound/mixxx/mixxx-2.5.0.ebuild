@@ -14,7 +14,7 @@ LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~amd64 ~arm64 ~x86"
 
-IUSE="aac ffmpeg hid keyfinder lv2 modplug mp3 mp4 opengl opus qt5 qt6 qtkeychain shout wavpack"
+IUSE="aac ffmpeg hid keyfinder lv2 modplug mp3 mp4 opengl opus qt5 +qt6 qtkeychain shout wavpack"
 
 RDEPEND="
 	dev-cpp/benchmark
