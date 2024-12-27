@@ -24,7 +24,7 @@ RDEPEND="
 	dev-libs/glib:2
 	dev-libs/protobuf:=
 	media-libs/chromaprint
-	=media-libs/libdjinterop-0.22.1
+	~media-libs/libdjinterop-0.22.1
 	media-libs/flac:=
 	media-libs/libebur128
 	media-libs/libid3tag:=
