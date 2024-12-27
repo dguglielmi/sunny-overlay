@@ -95,7 +95,7 @@ mixxx_set_globals() {
 	local lang
 	local MANUAL_URI_BASE="https://downloads.mixxx.org/manual/${MY_PV}"
 	for lang in ${PLOCALES} ; do
-		SRC_URI+=" l10n_${lang}? ( ${MANUAL_URI_BASE}/${PN}-manual-${MY_PV}-${lang}.pdf )"
+		SRC_URI+=" l10n_${lang}? ( ${MANUAL_URI_BASE}/${PN}-manual-${MY_PV}-${lang/-/_}.pdf )"
 		IUSE+=" l10n_${lang/ en/ +en}"
 	done
 	SRC_URI+=" ${MANUAL_URI_BASE}/${PN}-manual-${MY_PV}-en.pdf"
@@ -134,7 +134,7 @@ src_install() {
 	local locale
 	for locale in ${PLOCALES} ; do
 		if use l10n_${locale} ; then
-			dodoc "${DISTDIR}"/${PN}-manual-${MY_PV}-${locale}.pdf
+			dodoc "${DISTDIR}"/${PN}-manual-${MY_PV}-${locale/-/_}.pdf
 		fi
 	done
 }
