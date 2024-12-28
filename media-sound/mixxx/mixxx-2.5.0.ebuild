@@ -74,6 +74,7 @@ RDEPEND="
 	)
 	qt6? (
 		dev-qt/qtbase[concurrent,gui,network,opengl,sql,widgets,xml]
+		dev-qt/qt5compat:6
 		dev-qt/qtsvg:6
 	)
 	qtkeychain? ( dev-libs/qtkeychain:=[qt5(+),qt6?] )
