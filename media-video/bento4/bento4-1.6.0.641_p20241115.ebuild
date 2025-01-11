@@ -4,7 +4,7 @@
 EAPI=8
 
 MY_PV="$(ver_rs 3 '-')"
-BENTO4_COMMIT_ID="3b809bd6622c2afdb391bcce1d982ecc4e3176e2"
+BENTO4_COMMIT_ID="3bdc891602d19789b8e8626e4a3e613a937b4d35"
 
 inherit cmake
 
