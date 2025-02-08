@@ -20,7 +20,6 @@ SLOT="0"
 
 KEYWORDS="~amd64 ~x86"
 
-RDEPEND="media-tv/kodi"
 DEPEND="media-tv/kodi"
 
 src_prepare() {
