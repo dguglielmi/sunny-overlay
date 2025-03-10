@@ -35,7 +35,7 @@ RDEPEND="
 	media-libs/portaudio[alsa]
 	media-libs/portmidi
 	media-libs/rubberband:=
-	media-libs/taglib
+	media-libs/taglib:=
 	media-libs/vamp-plugin-sdk
 	media-sound/lame
 	sci-libs/fftw:3.0=
