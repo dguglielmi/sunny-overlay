@@ -10,5 +10,5 @@ LICENSE=GPL-3+
 RDEPEND=opengl? ( media-libs/glew ) media-libs/libsdl2 sys-libs/zlib
 SLOT=0
 SRC_URI=https://www.retrodev.com/repos/blastem/archive/99e59fdddbc3.tar.bz2 -> blastem-0.6.3_pre20241209.tar.bz2
-_eclasses_=desktop	3a72ffe0d8e1dd73af3a1c8c15a59fed	multilib	b2a329026f2e404e9e371097dda47f96	toolchain-funcs	14648d8795f7779e11e1bc7cf08b7536	xdg-utils	42869b3c8d86a70ef3cf75165a395e09
+_eclasses_=desktop	3a72ffe0d8e1dd73af3a1c8c15a59fed	multilib	b2a329026f2e404e9e371097dda47f96	toolchain-funcs	6afdb6107430c1832ca7e16aacbf8fa1	xdg-utils	42869b3c8d86a70ef3cf75165a395e09
 _md5_=fbeb9afae6c360713420028b1f09fd12
