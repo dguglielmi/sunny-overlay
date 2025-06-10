@@ -1,4 +1,4 @@
-# Copyright 2023 Gentoo Authors
+# Copyright 2024 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
@@ -25,19 +25,19 @@ REQUIRED_USE="
 "
 
 DEPEND="
-	dev-libs/appstream-glib
-	>=dev-libs/glib-2.7:2
+	>=gui-libs/libadwaita-1.1
+	>=app-crypt/gcr-3.90.0:4
+	>=x11-libs/gdk-pixbuf-2.38.0:2
+	>=dev-libs/glib-2.70.0:2
 	sys-apps/dbus
-	>=x11-libs/gdk-pixbuf-2.34:2
 	>=x11-libs/gtk+-3.24:3
-	x11-libs/libX11
-	x11-libs/libXi
-	x11-libs/pango
+	>=gui-libs/gtk-4.6.0:4
 	gnome? (
 		>=x11-wm/mutter-41.3
+		x11-libs/pango
+		>=dev-libs/gjs-1.78.0
 	)
 	introspection? (
-		dev-libs/gjs
 		>=dev-libs/gobject-introspection-1.48.0
 		>=x11-wm/mutter-41.3[introspection]
 	)
