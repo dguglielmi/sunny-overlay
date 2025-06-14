@@ -1,4 +1,4 @@
-# Copyright 1999-2024 Gentoo Authors
+# Copyright 1999-2025 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
@@ -24,7 +24,7 @@ RDEPEND="
 	dev-libs/glib:2
 	dev-libs/protobuf:=
 	media-libs/chromaprint
-	~media-libs/libdjinterop-0.22.1
+	~media-libs/libdjinterop-0.24.3
 	media-libs/flac:=
 	media-libs/libebur128
 	media-libs/libid3tag:=
