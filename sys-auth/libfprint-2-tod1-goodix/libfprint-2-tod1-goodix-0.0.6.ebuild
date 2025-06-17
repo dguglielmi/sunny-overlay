@@ -11,7 +11,6 @@ SRC_URI="http://dell.archive.canonical.com/updates/pool/public/libf/libfprint-2-
 
 LICENSE="Goodix"
 SLOT="0"
-S="${WORKDIR}/libfprint-2-tod1-goodix"
 KEYWORDS="~amd64"
 
 RESTRICT="bindist mirror"
