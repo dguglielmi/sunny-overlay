@@ -1,0 +1,12 @@
+DEFINED_PHASES=install
+DEPEND=net-misc/openssh sys-kernel/dracut
+DESCRIPTION=Dracut OpenSSH module
+EAPI=8
+HOMEPAGE=https://github.com/dguglielmi/dracut-openssh
+IUSE=systemd systemd-networkd
+KEYWORDS=~amd64 ~x86
+LICENSE=GPL-3+
+RDEPEND=net-misc/openssh sys-kernel/dracut !systemd-networkd? ( net-misc/dhcp ) systemd? ( sys-apps/systemd )
+SLOT=0
+SRC_URI=https://github.com/dguglielmi/dracut-openssh/archive/v0.5.tar.gz -> dracut-openssh-0.5.tar.gz
+_md5_=0795c42a49f7576139bdb1c98e59d3d1

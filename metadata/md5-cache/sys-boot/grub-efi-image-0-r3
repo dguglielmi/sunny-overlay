@@ -1,0 +1,14 @@
+BDEPEND=sys-apps/util-linux media-fonts/dejavu
+DEFINED_PHASES=compile install postinst postrm preinst prepare prerm pretend
+DEPEND=sys-boot/grub:2=[fonts]
+DESCRIPTION=Make GRUB EFI boot image
+EAPI=8
+HOMEPAGE=https://wiki.gentoo.org/wiki/No_homepage
+INHERIT=mount-boot
+IUSE=+grub_platforms_efi-64 grub_platforms_efi-32 fontsize-24 fontsize-32
+KEYWORDS=-* ~amd64 ~x86
+LICENSE=GPL-3
+RDEPEND=sys-boot/grub:2=[fonts]
+SLOT=0
+_eclasses_=mount-boot	03b0280b48caf6e18472fa7272cfcda8	mount-boot-utils	2551bac1a772f4b6beacb494a750ae92
+_md5_=63d17b683eefc7ae644156101c63d669
