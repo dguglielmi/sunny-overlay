@@ -1,0 +1,2 @@
+move sys-auth/libfprint-tod-goodix-drivers sys-auth/libfprint-2-tod1-goodix
+move sys-auth/libfprint-tod sys-auth/libfprint
