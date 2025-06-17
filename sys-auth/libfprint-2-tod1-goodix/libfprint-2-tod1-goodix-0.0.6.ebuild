@@ -16,10 +16,7 @@ KEYWORDS="~amd64"
 RESTRICT="bindist mirror"
 QA_PREBUILT="*"
 
-RDEPEND="
-	dev-libs/openssl:0/3
-	sys-auth/libfprint[tod(-)]
-"
+RDEPEND="sys-auth/libfprint[tod(-)]"
 
 src_install() {
 	udev_dorules lib/udev/rules.d/60-libfprint-2-tod1-goodix.rules
