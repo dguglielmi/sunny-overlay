@@ -394,7 +394,6 @@ HOMEPAGE="https://missioncenter.io https://gitlab.com/mission-center-devs/missio
 SRC_URI="https://gitlab.com/${PN}-devs/${PN}/-/archive/v${PV}/${PN}-v${PV}.tar.bz2
 	https://gitlab.com/${PN}-devs/gng/-/archive/${MAGPIE_SNAPSHOT}.tar.bz2 -> gng-${MAGPIE_SNAPSHOT}.tar.bz2
 	https://github.com/Syllo/nvtop/archive/${NVTOP_SNAPSHOT}.tar.gz -> nvtop-${NVTOP_SNAPSHOT}.tar.gz
-	https://github.com/Syllo/nvtop/archive/${NVTOP_SNAPSHOT}.tar.gz -> nvtop-${NVTOP_SNAPSHOT}.tar.gz
 	${CARGO_CRATE_URIS}
 "
 
