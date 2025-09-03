@@ -74,6 +74,7 @@ RDEPEND="
 	)
 	qt6? (
 		dev-qt/qtbase[concurrent,cups,dbus,gui,network,opengl,sql,widgets,xml]
+		dev-qt/qtdeclarative:6
 		dev-qt/qt5compat:6
 		dev-qt/qtshadertools:6
 		dev-qt/qtsvg:6
