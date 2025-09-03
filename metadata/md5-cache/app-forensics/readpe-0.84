@@ -9,5 +9,5 @@ LICENSE=GPL-2
 RDEPEND=dev-libs/openssl
 SLOT=0
 SRC_URI=https://github.com/mentebinaria/readpe/archive/v0.84.tar.gz -> readpe-0.84.tar.gz
-_eclasses_=toolchain-funcs	a6df79c1e9bc84369dbf3d44206ac772
+_eclasses_=toolchain-funcs	a0b29008c671a362b505f96fa80ce9c0
 _md5_=3c2736af397f3c998949ae757d2e33e7
