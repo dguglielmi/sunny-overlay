@@ -1,0 +1,14 @@
+BDEPEND=app-alternatives/ninja >=dev-build/cmake-3.28.5
+DEFINED_PHASES=compile configure install prepare test
+DEPEND=dev-libs/expat dev-libs/jsoncpp media-libs/gstreamer:1.0 media-libs/gst-plugins-base:1.0 media-libs/ipu7-camera-bins
+DESCRIPTION=Intel IPU7 MIPI camera HAL
+EAPI=8
+HOMEPAGE=https://github.com/intel/ipu7-camera-hal
+INHERIT=cmake
+KEYWORDS=~amd64
+LICENSE=Apache-2.0
+RDEPEND=dev-libs/expat dev-libs/jsoncpp media-libs/gstreamer:1.0 media-libs/gst-plugins-base:1.0 media-libs/ipu7-camera-bins
+SLOT=0
+SRC_URI=https://github.com/intel/ipu7-camera-hal/archive/feed9155372c0ba5543ca0c04052bdd71ed8b031.tar.gz -> ipu7-camera-hal-0_p20250929.tar.gz
+_eclasses_=cmake	cf95ad72ab207889c1668fc0d1bee181	flag-o-matic	a7afe42e95fb46ce9691605acfb24672	multiprocessing	1e32df7deee68372153dca65f4a7c21f	ninja-utils	2df4e452cea39a9ec8fb543ce059f8d6	toolchain-funcs	a0b29008c671a362b505f96fa80ce9c0	xdg-utils	42869b3c8d86a70ef3cf75165a395e09
+_md5_=226fc27de4a2cd655be6a88e1ef902db

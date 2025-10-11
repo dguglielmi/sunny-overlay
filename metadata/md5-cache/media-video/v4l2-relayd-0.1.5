@@ -1,0 +1,15 @@
+BDEPEND=sys-devel/gnuconfig >=app-portage/elt-patches-20250306 || ( >=dev-build/automake-1.18:1.18 >=dev-build/automake-1.17-r1:1.17 ) || ( >=dev-build/autoconf-2.72-r1:2.72 ) >=dev-build/libtool-2.4.7-r3 virtual/pkgconfig
+DEFINED_PHASES=configure prepare
+DEPEND=dev-libs/glib:= media-libs/gstreamer:1.0 media-libs/gst-plugins-base:1.0
+DESCRIPTION=Streaming relay for v4l2loopback using GStreamer
+EAPI=8
+HOMEPAGE=https://git.launchpad.net/v4l2-relayd
+INHERIT=autotools systemd
+IUSE=+icamera
+KEYWORDS=~amd64
+LICENSE=GPL-2
+RDEPEND=dev-libs/glib:= media-libs/gstreamer:1.0 media-libs/gst-plugins-base:1.0 icamera? ( media-plugins/gst-plugins-icamera ) media-video/v4l2loopback
+SLOT=0
+SRC_URI=https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/v4l2-relayd/0.1.5-0ubuntu1/v4l2-relayd_0.1.5.orig.tar.xz -> v4l2-relayd-0.1.5.tar.xz
+_eclasses_=autotools	955b29ccd82c1df4755e5f37748d2fa6	gnuconfig	ddeb9f8caff1b5f71a09c75b7534df79	libtool	c81bd096be5f4c82f4e8f156ef112402	systemd	a964c0cbe818b5729da1dbfcee5be861	toolchain-funcs	a0b29008c671a362b505f96fa80ce9c0
+_md5_=13558ff95707f5290c704dab72cac60b

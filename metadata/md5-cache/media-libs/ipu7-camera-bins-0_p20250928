@@ -1,0 +1,10 @@
+DEFINED_PHASES=install prepare
+DESCRIPTION=Intel IPU7 MIPI camera proprietary image processing libraries
+EAPI=8
+HOMEPAGE=https://github.com/intel/ipu7-camera-bins
+KEYWORDS=~amd64
+LICENSE=INTEL-IPU
+RESTRICT=elibc_musl
+SLOT=0
+SRC_URI=https://github.com/intel/ipu7-camera-bins/archive/09ccd020d5d1aa34b91e9f30b01a4166dd31f51b.tar.gz -> ipu7-camera-bins-0_p20250928.tar.gz
+_md5_=8752a7f1cf75cf636f4f92b3e1f35643
