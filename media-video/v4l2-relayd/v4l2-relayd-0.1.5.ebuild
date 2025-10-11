@@ -12,7 +12,7 @@ SRC_URI="
 		-> ${P}.tar.xz
 "
 
-LICENSE=""
+LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~amd64"
 
