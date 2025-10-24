@@ -22,6 +22,12 @@ pkg_setup() {
 	export KERNELRELEASE=${KV_FULL}
 }
 
+src_prepare() {
+	sed -i '/^KERNELRELEASE/s#:=#?=#1' Makefile || die
+
+	default
+}
+
 src_compile() {
 	local modlist=(
 		usbio=kernel/drivers/misc:::all
