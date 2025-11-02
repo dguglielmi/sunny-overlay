@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
-COMMIT_ID="774890f017eaa000df0647965a627f8738dcea71"
+COMMIT_ID="ee221ecae757d43ab3fb39433f389373b2026109"
 
 inherit linux-mod-r1 toolchain-funcs
 
