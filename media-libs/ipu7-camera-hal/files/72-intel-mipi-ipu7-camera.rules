@@ -1,0 +1,2 @@
+# Remove the 'uaccess' tag from ipu7 video4linux devices to avoid the application like Cheese seeing them.
+SUBSYSTEM=="video4linux", ENV{ID_V4L_PRODUCT}=="ipu7", TAG-="uaccess"

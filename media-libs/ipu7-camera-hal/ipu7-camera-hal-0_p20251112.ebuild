@@ -3,7 +3,7 @@
 
 EAPI=8
 
-inherit cmake
+inherit cmake udev
 
 COMMIT_ID="affeb2200bfa61f98ef4be08ff046767d40fcedf"
 
@@ -40,8 +40,21 @@ src_configure() {
 		-DBUILD_CAMHAL_ADAPTOR=ON
 		-DBUILD_CAMHAL_PLUGIN=ON
 		-DIPU_VERSIONS="ipu7x;ipu75xa"
+		-DUSE_PG_LITE_PIPE=ON
 		-DUSE_STATIC_GRAPH=ON
 		-DUSE_STATIC_GRAPH_AUTOGEN=ON
 	)
 	cmake_src_configure
+}
+
+src_install() {
+	udev_dorules "${FILESDIR}"/72-intel-mipi-ipu7-camera.rules
+}
+
+pkg_postinst() {
+	udev_reload
+}
+
+pkg_postrm() {
+	udev_reload
 }
