@@ -29,7 +29,7 @@ BDEPEND=""
 
 src_prepare() {
 	sed -i \
-		-e '/cmake_minimum_required/s#2\.8#3.5#1' \
+		-e '/cmake_minimum_required/s#2\.8#4.0#1' \
 		CMakeLists.txt || die
 
 	cmake_src_prepare
@@ -40,7 +40,6 @@ src_configure() {
 		-DBUILD_CAMHAL_ADAPTOR=ON
 		-DBUILD_CAMHAL_PLUGIN=ON
 		-DIPU_VERSIONS="ipu7x;ipu75xa"
-		-DUSE_PG_LITE_PIPE=ON
 		-DUSE_STATIC_GRAPH=ON
 		-DUSE_STATIC_GRAPH_AUTOGEN=ON
 	)
