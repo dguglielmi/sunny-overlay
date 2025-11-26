@@ -48,6 +48,7 @@ src_configure() {
 
 src_install() {
 	udev_dorules "${FILESDIR}"/72-intel-mipi-ipu7-camera.rules
+	cmake_src_install
 }
 
 pkg_postinst() {
