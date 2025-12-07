@@ -1,9 +1,9 @@
-# Copyright 2024 Gentoo Authors
+# Copyright 2025 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
 
-PYTHON_COMPAT=( python3_{9..13} )
+PYTHON_COMPAT=( python3_{9..14} )
 
 inherit meson python-single-r1
 
@@ -92,7 +92,7 @@ src_configure() {
 		-Dtest=false
 		-Dpipelines=imx8-isi,ipu3,mali-c55,rkisp1,rpi/vc4,simple,uvcvideo,vimc
 		-Dbuildtype=$(usex debug debug plain)
-		$(meson_use v4l v4l2)
+		$(meson_feature v4l v4l2)
 	)
 	meson_src_configure
 }
