@@ -1,8 +1,8 @@
-# Copyright 2025 Gentoo Authors
+# Copyright 2026 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
-COMMIT_ID="92a717e02ef30f4b5fad99271d0ec77c3364e4ea"
+COMMIT_ID="845d6f8bdf66ff1f455901da9de5e00a53a83dce"
 
 inherit linux-mod-r1 toolchain-funcs
 
