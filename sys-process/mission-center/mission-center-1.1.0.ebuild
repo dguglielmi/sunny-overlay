@@ -1,74 +1,75 @@
-# Copyright 2025 Gentoo Authors
+# Copyright 2026 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
 
 CRATES="
-	addr2line@0.24.2
-	adler2@2.0.0
+	addr2line@0.25.1
+	adler2@2.0.1
+	ahash@0.8.12
 	aho-corasick@1.1.3
-	anstream@0.6.18
-	anstyle-parse@0.2.6
-	anstyle-query@1.1.2
-	anstyle-wincon@3.0.7
-	anstyle@1.0.10
-	anyhow@1.0.98
-	app-rummage@0.2.8
+	anstream@0.6.20
+	anstyle-parse@0.2.7
+	anstyle-query@1.1.4
+	anstyle-wincon@3.0.10
+	anstyle@1.0.11
+	anyhow@1.0.100
+	app-rummage@0.2.9
 	arrayvec@0.7.6
 	ash@0.38.0+1.3.281
 	async-broadcast@0.7.2
-	async-channel@2.3.1
-	async-executor@1.13.2
-	async-io@2.4.0
-	async-lock@3.4.0
-	async-process@2.3.0
+	async-channel@2.5.0
+	async-executor@1.13.3
+	async-io@2.6.0
+	async-lock@3.4.1
+	async-process@2.5.0
 	async-recursion@1.1.1
-	async-signal@0.2.10
+	async-signal@0.2.13
 	async-task@4.7.1
-	async-trait@0.1.88
+	async-trait@0.1.89
 	atomic-waker@1.1.2
-	autocfg@1.4.0
-	backtrace@0.3.75
+	autocfg@1.5.0
+	backtrace@0.3.76
 	base64@0.22.1
-	bincode@1.3.3
+	beef@0.5.2
+	bincode@2.0.1
+	bincode_derive@2.0.1
 	bitflags@1.3.2
-	bitflags@2.9.0
-	bitflags@2.9.1
+	bitflags@2.9.4
 	block-buffer@0.10.4
 	block@0.1.6
-	blocking@1.6.1
+	blocking@1.6.2
 	bmart-derive@0.1.4
 	bmart@0.2.12
 	bstr@1.12.0
-	bytemuck@1.23.0
-	bytemuck_derive@1.9.3
+	bytemuck@1.23.2
+	bytemuck_derive@1.10.1
 	bytes@1.10.1
-	cairo-rs@0.20.7
-	cairo-sys-rs@0.20.7
-	cargo-util@0.2.20
-	cc@1.2.20
-	cc@1.2.23
-	cfg-expr@0.17.2
-	cfg-if@1.0.0
+	cairo-rs@0.21.2
+	cairo-sys-rs@0.21.2
+	cargo-util@0.2.23
+	cc@1.2.39
+	cfg-expr@0.20.3
+	cfg-if@1.0.3
 	cfg_aliases@0.2.1
-	clap@4.5.38
-	clap_builder@4.5.38
-	clap_derive@4.5.32
-	clap_lex@0.7.4
+	clap@4.5.48
+	clap_builder@4.5.48
+	clap_derive@4.5.47
+	clap_lex@0.7.5
 	cmake@0.1.54
-	colorchoice@1.0.3
+	colorchoice@1.0.4
 	colored@1.9.4
 	concurrent-queue@2.5.0
 	const-random-macro@0.1.16
 	const-random@0.1.18
 	core-foundation-sys@0.8.7
-	core-foundation@0.10.0
+	core-foundation@0.10.1
 	cpufeatures@0.2.17
-	crc32fast@1.4.2
+	crc32fast@1.5.0
 	crossbeam-deque@0.8.6
 	crossbeam-epoch@0.9.18
 	crossbeam-utils@0.8.21
-	crunchy@0.2.3
+	crunchy@0.2.4
 	crypto-common@0.1.6
 	digest@0.10.7
 	dlv-list@0.5.2
@@ -78,237 +79,244 @@ CRATES="
 	drm@0.14.1
 	either@1.15.0
 	endi@1.1.0
-	enumflags2@0.7.11
-	enumflags2_derive@0.7.11
+	enumflags2@0.7.12
+	enumflags2_derive@0.7.12
 	env_filter@0.1.3
 	env_logger@0.11.8
 	equivalent@1.0.2
-	errno@0.3.11
-	errno@0.3.12
-	error-code@3.3.1
+	errno@0.3.14
+	error-code@3.3.2
 	event-listener-strategy@0.5.4
-	event-listener@5.4.0
+	event-listener@5.4.1
 	fallible-iterator@0.3.0
 	fallible-streaming-iterator@0.1.9
 	fastrand@2.3.0
 	field-offset@0.3.6
-	filetime@0.2.25
+	filetime@0.2.26
+	find-msvc-tools@0.1.2
 	fixedbitset@0.5.7
-	flate2@1.1.1
+	flate2@1.1.2
 	fnv@1.0.7
 	foldhash@0.1.5
 	futures-channel@0.3.31
 	futures-core@0.3.31
 	futures-executor@0.3.31
 	futures-io@0.3.31
-	futures-lite@2.6.0
+	futures-lite@2.6.1
 	futures-macro@0.3.31
+	futures-sink@0.3.31
 	futures-task@0.3.31
 	futures-util@0.3.31
+	futures@0.3.31
 	gbm-sys@0.4.0
 	gbm@0.18.0
-	gdk-pixbuf-sys@0.20.7
-	gdk-pixbuf@0.20.9
-	gdk4-sys@0.9.6
-	gdk4@0.9.6
+	gdk-pixbuf-sys@0.21.2
+	gdk-pixbuf@0.21.2
+	gdk4-sys@0.10.1
+	gdk4@0.10.1
 	generic-array@0.14.7
 	getrandom@0.2.16
-	getrandom@0.3.2
 	getrandom@0.3.3
 	gettext-rs@0.7.2
 	gettext-sys@0.22.5
-	gimli@0.31.1
-	gio-sys@0.20.9
-	gio@0.20.9
-	glib-macros@0.20.7
-	glib-sys@0.20.9
-	glib@0.20.9
-	glob@0.3.2
+	gimli@0.32.3
+	gio-sys@0.21.2
+	gio@0.21.2
+	glib-macros@0.21.2
+	glib-sys@0.21.2
+	glib@0.21.3
+	glob@0.3.3
 	globset@0.4.16
-	gobject-sys@0.20.9
-	graphene-rs@0.20.9
-	graphene-sys@0.20.7
-	gsk4-sys@0.9.6
-	gsk4@0.9.6
-	gtk4-macros@0.9.5
-	gtk4-sys@0.9.6
-	gtk4@0.9.6
+	gobject-sys@0.21.2
+	graphene-rs@0.21.2
+	graphene-sys@0.21.2
+	gsk4-sys@0.10.1
+	gsk4@0.10.1
+	gtk4-macros@0.10.1
+	gtk4-sys@0.10.1
+	gtk4@0.10.1
 	hashbrown@0.14.5
-	hashbrown@0.15.2
-	hashbrown@0.15.3
+	hashbrown@0.15.5
+	hashbrown@0.16.0
 	hashlink@0.10.0
 	heck@0.5.0
-	hermit-abi@0.4.0
-	hermit-abi@0.5.1
+	hermit-abi@0.5.2
 	hex@0.4.3
 	http@1.3.1
 	httparse@1.10.1
 	ignore@0.4.23
-	indexmap@2.9.0
+	indexmap@2.11.4
+	io-uring@0.7.10
 	is-terminal@0.4.16
 	is_terminal_polyfill@1.70.1
 	itertools@0.14.0
 	itoa@1.0.15
-	jiff-static@0.2.13
-	jiff@0.2.13
-	jobserver@0.1.33
+	jiff-static@0.2.15
+	jiff@0.2.15
+	jobserver@0.1.34
 	khronos-egl@6.0.0
 	lazy_static@1.5.0
-	libadwaita-sys@0.7.2
-	libadwaita@0.7.2
-	libc@0.2.172
-	libloading@0.8.7
-	libredox@0.1.3
-	libsqlite3-sys@0.33.0
+	libadwaita-sys@0.8.0
+	libadwaita@0.8.0
+	libc@0.2.176
+	libloading@0.8.9
+	libredox@0.1.10
+	libsqlite3-sys@0.35.0
+	linux-raw-sys@0.11.0
 	linux-raw-sys@0.4.15
 	linux-raw-sys@0.6.5
-	linux-raw-sys@0.9.4
 	locale_config@0.3.0
-	lock_api@0.4.12
-	log@0.4.27
+	lock_api@0.4.13
+	log@0.4.28
+	logos-codegen@0.15.1
+	logos-derive@0.15.1
+	logos@0.15.1
 	malloc_buf@0.0.6
-	matchers@0.1.0
-	memchr@2.7.4
+	matchers@0.2.0
+	memchr@2.7.6
 	memoffset@0.6.5
 	memoffset@0.9.1
-	miniz_oxide@0.8.8
-	mio@1.0.3
-	miow@0.6.0
-	multimap@0.10.0
+	miette-derive@7.6.0
+	miette@7.6.0
+	miniz_oxide@0.8.9
+	mio@1.0.4
+	miow@0.6.1
 	multimap@0.10.1
 	nix@0.22.3
 	nix@0.30.1
-	nng-c-sys@1.10.1
-	nng-c@1.10.1
+	nng-c-sys@1.11.1
+	nng-c@1.11.0
 	ntapi@0.4.1
-	nu-ansi-term@0.46.0
+	nu-ansi-term@0.50.1
 	objc-foundation@0.1.1
 	objc2-core-foundation@0.3.1
 	objc2-io-kit@0.3.1
 	objc@0.2.7
 	objc_id@0.1.1
-	object@0.36.7
+	object@0.37.3
 	once_cell@1.21.3
+	once_cell_polyfill@1.70.1
 	ordered-multimap@0.7.3
 	ordered-stream@0.2.0
-	overload@0.1.1
-	pango-sys@0.20.9
-	pango@0.20.9
+	pango-sys@0.21.2
+	pango@0.21.3
 	parking@2.2.1
-	parking_lot@0.12.3
-	parking_lot_core@0.9.10
-	percent-encoding@2.3.1
+	parking_lot@0.12.4
+	parking_lot_core@0.9.11
+	paste@1.0.15
+	percent-encoding@2.3.2
 	petgraph@0.7.1
-	phf@0.11.3
-	phf_generator@0.11.3
-	phf_macros@0.11.3
-	phf_shared@0.11.3
+	phf@0.13.1
+	phf_generator@0.13.1
+	phf_macros@0.13.1
+	phf_shared@0.13.1
 	pin-project-lite@0.2.16
 	pin-utils@0.1.0
 	piper@0.2.4
 	pkg-config@0.3.32
-	polling@3.7.4
+	polling@3.11.0
 	portable-atomic-util@0.2.4
-	portable-atomic@1.11.0
+	portable-atomic@1.11.1
 	ppv-lite86@0.2.21
-	prettyplease@0.2.32
-	proc-macro-crate@3.3.0
-	proc-macro2@1.0.95
-	prost-build@0.13.5
-	prost-derive@0.13.5
-	prost-types@0.13.5
-	prost@0.13.5
+	prettyplease@0.2.37
+	proc-macro-crate@3.4.0
+	proc-macro2@1.0.101
+	prost-build@0.14.1
+	prost-derive@0.14.1
+	prost-reflect@0.16.2
+	prost-types@0.14.1
+	prost@0.14.1
+	protox-parse@0.9.0
+	protox@0.9.0
 	quote@1.0.40
-	r-efi@5.2.0
-	rand@0.8.5
-	rand@0.9.1
+	r-efi@5.3.0
+	rand@0.9.2
 	rand_chacha@0.9.0
-	rand_core@0.6.4
 	rand_core@0.9.3
-	rayon-core@1.12.1
-	rayon@1.10.0
-	redox_syscall@0.5.12
-	regex-automata@0.1.10
-	regex-automata@0.4.9
-	regex-syntax@0.6.29
-	regex-syntax@0.8.5
-	regex@1.11.1
+	rayon-core@1.13.0
+	rayon@1.11.0
+	redox_syscall@0.5.17
+	regex-automata@0.4.11
+	regex-syntax@0.8.6
+	regex@1.11.3
 	ring@0.17.14
-	rusqlite@0.35.0
-	rust-ini@0.21.1
-	rustc-demangle@0.1.24
+	rusqlite@0.37.0
+	rust-ini@0.21.3
+	rustc-demangle@0.1.26
 	rustc_version@0.4.1
 	rustix-openpty@0.2.0
 	rustix@0.38.44
-	rustix@1.0.5
-	rustix@1.0.7
+	rustix@1.1.2
 	rustls-pemfile@2.2.0
 	rustls-pki-types@1.12.0
-	rustls-webpki@0.103.3
-	rustls@0.23.27
-	rustversion@1.0.20
+	rustls-webpki@0.103.6
+	rustls@0.23.32
 	ryu@1.0.20
 	same-file@1.0.6
 	scopeguard@1.2.0
-	semver@1.0.26
-	serde@1.0.219
-	serde_derive@1.0.219
-	serde_json@1.0.140
+	semver@1.0.27
+	serde@1.0.227
+	serde_core@1.0.227
+	serde_derive@1.0.227
+	serde_json@1.0.145
 	serde_repr@0.1.20
-	serde_spanned@0.6.8
+	serde_spanned@0.6.9
 	sha2@0.10.9
 	sharded-slab@0.1.7
 	shell-escape@0.1.5
 	shlex@1.3.0
-	signal-hook-registry@1.4.5
+	signal-hook-registry@1.4.6
 	signal-hook@0.3.18
 	siphasher@1.0.1
-	slab@0.4.9
-	smallvec@1.15.0
-	socket2@0.5.9
+	slab@0.4.11
+	smallvec@1.15.1
+	socket2@0.6.0
 	static_assertions@1.1.0
 	strsim@0.11.1
-	strum@0.26.3
-	strum_macros@0.26.4
+	strum@0.27.2
+	strum_macros@0.27.2
 	subtle@2.6.1
 	syn@1.0.109
-	syn@2.0.101
+	syn@2.0.106
 	sysinfo@0.29.11
-	sysinfo@0.35.1
-	system-deps@7.0.3
+	sysinfo@0.37.1
+	system-deps@7.0.5
 	tar@0.4.44
-	target-lexicon@0.12.16
-	temp-dir@0.1.14
+	target-lexicon@0.13.2
 	temp-dir@0.1.16
-	tempfile@3.19.1
-	tempfile@3.20.0
-	test-log-macros@0.2.17
-	test-log@0.2.17
+	tempfile@3.23.0
+	test-log-macros@0.2.18
+	test-log@0.2.18
 	textdistance@1.1.1
-	thiserror-impl@2.0.12
-	thiserror@2.0.12
-	thread_local@1.1.8
+	thiserror-impl@2.0.16
+	thiserror@2.0.16
+	thread_local@1.1.9
 	tiny-keccak@2.0.2
 	tokio-macros@2.5.0
-	tokio@1.45.0
-	toml@0.8.22
-	toml_datetime@0.6.9
-	toml_edit@0.22.26
-	tracing-attributes@0.1.28
-	tracing-core@0.1.33
+	tokio@1.47.1
+	toml@0.8.23
+	toml_datetime@0.6.11
+	toml_datetime@0.7.2
+	toml_edit@0.22.27
+	toml_edit@0.23.6
+	toml_parser@1.0.3
+	tracing-attributes@0.1.30
+	tracing-core@0.1.34
 	tracing-log@0.2.0
-	tracing-subscriber@0.3.19
+	tracing-subscriber@0.3.20
 	tracing@0.1.41
 	triggered@0.1.3
 	trim-in-place@0.1.7
 	typenum@1.18.0
 	udisks2@0.3.1
 	uds_windows@1.1.0
-	unicode-ident@1.0.18
+	unicode-ident@1.0.19
 	unicode-width@0.1.14
+	unicode-width@0.2.1
 	untrusted@0.9.0
-	ureq-proto@0.4.1
-	ureq@3.0.11
+	unty@0.0.4
+	ureq-proto@0.5.2
+	ureq@3.1.2
 	utf-8@0.7.6
 	utf8parse@0.2.2
 	uuid@0.8.2
@@ -317,83 +325,82 @@ CRATES="
 	version-compare@0.2.0
 	version_check@0.9.5
 	virtual-terminal@0.1.4
-	vt100@0.15.2
-	vte@0.11.1
-	vte_generate_state_changes@0.1.2
+	virtue@0.0.18
+	vt100@0.16.2
+	vte@0.15.0
 	walkdir@2.5.0
-	wasi@0.11.0+wasi-snapshot-preview1
-	wasi@0.14.2+wasi-0.2.4
-	webpki-roots@0.26.11
-	webpki-roots@1.0.0
+	wasi@0.11.1+wasi-snapshot-preview1
+	wasi@0.14.7+wasi-0.2.4
+	wasip2@1.0.1+wasi-0.2.4
+	webpki-roots@1.0.2
 	winapi-i686-pc-windows-gnu@0.4.0
-	winapi-util@0.1.9
+	winapi-util@0.1.11
 	winapi-x86_64-pc-windows-gnu@0.4.0
 	winapi@0.3.9
 	windows-collections@0.2.0
-	windows-core@0.61.1
+	windows-core@0.61.2
 	windows-future@0.2.1
-	windows-implement@0.60.0
-	windows-interface@0.59.1
-	windows-link@0.1.1
+	windows-implement@0.60.1
+	windows-interface@0.59.2
+	windows-link@0.1.3
+	windows-link@0.2.0
 	windows-numerics@0.2.0
-	windows-result@0.3.3
-	windows-strings@0.4.1
-	windows-sys@0.48.0
+	windows-result@0.3.4
+	windows-strings@0.4.2
 	windows-sys@0.52.0
 	windows-sys@0.59.0
-	windows-targets@0.48.5
+	windows-sys@0.60.2
+	windows-sys@0.61.1
 	windows-targets@0.52.6
-	windows-targets@0.53.0
+	windows-targets@0.53.4
 	windows-threading@0.1.0
-	windows@0.61.1
-	windows_aarch64_gnullvm@0.48.5
+	windows@0.61.3
 	windows_aarch64_gnullvm@0.52.6
 	windows_aarch64_gnullvm@0.53.0
-	windows_aarch64_msvc@0.48.5
 	windows_aarch64_msvc@0.52.6
 	windows_aarch64_msvc@0.53.0
-	windows_i686_gnu@0.48.5
 	windows_i686_gnu@0.52.6
 	windows_i686_gnu@0.53.0
 	windows_i686_gnullvm@0.52.6
 	windows_i686_gnullvm@0.53.0
-	windows_i686_msvc@0.48.5
 	windows_i686_msvc@0.52.6
 	windows_i686_msvc@0.53.0
-	windows_x86_64_gnu@0.48.5
 	windows_x86_64_gnu@0.52.6
 	windows_x86_64_gnu@0.53.0
-	windows_x86_64_gnullvm@0.48.5
 	windows_x86_64_gnullvm@0.52.6
 	windows_x86_64_gnullvm@0.53.0
-	windows_x86_64_msvc@0.48.5
 	windows_x86_64_msvc@0.52.6
 	windows_x86_64_msvc@0.53.0
-	winnow@0.7.10
-	winnow@0.7.7
-	wit-bindgen-rt@0.39.0
-	xattr@1.5.0
-	zbus@5.7.0
-	zbus_macros@5.7.0
+	winnow@0.7.13
+	wit-bindgen@0.46.0
+	xattr@1.6.1
+	zbus@5.11.0
+	zbus_macros@5.11.0
 	zbus_names@4.2.0
-	zerocopy-derive@0.8.25
-	zerocopy@0.8.25
+	zerocopy-derive@0.8.27
+	zerocopy@0.8.27
 	zeroize@1.8.1
-	zvariant@5.5.3
-	zvariant_derive@5.5.3
-	zvariant_utils@3.2.0
+	zvariant@5.7.0
+	zvariant_derive@5.7.0
+	zvariant_utils@3.2.1
 "
+
+RUST_MIN_VER="1.88"
 
 inherit cargo gnome2-utils meson xdg
 
-NVTOP_SNAPSHOT="73291884d926445e499d6b9b71cb7a9bdbc7c393"
-MAGPIE_SNAPSHOT="a8a76a63b5c4ea81f30080a5bef4c32c33713afa"
+NVTOP_SNAPSHOT="339ee0b10a64ec51f43d27357b0068a40f16e9e4"
+MAGPIE_SNAPSHOT="1a8916cfeb06a3d63eefa8b17972eb2988e16da3"
 
 DESCRIPTION="Monitor your CPU, Memory, Disk, Network and GPU usage"
 HOMEPAGE="https://missioncenter.io https://gitlab.com/mission-center-devs/mission-center"
-SRC_URI="https://gitlab.com/${PN}-devs/${PN}/-/archive/v${PV}/${PN}-v${PV}.tar.bz2
-	https://gitlab.com/${PN}-devs/gng/-/archive/${MAGPIE_SNAPSHOT}.tar.bz2 -> gng-${MAGPIE_SNAPSHOT}.tar.bz2
-	https://github.com/Syllo/nvtop/archive/${NVTOP_SNAPSHOT}.tar.gz -> nvtop-${NVTOP_SNAPSHOT}.tar.gz
+SRC_URI="
+	https://gitlab.com/${PN}-devs/${PN}/-/archive/v${PV}/${PN}-v${PV}.tar.bz2
+		-> ${P}.tar.bz2
+	https://gitlab.com/${PN}-devs/gng/-/archive/${MAGPIE_SNAPSHOT}/gng-${MAGPIE_SNAPSHOT}.tar.bz2
+		-> magpie-${MAGPIE_SNAPSHOT}.tar.bz2
+	https://github.com/Syllo/nvtop/archive/${NVTOP_SNAPSHOT}.tar.gz
+		-> nvtop-${NVTOP_SNAPSHOT}.tar.gz
 	${CARGO_CRATE_URIS}
 "
 
@@ -427,7 +434,7 @@ BDEPEND="
 
 src_prepare() {
 	for p in "${WORKDIR}/gng-${MAGPIE_SNAPSHOT}"/platform-linux/3rdparty/nvtop/patches/*.patch; do
-	        eapply -d "${WORKDIR}/nvtop-${NVTOP_SNAPSHOT}" -p1 -- "${p}"
+		eapply -d "${WORKDIR}/nvtop-${NVTOP_SNAPSHOT}" -p1 -- "${p}" || die
 	done
 
 	sed -i \
@@ -442,7 +449,11 @@ src_prepare() {
 }
 
 src_configure() {
+	local emesonargs=(
+		-Dflatpak=false
+	)
 	meson_src_configure
+
 	ln -s "${CARGO_HOME}" "${BUILD_DIR}/cargo-home" || die
 	ln -s "${CARGO_HOME}" "${BUILD_DIR}/subprojects/magpie/cargo-home" || die
 }
