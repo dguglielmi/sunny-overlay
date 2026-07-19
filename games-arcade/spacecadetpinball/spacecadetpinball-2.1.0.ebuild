@@ -10,7 +10,7 @@ MY_PN="SpaceCadetPinball"
 DESCRIPTION="Reverse engineering of 3D Pinball Space Cadet"
 HOMEPAGE="https://github.com/k4zmu2a/SpaceCadetPinball"
 SRC_URI="https://github.com/k4zmu2a/${MY_PN}/archive/refs/tags/Release_${PV}.tar.gz -> ${P}.tar.gz
-	https://davipinheiro.com/wp-content/uploads/2021/02/Full-Tilt-Pinball_Win_EN.zip"
+	https://d1.xp.myabandonware.com/t/9f22cbcd-bb93-4d33-82b9-91384aec6992/Full-Tilt-Pinball_Win_EN.zip"
 
 S="${WORKDIR}/${MY_PN}-Release_${PV}"
 
