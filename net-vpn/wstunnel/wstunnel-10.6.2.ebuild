@@ -490,8 +490,8 @@ src_install() {
 	newins "${FILESDIR}"/${PN}-server.default ${PN}-server
 	newins "${FILESDIR}"/${PN}-client.default ${PN}-client
 
-	doinitd "${FILESDIR}"/${PN}-server.initd
-	doinitd "${FILESDIR}"/${PN}-client.initd
+	newinitd "${FILESDIR}"/${PN}-server.initd ${PN}-server
+	newinitd "${FILESDIR}"/${PN}-client.initd ${PN}-client
 
 	insinto /usr/libexec/${PN}
 	insopts -m 0755
