@@ -1,0 +1,19 @@
+#!/sbin/openrc-run
+# Copyright 2026 Gentoo Authors
+# Distributed under the terms of the GNU General Public License v2
+
+name="wstunnel-server daemon"
+description="wstunnel server"
+command=/usr/libexec/wstunnel/wrapper
+command_args="server"
+
+pidfile="/run/wstunnel-server.pid"
+
+output_log="/var/log/wstunnel-server.log"
+error_log="/var/log/wstunnel-server.log"
+
+depend() {
+	need net
+	use dns
+	after firewall
+}

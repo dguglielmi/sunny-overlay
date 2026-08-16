@@ -1,0 +1,11 @@
+[Unit]
+Description=wstunnel server daemon
+
+[Service]
+Type=simple
+ExecStart=/usr/libexec/wstunnel/wrapper server
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=default.target

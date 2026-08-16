@@ -1,0 +1,17 @@
+[Unit]
+Description=wstunnel server daemon
+Requires=nss-lookup.target network.target
+After=nss-lookup.target network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/libexec/wstunnel/wrapper server
+Restart=always
+RestartSec=5
+
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+
+[Install]
+WantedBy=multi-user.target
