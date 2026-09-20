@@ -1,11 +1,11 @@
-# Copyright 2024 Gentoo Authors
+# Copyright 2026 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
 
 inherit desktop toolchain-funcs xdg-utils
 
-COMMIT_ID="99e59fdddbc3"
+COMMIT_ID="2b2a182f4522"
 
 DESCRIPTION="The fast and accurate Genesis emulator"
 HOMEPAGE="https://www.retrodev.com/blastem/"
@@ -51,7 +51,7 @@ src_install() {
 	insinto "/usr/share/games/${PN}"
 	doins -r shaders images default.cfg rom.db gamecontrollerdb.txt
 
-	newicon "${S}/android/res/drawable-xxhdpi/ic_launcher.png" ${PN}.png
+	newicon "${S}/android/app/src/main/res/mipmap-xhdpi/ic_launcher.png" ${PN}.png
 	make_desktop_entry "${PN}" 'BlastEm' "${PN}" 'Game;Emulator'
 }
 
