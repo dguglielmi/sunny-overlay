@@ -458,7 +458,8 @@ LICENSE+="
 	Unicode-DFS-2016
 "
 SLOT="0"
-KEYWORDS="~amd64 ~x86"
+# Wait for GNOME 50
+#KEYWORDS="~amd64 ~x86"
 
 DEPEND="
 	>=dev-libs/glib-2.80.0
