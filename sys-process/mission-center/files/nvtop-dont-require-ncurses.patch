@@ -1,0 +1,50 @@
+diff --git a/src/extract_gpuinfo_msm_utils.c b/src/extract_gpuinfo_msm_utils.c
+index dc663c6..d53b487 100644
+--- a/src/extract_gpuinfo_msm_utils.c
++++ b/src/extract_gpuinfo_msm_utils.c
+@@ -17,9 +17,11 @@
+  *
+  */
+
+-#include "nvtop/interface_internal_common.h"
++#include <stddef.h>
+ #include <stdint.h>
+
++#define ARRAY_SIZE(x) (sizeof(x) / sizeof((x)[0]))
++
+ struct msm_id_struct {
+   uint64_t chip_id;
+   const char *name;
+diff --git a/src/extract_gpuinfo_panfrost_utils.c b/src/extract_gpuinfo_panfrost_utils.c
+index 305d1bd..ea6a629 100644
+--- a/src/extract_gpuinfo_panfrost_utils.c
++++ b/src/extract_gpuinfo_panfrost_utils.c
+@@ -18,7 +18,6 @@
+  */
+
+ #include <unistd.h>
+-#include "nvtop/interface_internal_common.h"
+ #include "panfrost_utils.h"
+
+ struct panfrost_model {
+@@ -36,6 +35,8 @@ static uint32_t get_num_eng_g52(int core_count,
+   return core_features & 0xF;
+ }
+
++#define ARRAY_SIZE(x) (sizeof(x) / sizeof((x)[0]))
++
+ #define GPU_MODEL(_name, _id, _nengines)	\
+ {						\
+ 	.name = #_name,				\
+diff --git a/src/extract_gpuinfo_panthor_utils.c b/src/extract_gpuinfo_panthor_utils.c
+index 54c7bf9..32b82e2 100644
+--- a/src/extract_gpuinfo_panthor_utils.c
++++ b/src/extract_gpuinfo_panthor_utils.c
+@@ -18,7 +18,6 @@
+  */
+
+ #include <unistd.h>
+-#include "nvtop/interface_internal_common.h"
+ #include "panthor_utils.h"
+
+ /**
