@@ -1,9 +1,9 @@
-# Copyright 1999-2025 Gentoo Authors
+# Copyright 2026 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
 
-KODI_ADDON_TAG="6055716267b1780f648df78c78a576d9174bfd9b"
+KODI_ADDON_TAG="a7cadd1b0f706c41335323da30f2079e09d4f3a9"
 KODI_ADDON_ID="service.upnext"
 
 DESCRIPTION="Proposes to play the next episode automatically for Kodi"
@@ -21,13 +21,6 @@ SLOT="0"
 KEYWORDS="~amd64 ~x86"
 
 DEPEND="media-tv/kodi"
-
-src_prepare() {
-	default
-	sed -i -e '/addon="xbmc.python"/s#2\.25\.0#3.0.0#g' \
-		-e '/addon id="service.upnext"/s#1\.1\.9#1.1.9+omega.1#g' \
-		"${S}"/addon.xml
-}
 
 src_install() {
 	insinto "/usr/share/kodi/addons/${KODI_ADDON_ID}"
