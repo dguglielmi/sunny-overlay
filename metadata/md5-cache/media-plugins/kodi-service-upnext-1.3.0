@@ -1,4 +1,4 @@
-DEFINED_PHASES=install prepare
+DEFINED_PHASES=install
 DEPEND=media-tv/kodi
 DESCRIPTION=Proposes to play the next episode automatically for Kodi
 EAPI=8
@@ -6,5 +6,5 @@ HOMEPAGE=https://github.com/im85288/service.upnext
 KEYWORDS=~amd64 ~x86
 LICENSE=GPL-3+
 SLOT=0
-SRC_URI=https://github.com/im85288/service.upnext/archive/6055716267b1780f648df78c78a576d9174bfd9b.tar.gz -> kodi-service-upnext-1.3.0.tar.gz
-_md5_=e18019a44af2a660081eeb56703d4fc7
+SRC_URI=https://github.com/im85288/service.upnext/archive/a7cadd1b0f706c41335323da30f2079e09d4f3a9.tar.gz -> kodi-service-upnext-1.3.0.tar.gz
+_md5_=68e8b22bdf5e81207147da19077996ff
