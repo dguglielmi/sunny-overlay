@@ -3,17 +3,16 @@
 
 EAPI=8
 
-KODI_ADDON_TAG="a7cadd1b0f706c41335323da30f2079e09d4f3a9"
 KODI_ADDON_ID="service.upnext"
 
 DESCRIPTION="Proposes to play the next episode automatically for Kodi"
 HOMEPAGE="https://github.com/im85288/service.upnext"
 
 SRC_URI="
-	https://github.com/im85288/${KODI_ADDON_ID}/archive/${KODI_ADDON_TAG}.tar.gz
+	https://github.com/im85288/${KODI_ADDON_ID}/archive/refs/tags/v${PV}.tar.gz
 		-> ${P}.tar.gz
 "
-S="${WORKDIR}/${KODI_ADDON_ID}-${KODI_ADDON_TAG}"
+S="${WORKDIR}/${KODI_ADDON_ID}-${PV}"
 
 LICENSE="GPL-3+"
 SLOT="0"
